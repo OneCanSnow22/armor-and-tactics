@@ -1,0 +1,20 @@
+[
+  {
+    "id": "msg-1778588470861-4wka4m",
+    "from": "team-lead",
+    "to": "code-explorer",
+    "type": "message",
+    "content": "直接返回你的读取结果给我，不需要等任何进一步指令",
+    "timestamp": "2026-05-12T12:21:10.861Z",
+    "read": true
+  },
+  {
+    "id": "msg-1778588474066-xvcye6",
+    "from": "team-lead",
+    "to": "code-explorer",
+    "type": "message",
+    "content": "请立即返回你读取代码的结果，不需要等任何消息",
+    "timestamp": "2026-05-12T12:21:14.066Z",
+    "read": true
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "sessions": {
+    "75e202acb09145d7947c9f11ecc3245b": [
+      {
+        "expertId": "GodotGameScriptEngineer",
+        "name": "Earl",
+        "profession": "Godot游戏脚本工程师",
+        "avatarUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/avatars/12-GameDevelopment/GodotGameScriptEngineer/GodotGameScriptEngineer.png",
+        "promptUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/experts/12-GameDevelopment/GodotGameScriptEngineer/GodotGameScriptEngineer_zh.md",
+        "usedAt": 1779775989221,
+        "industryId": "all"
+      },
+      {
+        "expertId": "GameDesigner",
+        "name": "玩法师",
+        "profession": "游戏设计师",
+        "avatarUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/avatars/12-GameDevelopment/GameDesigner/GameDesigner.png",
+        "promptUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/experts/12-GameDevelopment/GameDesigner/GameDesigner_zh.md",
+        "usedAt": 1777945191820,
+        "industryId": "all"
+      },
+      {
+        "expertId": "GodotShaderDeveloper",
+        "name": "渲染达",
+        "profession": "Godot着色器开发者",
+        "avatarUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/avatars/12-GameDevelopment/GodotShaderDeveloper/GodotShaderDeveloper.png",
+        "promptUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/experts/12-GameDevelopment/GodotShaderDeveloper/GodotShaderDeveloper_zh.md",
+        "usedAt": 1777882855103,
+        "industryId": "all"
+      }
+    ]
+  },
+  "lastUpdated": 1779776122111
+}

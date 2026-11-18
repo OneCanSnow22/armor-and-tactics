@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bov4t5dg1ox5"]
+
+[ext_resource type="Texture2D" uid="uid://c3ah81102nsy" path="res://assets/buff/dangerous.png" id="1_cnc73"]
+[ext_resource type="Script" uid="uid://blpqriupruntb" path="res://scripts/buff.gd" id="1_ixfor"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="2_ixfor"]
+
+[node name="Buff" type="Control" unique_id=622501091 node_paths=PackedStringArray("pic", "level_label")]
+custom_minimum_size = Vector2(52, 40)
+layout_mode = 3
+anchor_right = 0.027
+anchor_bottom = 0.037
+offset_right = 0.15999985
+offset_bottom = 0.040000916
+script = ExtResource("1_ixfor")
+pic = NodePath("TextureRect")
+level_label = NodePath("TextureRect/Label")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=650134568]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_cnc73")
+
+[node name="Label" type="Label" parent="TextureRect" unique_id=131522030]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 18.0
+offset_right = 49.0
+offset_bottom = 41.0
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("2_ixfor")
+text = "99"

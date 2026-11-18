@@ -1,0 +1,116 @@
+[gd_scene format=3 uid="uid://cqnbkjvrysbgy"]
+
+[ext_resource type="Script" uid="uid://bkc6yfyfc85rq" path="res://scripts/news.gd" id="1_ft71n"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="2_bqk8j"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="3_ks1ca"]
+[ext_resource type="PackedScene" uid="uid://t5wnrc8gatut" path="res://scenes/reward_branch/card_reward.tscn" id="4_bqk8j"]
+[ext_resource type="PackedScene" uid="uid://g1hoo57ahyjm" path="res://scenes/reward_branch/weapon_reward.tscn" id="5_ks1ca"]
+[ext_resource type="PackedScene" uid="uid://d15g1gmlljbrx" path="res://scenes/reward_branch/repair_reward.tscn" id="6_n4ljg"]
+[ext_resource type="PackedScene" uid="uid://7fu0ux4xctkm" path="res://scenes/reward_branch/charger_reward.tscn" id="7_aaomc"]
+
+[node name="news" type="CanvasLayer" unique_id=1116376386 node_paths=PackedStringArray("title", "reward_button", "back_button", "cardReward", "weaponReward", "repairReward", "chargerReward")]
+script = ExtResource("1_ft71n")
+title = NodePath("ColorRect/Label")
+reward_button = NodePath("ColorRect/Control/reward_report")
+back_button = NodePath("ColorRect/Control/back_to_map")
+cardReward = NodePath("CardReward")
+weaponReward = NodePath("WeaponReward")
+repairReward = NodePath("RepairReward")
+chargerReward = NodePath("charger_reward")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2009680574]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3019608, 0.3019608, 0.3019608, 0.6862745)
+
+[node name="Label" type="Label" parent="ColorRect" unique_id=1480460126]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.37
+anchor_top = 0.37
+anchor_right = 0.63000005
+anchor_bottom = 0.46400002
+offset_left = -0.4000244
+offset_top = 0.3999939
+offset_right = 0.39990234
+offset_bottom = -0.120025635
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.7665719, 0.52134436, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7764706)
+theme_override_colors/font_outline_color = Color(0.09411765, 0.14509805, 0.16078432, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("2_bqk8j")
+theme_override_font_sizes/font_size = 100
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="ColorRect" unique_id=26945327]
+clip_contents = true
+layout_mode = 1
+anchor_left = 0.381
+anchor_top = 0.48100004
+anchor_right = 0.61200005
+anchor_bottom = 0.808
+offset_left = -0.52001953
+offset_top = 0.5199585
+offset_right = -0.040039063
+offset_bottom = 0.35998535
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="reward_report" type="Button" parent="ColorRect/Control" unique_id=2053336778]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.15300001
+anchor_top = 0.085
+anchor_right = 0.84700006
+anchor_bottom = 0.289
+offset_left = 0.067993164
+offset_top = -0.005001068
+offset_right = -0.06802368
+offset_bottom = -0.016998291
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(154, 0)
+theme_override_fonts/font = ExtResource("3_ks1ca")
+theme_override_font_sizes/font_size = 45
+text = "结算报酬"
+
+[node name="back_to_map" type="Button" parent="ColorRect/Control" unique_id=1174259226]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.15300001
+anchor_top = 0.39800003
+anchor_right = 0.84700006
+anchor_bottom = 0.60200006
+offset_left = 0.067993164
+offset_top = -0.49401855
+offset_right = -0.06802368
+offset_bottom = -0.5060272
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(154, 0)
+theme_override_fonts/font = ExtResource("3_ks1ca")
+theme_override_font_sizes/font_size = 45
+text = "返回地图"
+
+[node name="CardReward" parent="." unique_id=1342895362 instance=ExtResource("4_bqk8j")]
+layer = 5
+visible = false
+
+[node name="WeaponReward" parent="." unique_id=849946570 instance=ExtResource("5_ks1ca")]
+layer = 5
+
+[node name="RepairReward" parent="." unique_id=1727955930 instance=ExtResource("6_n4ljg")]
+layer = 5
+
+[node name="charger_reward" parent="." unique_id=1790492287 instance=ExtResource("7_aaomc")]
+layer = 5
+
+[connection signal="pressed" from="ColorRect/Control/reward_report" to="." method="_on_reward_report_pressed"]
+[connection signal="pressed" from="ColorRect/Control/back_to_map" to="." method="_on_back_pressed"]

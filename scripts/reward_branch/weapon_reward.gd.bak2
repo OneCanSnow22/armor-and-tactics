@@ -1,0 +1,118 @@
+extends CanvasLayer
+@export var Picture:TextureRect
+@export var title:Label
+@export var context:Label
+@export var chip:PanelContainer
+var weapon:Profile.Attack
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	visible=false
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+func random_weapon():
+	var code=randi()%6
+	match code:
+		0:
+			weapon=Profile.Melee.new(randi()%8+2,randi()%3+1)
+			title.text="ME"
+		1:
+			weapon=Profile.Shoot.new(randi()%7+1,randi()%50+50)
+			title.text="ST"
+		2:
+			weapon=Profile.Through_shoot.new(randi()%5+2,randi()%40+54,randi()%3+1)
+			title.text="TS"
+		3:
+			weapon=Profile.Shelling.new(randi()%3+3,randi()%3+1)
+			title.text="SG"
+		4:
+			weapon=Profile.Multi_target_missile.new(randi()%3+2,randi()%4+1)
+			title.text="MTM"
+		5:
+			weapon=Profile.Sputtering_type_artillery.new(randi()%3+3,randi()%2+1,randi()%3+1)
+			title.text="STA"
+	if weapon is Profile.Shelling:#还需要另外对炮击类进行属性弹的随机补充
+		var available = random_select_classes()
+		weapon.firebomb.isCanBeUsed=available[0]
+		weapon.flare.isCanBeUsed=available[1]
+		weapon.flashbang.isCanBeUsed=available[2]
+	var num=randi()%10000
+	title.text+=("-%05d"%num)
+	change_texture(weapon)
+	show_text(weapon)
+func random_select_classes() -> Array[bool]:
+	var total_classes = 3
+	var available_count = randi_range(1, 2)  # 1或2个可用
+	var result: Array[bool] = [false, false, false]
+	var indices = [0, 1, 2]
+	indices.shuffle()  # 打乱顺序
+	for i in range(available_count):
+		result[indices[i]] = true
+	return result
+func change_texture(mode:Profile.Attack):
+	if mode is Profile.Melee:
+		Picture.texture=load("res://assets/statebar/melee_mode.png")
+	elif mode is Profile.Shoot:
+		Picture.texture=load("res://assets/statebar/shoot_mode.png")
+	elif mode is Profile.Shelling:
+		Picture.texture=load("res://assets/statebar/shelling.png")
+func show_text(mode:Profile.Attack):
+	context.text="攻击力："+str(mode.damage)+"\n"
+	if mode is Profile.Melee:
+		context.text+="攻击范围："+str(mode.range)+"\n"
+	elif mode is Profile.Shoot:
+		context.text+="命中率："+str(mode.probability)+"%\n"
+		if mode is Profile.Through_shoot:
+			context.text+="贯穿等级：Level"+str(mode.level)+"\n"
+	elif mode is Profile.Shelling:
+		if mode.firebomb.isCanBeUsed:
+			context.text+="-燃烧弹可装备\n"
+		if mode.flashbang.isCanBeUsed:
+			context.text+="-闪光弹可装备\n"
+		if mode.flare.isCanBeUsed:
+			context.text+="-干扰弹可装备\n"
+		if mode is Profile.Multi_target_missile:
+			context.text+="可打击多个目标\n"
+		elif mode is Profile.Sputtering_type_artillery:
+			context.text+="溅射范围："+str(mode.sputter_range)+"\n"
+		context.text+="需要等待的回合数："+str(mode.max_time)+"\n"
+	context.text+="价值："+str(weapon.evaluate_price())
+func show_chip():
+	visible=true
+	chip.position=Vector2(821,-200)
+	random_weapon()
+	var tween=create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(chip,"position",Vector2(821,207),0.2)
+	
+
+
+func _on_button_pressed() -> void:
+	var tween=create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(chip,"position",Vector2(2000,207),0.2)
+	await tween.finished
+	get_tree().change_scene_to_file("res://scenes/map.tscn")
+	pass # Replace with function body.
+
+
+func _on_button_2_pressed() -> void:
+	var tween=create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(chip,"position",Vector2(821,600),0.2)
+	await tween.finished
+	weapon.code=title.text
+	if weapon is Profile.Melee:
+		Profile.item.meleeBag.append(weapon)
+	elif weapon is Profile.Shoot:
+		Profile.item.shootBag.append(weapon)
+	elif weapon is Profile.Shelling:
+		Profile.item.shellingBag.append(weapon)
+	get_tree().change_scene_to_file("res://scenes/map.tscn")
+	pass # Replace with function body.

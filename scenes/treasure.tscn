@@ -1,0 +1,402 @@
+[gd_scene format=3 uid="uid://crynau1bvg686"]
+
+[ext_resource type="Texture2D" uid="uid://dgodfpuld2iu" path="res://assets/background/sci_fi_bg1.jpg" id="1_it12x"]
+[ext_resource type="Script" uid="uid://dida7jda750s6" path="res://scripts/treasure.gd" id="1_jd7h6"]
+[ext_resource type="Texture2D" uid="uid://bvcbk56cigq84" path="res://assets/treasure/chest_metal.png" id="2_0g4qu"]
+[ext_resource type="Shader" uid="uid://cusnkesaep0ao" path="res://shaders/treasure_glow.gdshader" id="3_0g4qu"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="4_wsoap"]
+[ext_resource type="Texture2D" uid="uid://c0flekscciuas" path="res://assets/treasure/coin_pile_01.svg" id="5_h5oxq"]
+[ext_resource type="Texture2D" uid="uid://ds0ed0odtqe6k" path="res://assets/treasure/icon-power.png" id="6_h5oxq"]
+[ext_resource type="PackedScene" uid="uid://dbgpuf8gpijp6" path="res://scenes/Card/Information_unit.tscn" id="7_6chw8"]
+[ext_resource type="Texture2D" uid="uid://x2y7en50ctmk" path="res://assets/statebar/melee_mode.png" id="9_5h3dt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wqbho"]
+atlas = ExtResource("2_0g4qu")
+region = Rect2(1, 0, 30, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wsoap"]
+atlas = ExtResource("2_0g4qu")
+region = Rect2(33, 0, 30, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_it12x"]
+atlas = ExtResource("2_0g4qu")
+region = Rect2(33, 0, 30, 32)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wqbho"]
+shader = ExtResource("3_0g4qu")
+shader_parameter/glow_width = 16.0
+shader_parameter/glow_intensity = 1.2
+shader_parameter/flow_speed = 1.0
+shader_parameter/pulse_speed = 2.0
+shader_parameter/color_outer = Color(0.1, 0.6, 1, 1)
+shader_parameter/color_inner = Color(0.3, 0.9, 1, 1)
+shader_parameter/color_arc = Color(0.7, 0.95, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wsoap"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h5oxq"]
+bg_color = Color(0.1061819, 0.55524737, 0.5245463, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.9098039, 0.60784316, 0.21960784, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6chw8"]
+bg_color = Color(0.070926495, 0.41377118, 0.3897828, 1)
+border_width_bottom = 8
+border_color = Color(0.9098039, 0.60784316, 0.21960784, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwrwc"]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.39607844, 0.4, 0.4, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jd7h6"]
+bg_color = Color(0.7579308, 3.5616756e-06, 5.7756904e-07, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5h3dt"]
+bg_color = Color(0.45768207, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_816p8"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_awv35"]
+bg_color = Color(0, 0.77545434, 7.70092e-07, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_06t4b"]
+bg_color = Color(0, 0.38090092, 4.3317675e-07, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_367ea"]
+bg_color = Color(0, 1, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="Treasure" type="CanvasLayer" unique_id=1417367555 node_paths=PackedStringArray("money_label", "energy_label", "money_page", "energy_page", "card_page", "weapon_page", "fun_list", "chest", "treasure_list", "context", "weapon_title", "weapon_pic")]
+script = ExtResource("1_jd7h6")
+money_label = NodePath("treasure_list/PanelContainer/VBoxContainer/Coin/HBoxContainer2/Label")
+energy_label = NodePath("treasure_list/PanelContainer/VBoxContainer/Energy/Label")
+money_page = NodePath("treasure_list/PanelContainer/VBoxContainer/Coin")
+energy_page = NodePath("treasure_list/PanelContainer/VBoxContainer/Energy")
+card_page = NodePath("treasure_list/PanelContainer/VBoxContainer/Card")
+weapon_page = NodePath("treasure_list/PanelContainer/VBoxContainer/Weapon")
+fun_list = NodePath("treasure_list/PanelContainer/VBoxContainer/Card/Control/VBoxContainer")
+chest = NodePath("Control/TextureButton")
+treasure_list = NodePath("treasure_list")
+context = NodePath("treasure_list/PanelContainer/VBoxContainer/Weapon/HBoxContainer2/VBoxContainer/Label")
+weapon_title = NodePath("treasure_list/PanelContainer/VBoxContainer/Weapon/HBoxContainer/PanelContainer/Label")
+weapon_pic = NodePath("treasure_list/PanelContainer/VBoxContainer/Weapon/HBoxContainer/TextureRect")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1730396498]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_it12x")
+
+[node name="Control" type="Control" parent="." unique_id=434843733]
+layout_mode = 3
+anchor_left = 0.43600002
+anchor_top = 0.48900002
+anchor_right = 0.56600004
+anchor_bottom = 0.744
+offset_left = -0.12005615
+offset_top = -0.11999512
+offset_right = -0.7200928
+offset_bottom = -0.52001953
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="shadow" type="ColorRect" parent="Control" unique_id=1699096039]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.012
+anchor_top = 0.731
+anchor_right = 1.008
+anchor_bottom = 1.0070001
+offset_left = -0.012000084
+offset_top = -0.025009155
+offset_right = 0.0079956055
+offset_bottom = -1.9250183
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(127, 0)
+color = Color(0.16812998, 0.19620535, 0.26995072, 0.65882355)
+
+[node name="TextureButton" type="TextureButton" parent="Control" unique_id=1912856629]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.018000001
+anchor_top = 0.035
+anchor_right = 0.98200005
+anchor_bottom = 0.96500003
+offset_left = 105.018
+offset_top = 111.875
+offset_right = -105.01802
+offset_bottom = -111.875
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(8, 8)
+pivot_offset = Vector2(15, 16)
+texture_normal = SubResource("AtlasTexture_wqbho")
+texture_pressed = SubResource("AtlasTexture_wsoap")
+texture_disabled = SubResource("AtlasTexture_it12x")
+
+[node name="treasure_list" type="PanelContainer" parent="." unique_id=1200920285]
+material = SubResource("ShaderMaterial_wqbho")
+anchors_preset = -1
+anchor_left = 0.38000003
+anchor_top = 0.178
+anchor_right = 0.62200004
+anchor_bottom = 0.71300006
+offset_left = -0.6000366
+offset_top = -0.2400055
+offset_right = 0.7598877
+offset_bottom = -0.040039063
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(233, 289)
+theme_override_styles/panel = SubResource("StyleBoxFlat_wsoap")
+
+[node name="PanelContainer" type="PanelContainer" parent="treasure_list" unique_id=1136615798]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_h5oxq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="treasure_list/PanelContainer" unique_id=1465840187]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="treasure_list/PanelContainer/VBoxContainer" unique_id=1420333179]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6chw8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer/PanelContainer" unique_id=1045657132]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="treasure_list/PanelContainer/VBoxContainer/PanelContainer/HBoxContainer" unique_id=1916099317]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9098039, 0.60784316, 0.21960784, 1)
+theme_override_fonts/font = ExtResource("4_wsoap")
+theme_override_font_sizes/font_size = 53
+text = "Treasure"
+
+[node name="Coin" type="VBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer" unique_id=1376007685]
+visible = false
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Coin" unique_id=1320218707]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer/Coin" unique_id=2034551951]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="treasure_list/PanelContainer/VBoxContainer/Coin/HBoxContainer" unique_id=798562926]
+layout_mode = 2
+texture = ExtResource("5_h5oxq")
+
+[node name="Control2" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Coin" unique_id=834276861]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer/Coin" unique_id=2097816801]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="treasure_list/PanelContainer/VBoxContainer/Coin/HBoxContainer2" unique_id=1645067670]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9098039, 0.60784316, 0.21960784, 1)
+theme_override_fonts/font = ExtResource("4_wsoap")
+theme_override_font_sizes/font_size = 41
+text = "500000$"
+
+[node name="Control3" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Coin" unique_id=592864183]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Energy" type="VBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer" unique_id=887442790]
+visible = false
+layout_mode = 2
+
+[node name="Control" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Energy" unique_id=895297858]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer/Energy" unique_id=529471283]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="treasure_list/PanelContainer/VBoxContainer/Energy/HBoxContainer" unique_id=91720203]
+layout_mode = 2
+texture = ExtResource("6_h5oxq")
+
+[node name="Control2" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Energy" unique_id=460430459]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="treasure_list/PanelContainer/VBoxContainer/Energy" unique_id=558199474]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.8976316, 0.89763135, 1)
+theme_override_fonts/font = ExtResource("4_wsoap")
+theme_override_font_sizes/font_size = 41
+text = "6-grid_energy"
+horizontal_alignment = 1
+
+[node name="Control3" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Energy" unique_id=1129378604]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Card" type="VBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer" unique_id=1538780805]
+visible = false
+layout_mode = 2
+
+[node name="Control" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Card" unique_id=966042999]
+custom_minimum_size = Vector2(0, 438)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer/Card/Control" unique_id=358739343]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.039
+anchor_top = 0.043
+anchor_right = 0.961
+anchor_bottom = 0.957
+offset_left = 100.918
+offset_top = 100.166
+offset_right = -100.918
+offset_bottom = -100.166016
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(101, 100)
+theme_override_constants/separation = 0
+metadata/_edit_group_ = true
+
+[node name="PanelContainer" parent="treasure_list/PanelContainer/VBoxContainer/Card/Control/VBoxContainer" unique_id=1095313832 instance=ExtResource("7_6chw8")]
+layout_mode = 2
+
+[node name="PanelContainer2" parent="treasure_list/PanelContainer/VBoxContainer/Card/Control/VBoxContainer" unique_id=866868752 instance=ExtResource("7_6chw8")]
+layout_mode = 2
+
+[node name="PanelContainer3" parent="treasure_list/PanelContainer/VBoxContainer/Card/Control/VBoxContainer" unique_id=54378722 instance=ExtResource("7_6chw8")]
+layout_mode = 2
+
+[node name="PanelContainer4" parent="treasure_list/PanelContainer/VBoxContainer/Card/Control/VBoxContainer" unique_id=1476850546 instance=ExtResource("7_6chw8")]
+layout_mode = 2
+
+[node name="Weapon" type="VBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer" unique_id=195354017]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer/Weapon" unique_id=1811211980]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="treasure_list/PanelContainer/VBoxContainer/Weapon/HBoxContainer" unique_id=1768442164]
+layout_mode = 2
+texture = ExtResource("9_5h3dt")
+
+[node name="PanelContainer" type="PanelContainer" parent="treasure_list/PanelContainer/VBoxContainer/Weapon/HBoxContainer" unique_id=636644586]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_nwrwc")
+
+[node name="Label" type="Label" parent="treasure_list/PanelContainer/VBoxContainer/Weapon/HBoxContainer/PanelContainer" unique_id=290810549]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.47058824, 1)
+theme_override_fonts/font = ExtResource("4_wsoap")
+theme_override_font_sizes/font_size = 26
+text = "??-?????"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Weapon" unique_id=449405813]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer/Weapon" unique_id=1410081972]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer/Weapon/HBoxContainer2" unique_id=1898827944]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="treasure_list/PanelContainer/VBoxContainer/Weapon/HBoxContainer2/VBoxContainer" unique_id=549899407]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.47058824, 1)
+theme_override_fonts/font = ExtResource("4_wsoap")
+theme_override_font_sizes/font_size = 30
+text = "攻击力：?
+攻击范围：?
+"
+
+[node name="Control2" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/Weapon" unique_id=576384835]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="treasure_list/PanelContainer/VBoxContainer" unique_id=1893170185]
+layout_mode = 2
+alignment = 1
+
+[node name="ignore" type="Button" parent="treasure_list/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1837093154]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_wsoap")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_jd7h6")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5h3dt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_816p8")
+text = "ignore"
+
+[node name="Control" type="Control" parent="treasure_list/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1981963705]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+
+[node name="take" type="Button" parent="treasure_list/PanelContainer/VBoxContainer/HBoxContainer" unique_id=341505691]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_wsoap")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_awv35")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4b")
+theme_override_styles/hover = SubResource("StyleBoxFlat_367ea")
+text = "take"
+
+[connection signal="pressed" from="Control/TextureButton" to="." method="_on_texture_button_pressed"]
+[connection signal="pressed" from="treasure_list/PanelContainer/VBoxContainer/HBoxContainer/ignore" to="." method="_on_ignore_pressed"]
+[connection signal="pressed" from="treasure_list/PanelContainer/VBoxContainer/HBoxContainer/take" to="." method="_on_take_pressed"]

@@ -1,0 +1,309 @@
+[gd_scene format=3 uid="uid://cnn5eel5fobb3"]
+
+[ext_resource type="Texture2D" uid="uid://vy7xi0cmdcsf" path="res://assets/page/cmd.png" id="1_8r1wq"]
+[ext_resource type="Script" uid="uid://c61p5b2ituog5" path="res://scripts/shop.gd" id="1_ajxib"]
+[ext_resource type="Texture2D" uid="uid://c7j4jqy0v35cb" path="res://assets/page/quit1.png" id="2_ajxib"]
+[ext_resource type="Texture2D" uid="uid://1vrmdml76gf0" path="res://assets/page/quit3.png" id="3_y6sft"]
+[ext_resource type="Texture2D" uid="uid://b05v6i8ieonfe" path="res://assets/page/quit2.png" id="4_m4ofw"]
+[ext_resource type="FontFile" uid="uid://dtycrfgtyobi5" path="res://assets/fonts/VT323-Regular.ttf" id="5_heatd"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="6_1v8qu"]
+[ext_resource type="PackedScene" uid="uid://dhxkboudpjdol" path="res://scenes/commodity/card_commodity.tscn" id="8_y6sft"]
+[ext_resource type="PackedScene" uid="uid://bwda2v0jyn55v" path="res://scenes/commodity/weapon_commodity.tscn" id="9_heatd"]
+[ext_resource type="PackedScene" uid="uid://dbgpuf8gpijp6" path="res://scenes/Card/Information_unit.tscn" id="9_m4ofw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44xle"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_24it5"]
+load_path = "res://.godot/imported/normal_smile.png-75691ace34d244c968c8ab04dc58360b.ctex"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7mqwv"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m4ofw"]
+content_margin_left = 14.0
+content_margin_top = 14.0
+content_margin_right = 14.0
+content_margin_bottom = 14.0
+bg_color = Color(0.29984972, 0.67368364, 0.62395, 1)
+border_width_left = 20
+border_width_top = 20
+border_width_right = 20
+border_width_bottom = 20
+border_color = Color(0.44276372, 0.25895977, 0.09032931, 1)
+border_blend = true
+corner_radius_top_left = 11
+corner_radius_top_right = 11
+corner_radius_bottom_right = 11
+corner_radius_bottom_left = 11
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_heatd"]
+bg_color = Color(0, 0.6901961, 0.8901961, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1v8qu"]
+bg_color = Color(0, 0, 0.63529414, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.16078432, 0.16078432, 0.16078432, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_24it5"]
+bg_color = Color(0, 0, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="Shop" type="CanvasLayer" unique_id=125801 node_paths=PackedStringArray("expression", "word", "money", "plate", "hint", "energy_button")]
+script = ExtResource("1_ajxib")
+expression = NodePath("HBoxContainer2/PanelContainer/TextureRect")
+word = NodePath("HBoxContainer2/PanelContainer2/Label")
+money = NodePath("Label")
+plate = NodePath("PanelContainer")
+hint = NodePath("hint")
+energy_button = NodePath("energy_button")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2060002051]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_8r1wq")
+
+[node name="delete" type="TextureButton" parent="." unique_id=214124570]
+z_index = 2
+anchors_preset = -1
+anchor_left = 0.94200003
+anchor_top = 0.0050000004
+anchor_right = 0.99700004
+anchor_bottom = 0.07700001
+offset_left = -0.64001465
+offset_top = -0.40000057
+offset_right = 0.7598877
+offset_bottom = -0.16001129
+grow_horizontal = 0
+texture_normal = ExtResource("2_ajxib")
+texture_pressed = ExtResource("3_y6sft")
+texture_hover = ExtResource("4_m4ofw")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=664704945]
+anchors_preset = -1
+anchor_left = 0.030000001
+anchor_top = 0.028
+anchor_right = 0.098000005
+anchor_bottom = 0.071
+offset_left = -0.6000023
+offset_top = -0.24000168
+offset_right = 0.83999634
+offset_bottom = 0.3199997
+
+[node name="title" type="Label" parent="HBoxContainer" unique_id=1335106991]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_heatd")
+theme_override_font_sizes/font_size = 35
+text = "🛒shop"
+
+[node name="Label" type="RichTextLabel" parent="." unique_id=260413151]
+anchors_preset = -1
+anchor_left = 0.74200004
+anchor_top = 0.082
+anchor_right = 0.994
+anchor_bottom = 0.194
+offset_left = -117.64014
+offset_top = -0.5600052
+offset_right = 0.52001953
+offset_bottom = -1.5200043
+grow_horizontal = 0
+theme_override_fonts/normal_font = ExtResource("6_1v8qu")
+theme_override_font_sizes/normal_font_size = 62
+bbcode_enabled = true
+text = "目前剩余金额：1000"
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1732048068]
+anchors_preset = -1
+anchor_left = 0.008
+anchor_top = 0.080000006
+anchor_right = 0.42800003
+anchor_bottom = 0.194
+offset_left = -0.3600006
+offset_top = -0.40000916
+offset_right = 0.2399292
+offset_bottom = -0.5200043
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer2" unique_id=1813379239]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_44xle")
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer2/PanelContainer" unique_id=1313450011]
+custom_minimum_size = Vector2(123, 0)
+layout_mode = 2
+texture = SubResource("CompressedTexture2D_24it5")
+
+[node name="PanelContainer2" type="PanelContainer" parent="HBoxContainer2" unique_id=1969309801]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7mqwv")
+
+[node name="Label" type="Label" parent="HBoxContainer2/PanelContainer2" unique_id=370828009]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_1v8qu")
+theme_override_font_sizes/font_size = 51
+text = "来，看看我的货。"
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=2066958796]
+anchors_preset = -1
+anchor_left = 0.003
+anchor_top = 0.209
+anchor_right = 0.99700004
+anchor_bottom = 0.99500006
+offset_left = -0.7600002
+offset_top = 0.27999878
+offset_right = 0.7598877
+offset_bottom = 0.39990234
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_m4ofw")
+
+[node name="CardShop" type="Control" parent="PanelContainer" unique_id=602962598]
+visible = false
+layout_mode = 2
+
+[node name="card_commodity" parent="PanelContainer/CardShop" unique_id=1627980588 instance=ExtResource("8_y6sft")]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 112.0
+offset_right = 234.0
+offset_bottom = 292.0
+
+[node name="card_commodity2" parent="PanelContainer/CardShop" unique_id=1597362912 instance=ExtResource("8_y6sft")]
+layout_mode = 0
+offset_left = 363.0
+offset_top = 345.0
+offset_right = 499.0
+offset_bottom = 525.0
+
+[node name="card_commodity3" parent="PanelContainer/CardShop" unique_id=978348950 instance=ExtResource("8_y6sft")]
+layout_mode = 0
+offset_left = 648.0
+offset_top = 180.0
+offset_right = 784.0
+offset_bottom = 360.0
+
+[node name="card_commodity4" parent="PanelContainer/CardShop" unique_id=950664867 instance=ExtResource("8_y6sft")]
+layout_mode = 0
+offset_left = 970.0
+offset_top = 314.0
+offset_right = 1106.0
+offset_bottom = 494.0
+
+[node name="card_commodity5" parent="PanelContainer/CardShop" unique_id=301674389 instance=ExtResource("8_y6sft")]
+layout_mode = 0
+offset_left = 1263.0
+offset_top = 120.0
+offset_right = 1399.0
+offset_bottom = 300.0
+
+[node name="card_commodity6" parent="PanelContainer/CardShop" unique_id=2003024626 instance=ExtResource("8_y6sft")]
+layout_mode = 0
+offset_left = 1578.0
+offset_top = 283.0
+offset_right = 1714.0
+offset_bottom = 463.0
+
+[node name="WeaponShop" type="Control" parent="PanelContainer" unique_id=1099812939]
+layout_mode = 2
+
+[node name="weapon_commodity" parent="PanelContainer/WeaponShop" unique_id=1060897520 instance=ExtResource("9_heatd")]
+layout_mode = 0
+offset_left = 242.0
+offset_top = 163.0
+offset_right = 576.0
+offset_bottom = 597.0
+
+[node name="weapon_commodity2" parent="PanelContainer/WeaponShop" unique_id=732503649 instance=ExtResource("9_heatd")]
+layout_mode = 0
+offset_left = 761.0
+offset_top = 166.0
+offset_right = 1095.0
+offset_bottom = 600.0
+
+[node name="hint" type="VBoxContainer" parent="." unique_id=864572375]
+offset_left = 260.0
+offset_top = 408.0
+offset_right = 462.0
+offset_bottom = 608.0
+scale = Vector2(2, 2)
+theme_override_constants/separation = 0
+metadata/_edit_group_ = true
+
+[node name="PanelContainer" parent="hint" unique_id=1095313832 instance=ExtResource("9_m4ofw")]
+layout_mode = 2
+
+[node name="PanelContainer2" parent="hint" unique_id=855814252 instance=ExtResource("9_m4ofw")]
+layout_mode = 2
+
+[node name="PanelContainer3" parent="hint" unique_id=278040105 instance=ExtResource("9_m4ofw")]
+layout_mode = 2
+
+[node name="PanelContainer4" parent="hint" unique_id=1720220700 instance=ExtResource("9_m4ofw")]
+layout_mode = 2
+
+[node name="energy_button" type="Button" parent="." unique_id=157600011]
+anchors_preset = -1
+anchor_left = 0.82900006
+anchor_top = 0.89800006
+anchor_right = 0.98800004
+anchor_bottom = 0.97700006
+offset_left = -0.6800537
+offset_top = 0.15991211
+offset_right = 0.039916992
+offset_bottom = -0.16003418
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("6_1v8qu")
+theme_override_font_sizes/font_size = 46
+theme_override_styles/normal = SubResource("StyleBoxFlat_heatd")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1v8qu")
+theme_override_styles/hover = SubResource("StyleBoxFlat_24it5")
+text = "5格能量："
+
+[connection signal="pressed" from="delete" to="." method="_on_delete_pressed"]
+[connection signal="pressed" from="energy_button" to="." method="_on_energy_button_pressed"]

@@ -1,0 +1,135 @@
+[gd_scene format=3 uid="uid://bufwqdsvouwos"]
+
+[ext_resource type="Script" uid="uid://dke7uj8okbcv1" path="res://scripts/state_bar.gd" id="1_ebvjb"]
+[ext_resource type="Shader" uid="uid://c52agosxugf1c" path="res://shaders/mode_transition.gdshader" id="2_4ss83"]
+[ext_resource type="Texture2D" uid="uid://5yonjl63t8s2" path="res://assets/statebar/bar0.png" id="2_wrd3i"]
+[ext_resource type="Texture2D" uid="uid://buw74lumme4bh" path="res://assets/statebar/shoot_mode.png" id="3_4ss83"]
+[ext_resource type="Shader" uid="uid://b7jwak1k214hv" path="res://shaders/health.gdshader" id="3_ebvjb"]
+[ext_resource type="Texture2D" uid="uid://br2vidd57ybh4" path="res://assets/statebar/bar2.png" id="3_ry508"]
+[ext_resource type="Texture2D" uid="uid://daxaee6mvmkws" path="res://assets/statebar/bar1.png" id="4_ebvjb"]
+[ext_resource type="FontFile" uid="uid://dtycrfgtyobi5" path="res://assets/fonts/VT323-Regular.ttf" id="5_wrd3i"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2mh03"]
+shader = ExtResource("2_4ss83")
+shader_parameter/transition = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wrd3i"]
+shader = ExtResource("3_ebvjb")
+shader_parameter/deep_color = Color(0.15, 0.3, 0.65, 1)
+shader_parameter/mid_color = Color(0.3, 0.55, 0.9, 1)
+shader_parameter/bright_color = Color(0.6, 0.85, 1, 1)
+shader_parameter/flow_speed = 0.8
+shader_parameter/flow_scale = 4.0
+shader_parameter/heartbeat_speed = 1.0
+shader_parameter/heart_intensity = 0.4
+
+[node name="stateBar" type="Control" unique_id=1078510718 node_paths=PackedStringArray("decreaseBar", "healthBar", "health_label", "mode_bar", "mode_label", "Imode")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -998.0
+offset_bottom = -822.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ebvjb")
+decreaseBar = NodePath("HBoxContainer/Progress/ColorRect2")
+healthBar = NodePath("HBoxContainer/Progress/ColorRect")
+health_label = NodePath("HBoxContainer/Progress/Label")
+mode_bar = NodePath("mode_debuff/TextureProgressBar")
+mode_label = NodePath("mode_debuff/Label")
+Imode = NodePath("HBoxContainer/mode")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=254730347]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.17400001
+offset_right = -876.0
+offset_bottom = 0.107997894
+theme_override_constants/separation = 1
+
+[node name="mode" type="TextureRect" parent="HBoxContainer" unique_id=1512457070]
+material = SubResource("ShaderMaterial_2mh03")
+layout_mode = 2
+texture = ExtResource("3_4ss83")
+
+[node name="Progress" type="Control" parent="HBoxContainer" unique_id=2097418115]
+layout_mode = 2
+
+[node name="BarUnder" type="TextureRect" parent="HBoxContainer/Progress" unique_id=301000001]
+layout_mode = 1
+offset_right = 875.0
+offset_bottom = 45.0
+texture = ExtResource("2_wrd3i")
+stretch_mode = 4
+
+[node name="ColorRect2" type="ColorRect" parent="HBoxContainer/Progress" unique_id=1257662963]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 874.0
+offset_bottom = 44.0
+color = Color(0.8784314, 0.63529414, 0, 1)
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/Progress" unique_id=841229249]
+material = SubResource("ShaderMaterial_wrd3i")
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 534.0
+offset_bottom = 44.0
+
+[node name="BarOver" type="TextureRect" parent="HBoxContainer/Progress" unique_id=301000003]
+layout_mode = 1
+offset_right = 875.0
+offset_bottom = 45.0
+mouse_filter = 2
+texture = ExtResource("3_ry508")
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="HBoxContainer/Progress" unique_id=1699113588]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 41.0
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_wrd3i")
+theme_override_font_sizes/font_size = 34
+text = "22/100"
+vertical_alignment = 1
+
+[node name="mode_debuff" type="HBoxContainer" parent="." unique_id=1528768927]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.178
+anchor_right = 0.49300003
+anchor_bottom = 0.266
+offset_top = 0.07600021
+offset_right = 454.45398
+offset_bottom = 22.372002
+scale = Vector2(0.5, 0.5)
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="mode_debuff" unique_id=1211266476]
+layout_mode = 2
+texture_under = ExtResource("2_wrd3i")
+texture_over = ExtResource("3_ry508")
+texture_progress = ExtResource("4_ebvjb")
+
+[node name="Label" type="Label" parent="mode_debuff" unique_id=885000434]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_wrd3i")
+theme_override_font_sizes/font_size = 38
+text = "22"
+
+[node name="Buff" type="HFlowContainer" parent="." unique_id=1076516994]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.26700002
+anchor_right = 1.0
+anchor_bottom = 0.71300006
+offset_top = 0.11399841
+offset_right = -2.0
+offset_bottom = 0.04598999

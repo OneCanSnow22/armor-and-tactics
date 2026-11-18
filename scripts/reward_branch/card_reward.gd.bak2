@@ -1,0 +1,191 @@
+extends CanvasLayer
+@export var basket: HFlowContainer
+@export var Hint:Label
+@export var ban:Control
+@export var typing_speed: float = 15.0
+@export var refuseButton:Button
+## 本地枚举别名，方便引用
+const Func = Profile.Function
+
+## 有用模组 ID 列表（对应 Profile.Function 枚举整数值，排除 Lock=13、Blank=14）
+## 负面模组（One_off=11、Consume=12）也算有用模组，参与抽取
+const USEFUL_FUNCTIONS: Array[int] = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+
+## 各模组对应点数（绝对值用于计算稀有度权重）
+const FUNCTION_POINTS: Dictionary = {
+	0:  3,   # Forward
+	1:  3,   # Backward
+	2:  3,   # Discard_one
+	3:  4,   # Discard_two
+	4:  3,   # Draw_one
+	5:  4,   # Draw_two
+	6:  5,   # Draw_three
+	7:  4,   # Load
+	8:  4,   # Replace
+	9:  3,   # Swipe
+	10: 3,   # Turn
+	11: -4,  # One_off
+	12: -5,  # Consume
+}
+
+func _ready() -> void:
+	refuseButton.visible=false
+	Hint.visible_characters=0
+	
+	# 测试：生成3张卡牌
+	
+func _process(_delta: float) -> void:
+	pass
+
+## 创建一张随机卡牌，挂载到basket前需调用add_child
+func create_card(exclude_signatures: Array[String] = []) -> Card:
+	var card_scene = load("res://scenes/Card/card.tscn")
+	var card: Card = card_scene.instantiate() as Card
+	card.function_list.resize(4)
+
+	# 最多尝试 20 次，保证生成的卡与已有卡不重复（按模组组合签名去重）
+	var max_attempts: int = 20
+	for _attempt in range(max_attempts):
+		var max_function_num: int = get_random_weighted()   # 有用模组数量 1~4
+		var picked_types: Array[int] = []   # 本张卡已选模组类型，避免同类型重复
+		var current_points: int = 0
+		var success: bool = true
+
+		for slot in range(4):
+			card.function_list[slot] = Profile.create_function(Profile.Function.Lock)
+
+		for slot in range(max_function_num):
+			var chosen: int = pick_function(current_points, picked_types)
+			if chosen == -1:
+				# 剩余点数不足以放下任何有用模组，提前填 Lock
+				break
+			card.function_list[slot] = Profile.create_function(chosen as Profile.Function)
+			current_points += abs(FUNCTION_POINTS[chosen])
+			picked_types.append(chosen)
+
+		# 计算本张牌签名（有用模组 ID 排序后拼接）
+		var sig: String = _card_signature(picked_types)
+		if not exclude_signatures.has(sig):
+			return card
+		# 签名重复则重新生成
+		success = false
+
+	# 超过最大尝试次数，直接返回最后生成的卡（兜底）
+	return card
+
+## 计算卡牌模组签名，用于去重（将模组ID排序后拼接为字符串）
+func _card_signature(picked: Array[int]) -> String:
+	var sorted: Array[int] = picked.duplicate()
+	sorted.sort()
+	var parts: Array[String] = []
+	for id in sorted:
+		parts.append(str(id))
+	return ",".join(parts)
+
+## 从有用模组中随机选一个，保证加入后总点数不超 max_point，且不与已选模组重复
+## 返回 Profile.Function 枚举值，无法选时返回 -1
+func pick_function(current_points: int, exclude: Array[int] = []) -> int:
+	var remaining: int = Card.max_point - current_points
+
+	# 筛选候选：点数绝对值 <= remaining，且未被本张卡选过
+	var candidates: Array = []
+	for func_type in USEFUL_FUNCTIONS:
+		if exclude.has(func_type):
+			continue
+		var abs_pt: int = abs(FUNCTION_POINTS[func_type])
+		if abs_pt <= remaining:
+			candidates.append(func_type)
+
+	if candidates.is_empty():
+		return -1
+
+	# 稀有度权重：点数越大越稀有，权重 = max_abs_point + 1 - abs_point
+	var max_abs: int = 0
+	for func_type in candidates:
+		max_abs = max(max_abs, abs(FUNCTION_POINTS[func_type]))
+
+	var weights: Array = []
+	var total_weight: int = 0
+	for func_type in candidates:
+		var w: int = max_abs + 1 - abs(FUNCTION_POINTS[func_type])
+		weights.append(w)
+		total_weight += w
+
+	# 加权随机抽取
+	var rand_val: int = randi() % total_weight
+	var cumulative: int = 0
+	for i in range(candidates.size()):
+		cumulative += weights[i]
+		if rand_val < cumulative:
+			return candidates[i]
+
+	return candidates[0]  # 兜底
+
+## 随机加权返回有用模组数量（1~4），权重 80:10:2:1
+func get_random_weighted() -> int:
+	var weights: Array = [80, 10, 2, 1]
+	var total_weight: int = 0
+	for weight in weights:
+		total_weight += weight
+	var random_value: int = randi() % total_weight
+	var cumulative_weight: int = 0
+	for i in range(weights.size()):
+		cumulative_weight += weights[i]
+		if random_value < cumulative_weight:
+			return i + 1
+	return 1
+## 清除 basket 中所有卡牌节点
+## selected_card: 玩家已选择的卡（只 remove_child 保留节点），其余全 queue_free
+## 传 null 表示没有被选择的卡，全部 queue_free
+func clear_all_card(selected_card: Card = null) -> void:
+	if basket.get_child_count() > 0:
+		for child in basket.get_children():
+			if child == selected_card:
+				basket.remove_child(child)   # 保留节点，不销毁
+			else:
+				child.queue_free()           # 未被选中，销毁
+var ChosenCard:Card=null
+func ensure_card(card:Card):
+	ChosenCard=card
+	card.just_for_reward=false
+	card.just_for_check=false
+	Profile.Deck.append(card)
+	card.reward_is_chosen.disconnect(ensure_card)
+	ban.visible=true
+	clear_all_card(ChosenCard)
+	get_tree().change_scene_to_file("res://scenes/map.tscn")
+func create_reward() -> void: #生成奖励
+	type_hint()
+	clear_all_card(ChosenCard)
+	var signatures: Array[String] = []   # 已生成卡牌签名，用于去重
+	for _i in range(4):
+		var card: Card = create_card(signatures)
+		if card != null:
+			basket.add_child(card)
+			card.reward_is_chosen.connect(ensure_card)
+			card.display()
+			card.hide_stack()
+			card.just_for_check = true
+			card.just_for_reward = true
+			# 记录签名，下一张卡生成时排除
+			var picked: Array[int] = []
+			for fu in card.function_list:
+				if fu != null and fu.mode != Profile.Function.Lock:
+					picked.append(fu.mode as int)
+			signatures.append(_card_signature(picked))
+func type_hint():
+	var hint="选择其中一张加入库存"
+	var duration=hint.length()/typing_speed
+	Hint.text=hint
+	var tween=create_tween()
+	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.tween_property(Hint,"visible_characters",hint.length(),duration)
+	await tween.finished
+	ban.visible=false
+	refuseButton.visible=true
+
+
+func _on_button_pressed() -> void:
+	clear_all_card(null)
+	get_tree().change_scene_to_file("res://scenes/map.tscn")
+	pass # Replace with function body.

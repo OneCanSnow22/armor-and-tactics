@@ -1,0 +1,112 @@
+extends CanvasLayer
+@export var speaker:Speaker
+@export var melee_button:Button
+@export var shoot_button:Button
+@export var shelling_button:Button
+@export var context:Label
+@export var price:RichTextLabel
+@export var weapon_detail:PanelContainer
+@export var weapon_context:PanelContainer
+@export var weapon_list:VBoxContainer
+@export var space:Control
+@export var money_label:RichTextLabel
+var cost:int
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	refresh_money()
+	weapon_detail.visible=false
+	weapon_context.visible=false
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_melee_button_pressed() -> void:
+	weapon_context.visible=true
+	space.custom_minimum_size.x=0
+	_apply_all_button()
+	melee_button.disabled=true
+	show_list(Profile.item.meleeBag)
+	pass # Replace with function body.
+func _apply_all_button():
+	melee_button.disabled=false
+	shoot_button.disabled=false
+	shelling_button.disabled=false
+
+
+func _on_shoot_button_pressed() -> void:
+	weapon_context.visible=true
+	space.custom_minimum_size.x=220
+	_apply_all_button()
+	shoot_button.disabled=true
+	show_list(Profile.item.shootBag)
+	pass # Replace with function body.
+
+
+func _on_shelling_button_pressed() -> void:
+	weapon_context.visible=true
+	space.custom_minimum_size.x=440
+	_apply_all_button()
+	shelling_button.disabled=true
+	show_list(Profile.item.shellingBag)
+	pass # Replace with function body.
+func show_text(mode:Profile.Attack):
+	if mode==null:
+		weapon_detail.visible=false
+	else:
+		weapon_detail.visible=true
+		context.text="攻击力：%d\n"%mode.damage
+		if mode is Profile.Melee:
+			context.text+="攻击范围：%d"%mode.max_range
+		elif mode is Profile.Shoot:
+			context.text+="命中率：%d%%"%mode.max_probability
+			if mode is Profile.Through_shoot:
+				context.text+="\n贯穿等级：Level%d"%mode.level
+		elif mode is Profile.Shelling:
+			if mode.firebomb.isCanBeUsed:
+				context.text+="燃烧弹可装备\n"
+			if mode.flashbang.isCanBeUsed:
+				context.text+="闪光弹可装备\n"
+			if mode.flare.isCanBeUsed:
+				context.text+="干扰弹可装备\n"
+			if mode is Profile.Multi_target_missile:
+				context.text+="可打击多个目标\n"
+			elif mode is Profile.Sputtering_type_artillery:
+				context.text+="溅射范围：%d\n"%mode.sputter_range
+			context.text+="需要等待回合数：%d"%mode.max_time
+		
+func clear_list():
+	for _i in weapon_list.get_children():
+		weapon_list.remove_child(_i)
+		_i.queue_free()
+func show_list(value:Array):
+	clear_list()
+	var weapon_select=load("res://scenes/weapon_select.tscn")
+	for _i in value:
+		if !is_equipped(_i):
+			var unit =weapon_select.instantiate()
+			weapon_list.add_child(unit)
+			unit.set_weapon(_i)
+			unit.weapon_selected.connect(show_text)
+			unit.cost_is_input.connect(cost_is_on)
+func is_equipped(mode:Profile.Attack)->bool:
+	if mode is Profile.Melee:
+		if mode==Profile.player.melee:
+			return true
+	elif mode is Profile.Shoot:
+		if mode==Profile.player.shoot:
+			return true
+	elif mode is Profile.Shelling:
+		if mode== Profile.player.shelling:
+			return true
+	return false
+func refresh_money():
+	money_label.text="当前剩余金额:[color=#FFD700]%d[/color]"%Profile.item.money
+func cost_is_on(value:int):
+	price.text="收购价：[color=#FFD700]%d[/color]"%value
+	cost=value
+func money_is_input(value:int):#cost加入money，money_label重新更新
+	

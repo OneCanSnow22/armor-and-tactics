@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dkqc8mdg26v3j"]
+
+[ext_resource type="Script" uid="uid://dh3owscdtwhyo" path="res://scripts/floating_text.gd" id="1_1bgbr"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="2_tpxm1"]
+
+[node name="floating_text" type="Label" unique_id=2034001788]
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("2_tpxm1")
+theme_override_font_sizes/font_size = 40
+text = "22"
+horizontal_alignment = 1
+script = ExtResource("1_1bgbr")

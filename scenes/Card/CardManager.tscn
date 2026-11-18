@@ -1,0 +1,287 @@
+[gd_scene format=3 uid="uid://22rik1iljku2"]
+
+[ext_resource type="Script" uid="uid://dvsaikj7p44nt" path="res://scripts/card_manager.gd" id="1_4h2bo"]
+[ext_resource type="Texture2D" uid="uid://bmlqep77f4ari" path="res://assets/cards/other/Column2.png" id="1_vn20r"]
+[ext_resource type="Texture2D" uid="uid://ce0txtl7kc82i" path="res://assets/cards/other/button1.png" id="2_v1hjo"]
+[ext_resource type="Texture2D" uid="uid://dj3f8hp51gc0k" path="res://assets/cards/other/button3.png" id="3_4h2bo"]
+[ext_resource type="Texture2D" uid="uid://bgis844d2lyxe" path="res://assets/cards/other/button2.png" id="4_3lkf0"]
+[ext_resource type="Texture2D" uid="uid://3hwodheij0hq" path="res://assets/cards/other/button6.png" id="5_th0w4"]
+[ext_resource type="Texture2D" uid="uid://celw15n3tybbn" path="res://assets/cards/other/button7.png" id="6_3lkf0"]
+[ext_resource type="Texture2D" uid="uid://ccawk2clwityj" path="res://assets/cards/other/button4.png" id="6_yrumn"]
+[ext_resource type="Texture2D" uid="uid://ce5u6ouvvv1md" path="res://assets/cards/other/button5.png" id="7_gnklg"]
+[ext_resource type="Texture2D" uid="uid://dy0rj5c4hkvpi" path="res://assets/cards/other/button8.png" id="10_th0w4"]
+[ext_resource type="Texture2D" uid="uid://pnplq3epg3n7" path="res://assets/cards/other/check1.png" id="11_nx06y"]
+[ext_resource type="Texture2D" uid="uid://bwow2vchs1j6i" path="res://assets/cards/other/check2.png" id="12_13jaj"]
+[ext_resource type="FontFile" uid="uid://dtycrfgtyobi5" path="res://assets/fonts/VT323-Regular.ttf" id="13_ceu4e"]
+[ext_resource type="Texture2D" uid="uid://cc4iwnqcq8xwy" path="res://assets/cards/other/check3.png" id="14_cbfh1"]
+[ext_resource type="Texture2D" uid="uid://taxw2evd8bcv" path="res://assets/cards/other/check4.png" id="15_cpa7p"]
+[ext_resource type="Texture2D" uid="uid://cblxbipw3efrj" path="res://assets/cards/other/check5.png" id="16_gbgrf"]
+[ext_resource type="Texture2D" uid="uid://dv8nehetxjqtc" path="res://assets/cards/other/check6.png" id="17_xeddg"]
+[ext_resource type="Texture2D" uid="uid://cfsato7wq57kx" path="res://assets/cards/other/stack.png" id="18_13jaj"]
+[ext_resource type="PackedScene" uid="uid://cgahfidb21vd8" path="res://scenes/Card/detail_information.tscn" id="19_cbfh1"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="20_cbfh1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cpa7p"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.3372549, 0.3372549, 0.3372549, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Card_manager" type="CanvasLayer" unique_id=1386899687 node_paths=PackedStringArray("draw_label", "discard_label", "consume_label", "alarm", "ban", "finished_button", "submit_button", "ban_interact", "subutton", "draw_deck_button", "discard_deck_button", "consume_deck_button")]
+script = ExtResource("1_4h2bo")
+draw_label = NodePath("VBoxContainer/HBoxContainer/HBoxContainer/Label")
+discard_label = NodePath("VBoxContainer/HBoxContainer/HBoxContainer2/Label")
+consume_label = NodePath("VBoxContainer/HBoxContainer/HBoxContainer3/Label")
+alarm = NodePath("ScaleRoot/Column/TextureRect/next/alarm")
+ban = NodePath("ScaleRoot/Column/TextureRect/ban")
+finished_button = NodePath("FinishedButton")
+submit_button = NodePath("SubmitButton")
+ban_interact = NodePath("Baninteract")
+subutton = NodePath("SubmitButton/Button")
+draw_deck_button = NodePath("VBoxContainer/HBoxContainer/HBoxContainer/TextureButton")
+discard_deck_button = NodePath("VBoxContainer/HBoxContainer/HBoxContainer2/TextureButton")
+consume_deck_button = NodePath("VBoxContainer/HBoxContainer/HBoxContainer3/TextureButton")
+
+[node name="Baninteract" type="ColorRect" parent="." unique_id=1333565972]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.11372549, 0.11372549, 0.11372549, 0.21960784)
+
+[node name="Stack1" type="ColorRect" parent="Baninteract" unique_id=1622725526]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 640.0
+grow_vertical = 2
+
+[node name="Stack2" type="ColorRect" parent="Baninteract" unique_id=388432664]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_right = 320.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Stack3" type="ColorRect" parent="Baninteract" unique_id=882464639]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -640.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="ScaleRoot" type="Control" parent="." unique_id=1973348735]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Column" type="HBoxContainer" parent="ScaleRoot" unique_id=1362396604]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -166.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="ScaleRoot/Column" unique_id=5072085]
+layout_mode = 2
+texture = ExtResource("1_vn20r")
+
+[node name="previous" type="TextureButton" parent="ScaleRoot/Column/TextureRect" unique_id=725806958]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 22.0
+offset_right = 64.0
+offset_bottom = 142.0
+texture_normal = ExtResource("2_v1hjo")
+texture_pressed = ExtResource("3_4h2bo")
+texture_hover = ExtResource("4_3lkf0")
+texture_disabled = ExtResource("6_3lkf0")
+
+[node name="next" type="TextureButton" parent="ScaleRoot/Column/TextureRect" unique_id=965854239]
+layout_mode = 0
+offset_left = 1016.0
+offset_top = 22.0
+offset_right = 1056.0
+offset_bottom = 142.0
+texture_normal = ExtResource("5_th0w4")
+texture_pressed = ExtResource("6_yrumn")
+texture_hover = ExtResource("7_gnklg")
+texture_disabled = ExtResource("10_th0w4")
+
+[node name="alarm" type="ColorRect" parent="ScaleRoot/Column/TextureRect/next" unique_id=1871160875]
+layout_mode = 0
+offset_left = 35.0
+offset_top = -4.0
+offset_right = 45.0
+offset_bottom = 6.0
+color = Color(1, 0, 0, 1)
+
+[node name="Context" type="Control" parent="ScaleRoot/Column/TextureRect" unique_id=374007383]
+clip_contents = true
+anchors_preset = 0
+offset_left = 68.0
+offset_top = 22.0
+offset_right = 1012.0
+offset_bottom = 142.0
+
+[node name="ban" type="Control" parent="ScaleRoot/Column/TextureRect" unique_id=1426743275]
+anchors_preset = 0
+offset_right = 1080.0
+offset_bottom = 166.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1277675040]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 52.0
+offset_top = -177.0
+offset_right = 216.0
+offset_bottom = -91.0
+grow_vertical = 0
+scale = Vector2(2, 2)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1188737488]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=545579267]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=94805078]
+layout_mode = 2
+texture_normal = ExtResource("11_nx06y")
+texture_hover = ExtResource("12_13jaj")
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer" unique_id=420626075]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_fonts/font = ExtResource("13_ceu4e")
+theme_override_font_sizes/font_size = 20
+text = "24"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1018969898]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=1475619621]
+layout_mode = 2
+texture_normal = ExtResource("14_cbfh1")
+texture_hover = ExtResource("15_cpa7p")
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer2" unique_id=633097215]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("13_ceu4e")
+theme_override_font_sizes/font_size = 20
+text = "24"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1073793532]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer/HBoxContainer/HBoxContainer3" unique_id=1353398486]
+layout_mode = 2
+texture_normal = ExtResource("16_gbgrf")
+texture_hover = ExtResource("17_xeddg")
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HBoxContainer3" unique_id=63083568]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 1, 1)
+theme_override_fonts/font = ExtResource("13_ceu4e")
+theme_override_font_sizes/font_size = 20
+text = "24"
+
+[node name="StackBar" type="TextureRect" parent="VBoxContainer" unique_id=1607108927]
+layout_mode = 2
+texture = ExtResource("18_13jaj")
+
+[node name="stack1" type="ColorRect" parent="VBoxContainer/StackBar" unique_id=2012840733]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 7.0
+offset_right = 57.0
+offset_bottom = 43.0
+color = Color(1, 1, 1, 0)
+
+[node name="stack2" type="ColorRect" parent="VBoxContainer/StackBar" unique_id=1187246030]
+layout_mode = 0
+offset_left = 58.0
+offset_top = 7.0
+offset_right = 106.0
+offset_bottom = 43.0
+color = Color(1, 1, 1, 0)
+
+[node name="stack3" type="ColorRect" parent="VBoxContainer/StackBar" unique_id=1536139667]
+layout_mode = 0
+offset_left = 107.0
+offset_top = 7.0
+offset_right = 155.0
+offset_bottom = 43.0
+color = Color(1, 1, 1, 0)
+
+[node name="PanelContainer" parent="." unique_id=1981669763 instance=ExtResource("19_cbfh1")]
+
+[node name="FinishedButton" type="PanelContainer" parent="." unique_id=961478420]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -138.0
+offset_top = -279.0
+offset_right = 146.0
+offset_bottom = -191.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(142, 44)
+theme_override_styles/panel = SubResource("StyleBoxFlat_cpa7p")
+
+[node name="Button" type="Button" parent="FinishedButton" unique_id=248697479]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72156864, 0.72156864, 0.72156864, 1)
+theme_override_fonts/font = ExtResource("20_cbfh1")
+theme_override_font_sizes/font_size = 50
+text = "结束回合"
+
+[node name="SubmitButton" type="PanelContainer" parent="." unique_id=1458941601]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -138.0
+offset_top = -279.0
+offset_right = 146.0
+offset_bottom = -191.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(142, 44)
+theme_override_styles/panel = SubResource("StyleBoxFlat_cpa7p")
+
+[node name="Button" type="Button" parent="SubmitButton" unique_id=243269207]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72156864, 0.72156864, 0.72156864, 1)
+theme_override_fonts/font = ExtResource("20_cbfh1")
+theme_override_font_sizes/font_size = 50
+text = "提交"
+
+[connection signal="pressed" from="FinishedButton/Button" to="." method="_on_finished_button_pressed"]

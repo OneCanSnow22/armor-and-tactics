@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://ba2b4k31u2vpw"]
+
+[ext_resource type="Texture2D" uid="uid://clxnh1dafh46i" path="res://assets/chessboard/energy/energy_bar.png" id="1_vuxuq"]
+[ext_resource type="Script" uid="uid://ofdeit716ddt" path="res://scripts/energy_bar.gd" id="2_energybar"]
+[ext_resource type="Texture2D" uid="uid://b4r2r61lqrujd" path="res://assets/chessboard/ui.png" id="3_ixhji"]
+[ext_resource type="PackedScene" uid="uid://c85mioi3s3gln" path="res://scenes/cmd.tscn" id="4_jv3pu"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jyvkc"]
+texture = ExtResource("1_vuxuq")
+expand_margin_left = 30.0
+expand_margin_top = 26.0
+expand_margin_right = 32.0
+expand_margin_bottom = 30.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jv3pu"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wsqcc"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ftf2b"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yhjl0"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4xxyu"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uw4cn"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(16, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n2d7n"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0g65k"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vxbpt"]
+atlas = ExtResource("3_ixhji")
+region = Rect2(16, 0, 16, 16)
+
+[node name="information" type="CanvasLayer" unique_id=1052764519]
+
+[node name="EnergyBar" type="PanelContainer" parent="." unique_id=1908757180]
+anchors_preset = -1
+anchor_right = 0.72400004
+anchor_bottom = 0.127
+offset_left = 24.0
+offset_top = 15.0
+offset_right = 273.91992
+offset_bottom = 39.839996
+scale = Vector2(0.8178008, 0.5883981)
+theme_override_styles/panel = SubResource("StyleBoxTexture_jyvkc")
+metadata/_edit_group_ = true
+
+[node name="bar" type="HBoxContainer" parent="EnergyBar" unique_id=1941997031]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+script = ExtResource("2_energybar")
+
+[node name="select" type="HBoxContainer" parent="." unique_id=1686095937]
+offset_left = 44.0
+offset_top = 141.0
+offset_right = 102.0
+offset_bottom = 181.0
+scale = Vector2(4, 4)
+theme_override_constants/separation = 5
+
+[node name="button1" type="TextureButton" parent="select" unique_id=1951357186]
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_jv3pu")
+texture_pressed = SubResource("AtlasTexture_wsqcc")
+texture_hover = SubResource("AtlasTexture_ftf2b")
+
+[node name="button2" type="TextureButton" parent="select" unique_id=192011925]
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_yhjl0")
+texture_pressed = SubResource("AtlasTexture_4xxyu")
+texture_hover = SubResource("AtlasTexture_uw4cn")
+
+[node name="button3" type="TextureButton" parent="select" unique_id=485305175]
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_n2d7n")
+texture_pressed = SubResource("AtlasTexture_0g65k")
+texture_hover = SubResource("AtlasTexture_vxbpt")
+
+[node name="cmd" parent="." unique_id=202584575 instance=ExtResource("4_jv3pu")]

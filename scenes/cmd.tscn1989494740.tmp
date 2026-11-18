@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://c85mioi3s3gln"]
+
+[ext_resource type="Texture2D" uid="uid://vy7xi0cmdcsf" path="res://assets/page/cmd.png" id="1_fdl6v"]
+[ext_resource type="Script" uid="uid://dilbcvpprgiyb" path="res://scripts/cmd.gd" id="2_bhsxn"]
+[ext_resource type="Texture2D" uid="uid://c7j4jqy0v35cb" path="res://assets/page/quit1.png" id="3_7ef5s"]
+[ext_resource type="Texture2D" uid="uid://1vrmdml76gf0" path="res://assets/page/quit3.png" id="4_i5kn2"]
+[ext_resource type="Texture2D" uid="uid://b05v6i8ieonfe" path="res://assets/page/quit2.png" id="5_7sbcw"]
+[ext_resource type="FontFile" uid="uid://dtycrfgtyobi5" path="res://assets/fonts/VT323-Regular.ttf" id="6_f54bt"]
+[ext_resource type="PackedScene" uid="uid://c81vx1a47mxea" path="res://scenes/Card/card.tscn" id="7_bhsxn"]
+[ext_resource type="PackedScene" uid="uid://cgahfidb21vd8" path="res://scenes/Card/detail_information.tscn" id="8_7ef5s"]
+
+[node name="cmd" type="TextureRect" unique_id=202584575 node_paths=PackedStringArray("card_main")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+texture = ExtResource("1_fdl6v")
+script = ExtResource("2_bhsxn")
+card_main = NodePath("Card_Main")
+
+[node name="delete" type="TextureButton" parent="." unique_id=1233939649]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -112.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = 83.0
+grow_horizontal = 0
+texture_normal = ExtResource("3_7ef5s")
+texture_pressed = ExtResource("4_i5kn2")
+texture_hover = ExtResource("5_7sbcw")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=233931057]
+layout_mode = 0
+offset_left = 57.0
+offset_top = 30.0
+offset_right = 189.0
+offset_bottom = 77.0
+
+[node name="title" type="Label" parent="HBoxContainer" unique_id=1078192509]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_f54bt")
+theme_override_font_sizes/font_size = 35
+text = "🛒shop"
+
+[node name="context" type="RichTextLabel" parent="." unique_id=1206459664]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 90.0
+offset_right = 1904.0
+offset_bottom = 947.0
+theme_override_fonts/normal_font = ExtResource("6_f54bt")
+theme_override_font_sizes/normal_font_size = 65
+bbcode_enabled = true
+
+[node name="input" type="LineEdit" parent="." unique_id=222804075]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -95.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_placeholder_color = Color(0.5, 0.5, 0.5, 0.5)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("6_f54bt")
+theme_override_font_sizes/font_size = 65
+placeholder_text = "输入命令..."
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Card_Main" type="Control" parent="." unique_id=1251827437]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 90.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CardList" type="ScrollContainer" parent="Card_Main" unique_id=669069445]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 11.0
+offset_top = 4.0
+offset_right = 971.0
+offset_bottom = -17.0
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="HFlowContainer" type="HFlowContainer" parent="Card_Main/CardList" unique_id=1069235424]
+custom_minimum_size = Vector2(960, 964)
+layout_mode = 2
+theme_override_constants/h_separation = 18
+theme_override_constants/v_separation = 18
+
+[node name="Card" parent="Card_Main/CardList/HFlowContainer" unique_id=1249424169 instance=ExtResource("7_bhsxn")]
+layout_mode = 2
+
+[node name="Card2" parent="Card_Main/CardList/HFlowContainer" unique_id=303726811 instance=ExtResource("7_bhsxn")]
+layout_mode = 2
+
+[node name="Card3" parent="Card_Main/CardList/HFlowContainer" unique_id=712170494 instance=ExtResource("7_bhsxn")]
+layout_mode = 2
+
+[node name="Card4" parent="Card_Main/CardList/HFlowContainer" unique_id=1249647065 instance=ExtResource("7_bhsxn")]
+layout_mode = 2
+
+[node name="Card5" parent="Card_Main/CardList/HFlowContainer" unique_id=568537421 instance=ExtResource("7_bhsxn")]
+layout_mode = 2
+
+[node name="Card6" parent="Card_Main/CardList/HFlowContainer" unique_id=1298625773 instance=ExtResource("7_bhsxn")]
+layout_mode = 2
+
+[node name="Card7" parent="Card_Main/CardList/HFlowContainer" unique_id=1550451529 instance=ExtResource("7_bhsxn")]
+layout_mode = 2
+
+[node name="PanelContainer" parent="Card_Main" unique_id=1981669763 instance=ExtResource("8_7ef5s")]
+layout_mode = 1
+anchors_preset = 11
+anchor_top = 0.0
+offset_left = -768.0
+offset_top = 117.0
+offset_right = -568.0
+offset_bottom = -669.0
+grow_vertical = 2
+scale = Vector2(3, 3)
+
+[connection signal="pressed" from="delete" to="." method="_on_delete_pressed"]

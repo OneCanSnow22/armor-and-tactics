@@ -1,0 +1,45 @@
+extends Label
+
+## 浮动伤害数字，受击时实例化，播放弹射动画后自动销毁。
+
+func _ready() -> void:
+	# 随机水平散布
+	position.x += randf_range(-60, 20)
+	# 随机初始旋转，增加动感
+	rotation = randf_range(-0.2, 0.2)
+
+	var tween := create_tween()
+
+	# 第一阶段：弹出冲击（0.1秒）— 快速放大到 1.5 倍 + 向上弹射
+	tween.set_parallel(true)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.1)
+	tween.tween_property(self, "position:y", position.y - 30, 0.15)
+	tween.set_parallel(false)
+
+	# 第二阶段：回落 + 缩小回弹（0.15秒）— 缩小到 0.9 再回 1.1，模拟弹性
+	tween.set_parallel(true)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", Vector2(0.9, 0.9), 0.1)
+	tween.tween_property(self, "position:y", position.y - 5, 0.1)
+	tween.set_parallel(false)
+
+	# 第三阶段：弹到最终大小
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", Vector2.ONE, 0.08)
+
+	# 第四阶段：缓慢上浮 + 旋转 + 淡出（同时进行）
+	tween.set_parallel(true)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.tween_property(self, "position:y", position.y - 50, 0.6)
+	tween.tween_property(self, "rotation", rotation + randf_range(-0.3, 0.3), 0.6)
+	tween.tween_property(self, "modulate:a", 0.0, 0.5)
+
+	# 动画结束销毁
+	tween.chain().tween_callback(queue_free)
+
+func set_value(value: int) -> void:
+	text = str(value)
+func set_miss():
+	text="miss"

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://d15g1gmlljbrx"]
+
+[ext_resource type="Script" uid="uid://xn4c1ipian6q" path="res://scripts/reward_branch/repair_reward.gd" id="1_q3hp2"]
+[ext_resource type="PackedScene" uid="uid://c85mioi3s3gln" path="res://scenes/cmd.tscn" id="2_n2efw"]
+
+[node name="RepairReward" type="CanvasLayer" unique_id=1727955930 node_paths=PackedStringArray("page")]
+script = ExtResource("1_q3hp2")
+page = NodePath("cmd")
+
+[node name="cmd" parent="." unique_id=202584575 instance=ExtResource("2_n2efw")]

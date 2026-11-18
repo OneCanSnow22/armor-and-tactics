@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://dluqch1ybr1d7"]
+
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="1_5dhyh"]
+[ext_resource type="Script" uid="uid://bnuoc3autfic5" path="res://scripts/main_button.gd" id="1_6e1ow"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6e1ow"]
+bg_color = Color(0.627451, 0.627451, 0.627451, 0)
+border_width_left = 5
+border_color = Color(0.6509804, 0.8862745, 0.18039216, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tvldp"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.64705884, 0.64705884, 0.64705884, 0)
+
+[node name="PanelContainer" type="PanelContainer" unique_id=193452783 node_paths=PackedStringArray("space", "button_text", "button")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_6e1ow")
+script = ExtResource("1_6e1ow")
+space = NodePath("HBoxContainer/space")
+button_text = NodePath("HBoxContainer/PanelContainer/Label")
+button = NodePath("TextureButton")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1582579640]
+layout_mode = 2
+
+[node name="space" type="Control" parent="HBoxContainer" unique_id=119276637]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=1497940848]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tvldp")
+
+[node name="Label" type="Label" parent="HBoxContainer/PanelContainer" unique_id=594501479]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.8862745, 0.18039216, 1)
+theme_override_fonts/font = ExtResource("1_5dhyh")
+theme_override_font_sizes/font_size = 62
+text = "开始游戏"
+
+[node name="Control" type="Control" parent="HBoxContainer" unique_id=84396980]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=885108434]
+layout_mode = 2
+
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_texture_button_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_texture_button_mouse_exited"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

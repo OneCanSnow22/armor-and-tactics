@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://xe2tkdv360rt"]
+
+[ext_resource type="Script" uid="uid://y4gx4d3wngvo" path="res://scripts/turn_title.gd" id="1_title"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="2_font"]
+
+[node name="turn_title" type="Label" unique_id=989300941]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -38.5
+offset_right = 0.5
+offset_bottom = 38.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.1, 0.1, 0.8)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 70
+horizontal_alignment = 1
+script = ExtResource("1_title")

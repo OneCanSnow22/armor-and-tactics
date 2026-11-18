@@ -1,0 +1,648 @@
+[gd_scene format=3 uid="uid://d5rc2mh34qnv"]
+
+[ext_resource type="Texture2D" uid="uid://b3hiicjsdxwle" path="res://assets/workshop/background.png" id="1_acb0r"]
+[ext_resource type="Script" uid="uid://cyep52o8vo4vp" path="res://scripts/workshop.gd" id="1_cy215"]
+[ext_resource type="Texture2D" uid="uid://c7j4jqy0v35cb" path="res://assets/page/quit1.png" id="2_35y6k"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="3_35y6k"]
+[ext_resource type="Texture2D" uid="uid://1vrmdml76gf0" path="res://assets/page/quit3.png" id="3_cy215"]
+[ext_resource type="Texture2D" uid="uid://b05v6i8ieonfe" path="res://assets/page/quit2.png" id="4_4xjol"]
+[ext_resource type="Texture2D" uid="uid://dil76q1eb3pw2" path="res://assets/cards/card_need_add.png" id="4_gdjy1"]
+[ext_resource type="Texture2D" uid="uid://bop6i11raour8" path="res://assets/workshop/page1.png" id="5_gdjy1"]
+[ext_resource type="Texture2D" uid="uid://cs1nsyg47yxhx" path="res://assets/workshop/page2.png" id="6_15wdr"]
+[ext_resource type="PackedScene" uid="uid://c81vx1a47mxea" path="res://scenes/Card/card.tscn" id="6_gdjy1"]
+[ext_resource type="PackedScene" uid="uid://bqdao1on5af7e" path="res://scenes/Card/select_function.tscn" id="8_15wdr"]
+[ext_resource type="PackedScene" uid="uid://dbgpuf8gpijp6" path="res://scenes/Card/Information_unit.tscn" id="9_f1oc0"]
+[ext_resource type="Texture2D" uid="uid://cpbc1i7xv00mn" path="res://assets/statebar/gear.png" id="13_5p7st"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_45mnr"]
+bg_color = Color(0.011764706, 0.3529412, 0.1764706, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f1oc0"]
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.45882353, 0.4627451, 0.4627451, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5p7st"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.34904912, 0.35241657, 0.35241657, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w36ov"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.45882353, 0.4627451, 0.4627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_im6k6"]
+bg_color = Color(0.3019608, 0.3019608, 0.3019608, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.16078432, 0.16078432, 0.16078432, 1)
+corner_radius_bottom_right = 40
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cy215"]
+bg_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_35y6k"]
+bg_color = Color(0.02745098, 0.02745098, 0.02745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4xjol"]
+bg_color = Color(0.4817894, 0.48178953, 0.4817894, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gdjy1"]
+bg_color = Color(0.02745098, 0.02745098, 0.02745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_15wdr"]
+bg_color = Color(0.02745098, 0.02745098, 0.02745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vyga0"]
+bg_color = Color(0.09620472, 0.09620475, 0.09620469, 1)
+border_color = Color(0.21960784, 0.24705882, 0.25490198, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w31ll"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.6, 0.6, 0.8235294, 1)
+border_color = Color(0.21960784, 0.24705882, 0.25490198, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="Workshop" type="CanvasLayer" unique_id=1724108347 node_paths=PackedStringArray("expand_page", "rewrite_page", "expand_button", "rewrite_button", "money_label", "Selected_card", "card_list", "card_display", "ban", "basket", "frame", "approve_button", "tear_frame", "tear_basket", "current_money", "cost", "mode_number", "function_frame", "column", "gear", "progress", "gear_background", "display_line")]
+script = ExtResource("1_cy215")
+expand_page = NodePath("page1")
+rewrite_page = NodePath("page2")
+expand_button = NodePath("expand")
+rewrite_button = NodePath("rewrite")
+money_label = NodePath("page1/money")
+Selected_card = NodePath("page1/list")
+card_list = NodePath("page1/ScrollContainer/HFlowContainer")
+card_display = NodePath("page1/list/TextureButton/func_background")
+ban = NodePath("page1/list/TextureButton/Control")
+basket = NodePath("page2/PanelContainer/ScrollContainer/basket")
+frame = NodePath("page2/PanelContainer")
+approve_button = NodePath("page2/VBoxContainer/HBoxContainer2/Button")
+tear_frame = NodePath("page2/PanelContainer2")
+tear_basket = NodePath("page2/PanelContainer2/VBoxContainer/ScrollContainer/basket")
+current_money = NodePath("page2/PanelContainer2/VBoxContainer/PanelContainer/VBoxContainer/current_money")
+cost = NodePath("page2/PanelContainer2/VBoxContainer/PanelContainer/VBoxContainer/cost")
+mode_number = NodePath("page2/PanelContainer2/VBoxContainer/PanelContainer/VBoxContainer/mode_number")
+function_frame = NodePath("page2/PanelContainer3")
+column = NodePath("page2/PanelContainer3/ScrollContainer/VBoxContainer")
+gear = NodePath("ColorRect/Control/TextureRect")
+progress = NodePath("ColorRect/Control/ProgressBar")
+gear_background = NodePath("ColorRect")
+display_line = NodePath("page1/list/TextureButton/func_background/HFlowContainer")
+
+[node name="background" type="TextureRect" parent="." unique_id=1617794295]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_acb0r")
+
+[node name="page1" type="TextureRect" parent="." unique_id=1820432148]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_gdjy1")
+
+[node name="list" type="Control" parent="page1" unique_id=2006081651]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchor_left = 0.29700002
+anchor_top = 0.080000006
+anchor_right = 0.70400006
+anchor_bottom = 0.994
+offset_left = -540.24005
+offset_top = -0.40000916
+offset_right = -1061.3467
+offset_bottom = -658.18665
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+
+[node name="TextureButton" type="TextureButton" parent="page1/list" unique_id=1170860918]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.27
+anchor_top = 0.31800002
+anchor_right = 0.73
+anchor_bottom = 0.68200004
+offset_left = 39.87667
+offset_top = 39.938667
+offset_right = -39.87668
+offset_bottom = -39.93869
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("4_gdjy1")
+
+[node name="Control" type="Control" parent="page1/list/TextureButton" unique_id=941191835]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="func_background" type="PanelContainer" parent="page1/list/TextureButton" unique_id=826805851]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.075
+anchor_top = 0.075
+anchor_right = 0.9250001
+anchor_bottom = 0.9250001
+offset_left = 17.0
+offset_top = 17.0
+offset_right = -17.000008
+offset_bottom = -17.000008
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(34, 34)
+theme_override_styles/panel = SubResource("StyleBoxFlat_45mnr")
+
+[node name="HFlowContainer" type="HFlowContainer" parent="page1/list/TextureButton/func_background" unique_id=1864388985]
+custom_minimum_size = Vector2(68, 68)
+layout_mode = 2
+
+[node name="Button" type="Button" parent="page1/list" unique_id=2126550004]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.351
+anchor_top = 0.76600003
+anchor_right = 0.647
+anchor_bottom = 0.86
+offset_left = 1.6229858
+offset_top = 7.397278
+offset_right = -1.7690125
+offset_bottom = 0.1065979
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_35y6k")
+text = "花费9999"
+
+[node name="money" type="Label" parent="page1" unique_id=676742005]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.009000001
+anchor_top = 0.086
+anchor_right = 0.209
+anchor_bottom = 0.16900001
+offset_left = 0.7199993
+offset_top = 0.11999512
+offset_right = 0.7200012
+offset_bottom = -0.52001953
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 49
+text = "目前可用金额："
+
+[node name="ScrollContainer" type="ScrollContainer" parent="page1" unique_id=1725832542]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.44300002
+anchor_top = 0.080000006
+anchor_right = 0.99600005
+anchor_bottom = 1.0
+offset_left = -0.5600586
+offset_top = -0.40000916
+offset_right = -0.32006836
+offset_bottom = -7.0
+grow_horizontal = 0
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="HFlowContainer" type="HFlowContainer" parent="page1/ScrollContainer" unique_id=993918581]
+custom_minimum_size = Vector2(1062, 987)
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="Card" parent="page1/ScrollContainer/HFlowContainer" unique_id=1101160890 instance=ExtResource("6_gdjy1")]
+layout_mode = 2
+
+[node name="Card2" parent="page1/ScrollContainer/HFlowContainer" unique_id=990515305 instance=ExtResource("6_gdjy1")]
+layout_mode = 2
+
+[node name="Card3" parent="page1/ScrollContainer/HFlowContainer" unique_id=108393263 instance=ExtResource("6_gdjy1")]
+layout_mode = 2
+
+[node name="Card4" parent="page1/ScrollContainer/HFlowContainer" unique_id=1925263582 instance=ExtResource("6_gdjy1")]
+layout_mode = 2
+
+[node name="Card5" parent="page1/ScrollContainer/HFlowContainer" unique_id=597289084 instance=ExtResource("6_gdjy1")]
+layout_mode = 2
+
+[node name="Card6" parent="page1/ScrollContainer/HFlowContainer" unique_id=1763274449 instance=ExtResource("6_gdjy1")]
+layout_mode = 2
+
+[node name="Card7" parent="page1/ScrollContainer/HFlowContainer" unique_id=960527596 instance=ExtResource("6_gdjy1")]
+layout_mode = 2
+
+[node name="Card8" parent="page1/ScrollContainer/HFlowContainer" unique_id=1869141585 instance=ExtResource("6_gdjy1")]
+layout_mode = 2
+
+[node name="page2" type="TextureRect" parent="." unique_id=167961328]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("6_15wdr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="page2" unique_id=70375192]
+custom_minimum_size = Vector2(84, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.41200003
+anchor_top = 0.30800003
+anchor_right = 0.587
+anchor_bottom = 0.89400005
+offset_left = 126.95996
+offset_top = 126.359955
+offset_right = -125.04004
+offset_bottom = -348.27008
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4, 4)
+pivot_offset = Vector2(42, 42)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="page2/VBoxContainer" unique_id=126360286]
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="page2/VBoxContainer/HBoxContainer" unique_id=1002968368]
+custom_minimum_size = Vector2(84, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f1oc0")
+
+[node name="HFlowContainer" type="HFlowContainer" parent="page2/VBoxContainer/HBoxContainer/PanelContainer" unique_id=237864972]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Select_function" parent="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer" unique_id=1168018617 instance=ExtResource("8_15wdr")]
+layout_mode = 2
+
+[node name="Select_function2" parent="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer" unique_id=345982771 instance=ExtResource("8_15wdr")]
+layout_mode = 2
+
+[node name="Select_function3" parent="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer" unique_id=263195343 instance=ExtResource("8_15wdr")]
+layout_mode = 2
+
+[node name="Select_function4" parent="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer" unique_id=1782058785 instance=ExtResource("8_15wdr")]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="page2/VBoxContainer" unique_id=1992238893]
+layout_mode = 2
+alignment = 1
+
+[node name="Button" type="Button" parent="page2/VBoxContainer/HBoxContainer2" unique_id=1443298361]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_35y6k")
+text = "开始修改"
+
+[node name="PanelContainer" type="PanelContainer" parent="page2" unique_id=1389143849]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 33.0
+offset_top = 112.0
+offset_right = 609.0
+offset_bottom = -35.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5p7st")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="page2/PanelContainer" unique_id=1633132452]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="basket" type="HFlowContainer" parent="page2/PanelContainer/ScrollContainer" unique_id=771978331]
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="page2" unique_id=2140312632]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 33.0
+offset_top = 112.0
+offset_right = 609.0
+offset_bottom = -35.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5p7st")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="page2/PanelContainer2" unique_id=356641993]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="page2/PanelContainer2/VBoxContainer" unique_id=1546786886]
+custom_minimum_size = Vector2(0, 740)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="basket" type="HFlowContainer" parent="page2/PanelContainer2/VBoxContainer/ScrollContainer" unique_id=1796763989]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_constants/h_separation = 18
+theme_override_constants/v_separation = 13
+
+[node name="PanelContainer" type="PanelContainer" parent="page2/PanelContainer2/VBoxContainer" unique_id=1623067030]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="page2/PanelContainer2/VBoxContainer/PanelContainer" unique_id=914229484]
+layout_mode = 2
+
+[node name="current_money" type="Label" parent="page2/PanelContainer2/VBoxContainer/PanelContainer/VBoxContainer" unique_id=331727575]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 38
+text = "目前可用金额："
+
+[node name="cost" type="Label" parent="page2/PanelContainer2/VBoxContainer/PanelContainer/VBoxContainer" unique_id=1236328368]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 38
+text = "拆解所需金额："
+
+[node name="mode_number" type="Label" parent="page2/PanelContainer2/VBoxContainer/PanelContainer/VBoxContainer" unique_id=1164337673]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 38
+text = "可用模组数量："
+
+[node name="PanelContainer3" type="PanelContainer" parent="page2" unique_id=774174919]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.79600006
+anchor_top = 0.104
+anchor_right = 0.96800005
+anchor_bottom = 0.96500003
+offset_left = 0.67993164
+offset_top = -0.3199997
+offset_right = -109.56006
+offset_bottom = -310.20007
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_w36ov")
+metadata/_edit_group_ = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="page2/PanelContainer3" unique_id=1947573239]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="page2/PanelContainer3/ScrollContainer" unique_id=673486287]
+layout_mode = 2
+
+[node name="PanelContainer" parent="page2/PanelContainer3/ScrollContainer/VBoxContainer" unique_id=1095313832 instance=ExtResource("9_f1oc0")]
+layout_mode = 2
+
+[node name="PanelContainer2" parent="page2/PanelContainer3/ScrollContainer/VBoxContainer" unique_id=1277705399 instance=ExtResource("9_f1oc0")]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="page2" unique_id=800866023]
+visible = false
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.32172796, 0.32172796, 0.32172796, 0.24313726)
+
+[node name="PanelContainer" type="PanelContainer" parent="page2/ColorRect" unique_id=1957279730]
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.39600003
+anchor_top = 0.407
+anchor_right = 0.60400003
+anchor_bottom = 0.59300005
+offset_left = 179.67993
+offset_top = 80.44
+offset_right = -179.68005
+offset_bottom = -80.44006
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_im6k6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="page2/ColorRect/PanelContainer" unique_id=1837764467]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="page2/ColorRect/PanelContainer/VBoxContainer" unique_id=863416848]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="page2/ColorRect/PanelContainer/VBoxContainer" unique_id=1478172268]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="page2/ColorRect/PanelContainer/VBoxContainer/HBoxContainer" unique_id=384140482]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 40
+text = "你确定为这张牌增加模组吗？"
+autowrap_mode = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="page2/ColorRect/PanelContainer/VBoxContainer" unique_id=378114481]
+layout_mode = 2
+theme_override_constants/separation = 72
+alignment = 1
+
+[node name="Button" type="Button" parent="page2/ColorRect/PanelContainer/VBoxContainer/HBoxContainer2" unique_id=337568158]
+custom_minimum_size = Vector2(70, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 23
+text = "返回"
+
+[node name="Button2" type="Button" parent="page2/ColorRect/PanelContainer/VBoxContainer/HBoxContainer2" unique_id=2098715659]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 23
+text = "是的"
+
+[node name="delete" type="TextureButton" parent="." unique_id=290394627]
+z_index = 2
+anchors_preset = -1
+anchor_left = 0.94200003
+anchor_top = 0.0050000004
+anchor_right = 0.99700004
+anchor_bottom = 0.07700001
+offset_left = -0.64001465
+offset_top = -0.40000057
+offset_right = 0.7598877
+offset_bottom = -0.16001129
+grow_horizontal = 0
+texture_normal = ExtResource("2_35y6k")
+texture_pressed = ExtResource("3_cy215")
+texture_hover = ExtResource("4_4xjol")
+
+[node name="rewrite" type="Button" parent="." unique_id=1517180953]
+anchors_preset = -1
+anchor_left = 0.246
+anchor_top = 0.018000001
+anchor_right = 0.47800002
+anchor_bottom = 0.07700001
+offset_left = 0.6799927
+offset_top = -0.44000053
+offset_right = 0.23999023
+offset_bottom = -0.16001129
+theme_override_colors/font_pressed_color = Color(0.05152058, 0.2893515, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.8745098, 0.8745098, 0.8745098, 1)
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_cy215")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_35y6k")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4xjol")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_gdjy1")
+text = "  ✍️改写"
+alignment = 0
+
+[node name="expand" type="Button" parent="." unique_id=1693891849]
+anchors_preset = -1
+anchor_left = 0.015000001
+anchor_top = 0.018000001
+anchor_right = 0.246
+anchor_bottom = 0.07700001
+offset_left = -0.80000114
+offset_top = -0.44000053
+offset_right = 0.6799927
+offset_bottom = -0.16001129
+theme_override_colors/font_pressed_color = Color(0.05152058, 0.2893515, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.8745098, 0.8745098, 0.8745098, 1)
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_cy215")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_35y6k")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4xjol")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_15wdr")
+text = " 🔓扩容"
+alignment = 0
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=285530433]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3882353, 0.3882353, 0.3882353, 0.49019608)
+
+[node name="Control" type="Control" parent="ColorRect" unique_id=1783226284]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="ColorRect/Control" unique_id=201445269]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.4
+anchor_right = 0.6
+anchor_bottom = 0.6
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.000015
+offset_bottom = -20.000015
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(20, 20)
+texture = ExtResource("13_5p7st")
+
+[node name="ProgressBar" type="ProgressBar" parent="ColorRect/Control" unique_id=748871768]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.625
+anchor_right = 0.75000006
+anchor_bottom = 0.69200003
+offset_right = -3.0517578e-05
+offset_bottom = 0.19998169
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_35y6k")
+theme_override_styles/background = SubResource("StyleBoxFlat_vyga0")
+theme_override_styles/fill = SubResource("StyleBoxFlat_w31ll")
+step = 1.0
+value = 80.0
+
+[connection signal="pressed" from="page1/list/TextureButton" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="page1/list/Button" to="." method="expand_card"]
+[connection signal="is_back" from="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer/Select_function" to="." method="back_to_column"]
+[connection signal="is_this_function" from="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer/Select_function" to="." method="open_func_list"]
+[connection signal="is_back" from="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer/Select_function2" to="." method="back_to_column"]
+[connection signal="is_this_function" from="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer/Select_function2" to="." method="open_func_list"]
+[connection signal="is_back" from="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer/Select_function3" to="." method="back_to_column"]
+[connection signal="is_this_function" from="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer/Select_function3" to="." method="open_func_list"]
+[connection signal="is_back" from="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer/Select_function4" to="." method="back_to_column"]
+[connection signal="is_this_function" from="page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer/Select_function4" to="." method="open_func_list"]
+[connection signal="pressed" from="page2/VBoxContainer/HBoxContainer2/Button" to="." method="_on_confirm_pressed"]
+[connection signal="pressed" from="page2/ColorRect/PanelContainer/VBoxContainer/HBoxContainer2/Button" to="." method="_on_refuse_pressed"]
+[connection signal="pressed" from="page2/ColorRect/PanelContainer/VBoxContainer/HBoxContainer2/Button2" to="." method="who_is_the_target"]
+[connection signal="pressed" from="delete" to="." method="_on_delete_pressed"]
+[connection signal="pressed" from="rewrite" to="." method="_on_rewrite_pressed"]
+[connection signal="pressed" from="expand" to="." method="_on_expand_pressed"]

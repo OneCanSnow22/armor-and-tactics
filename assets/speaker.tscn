@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://2b5wpl8gs1jo"]
+
+[ext_resource type="Texture2D" uid="uid://3j0jhk3ox6i7" path="res://assets/character/monster_02/monster02_cool.png" id="1_0lpnj"]
+[ext_resource type="Script" uid="uid://bpw7hno2l0qhq" path="res://scripts/speaker.gd" id="1_q3erv"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="2_q3erv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bi3bi"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kyfra"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+
+[node name="HBoxContainer2" type="HBoxContainer" unique_id=1581996816 node_paths=PackedStringArray("context", "expression")]
+anchors_preset = -1
+anchor_left = 0.008
+anchor_top = 0.080000006
+anchor_right = 0.42800003
+anchor_bottom = 0.194
+offset_left = -0.3600006
+offset_top = -0.40000916
+offset_right = 0.2399292
+offset_bottom = -0.5200043
+script = ExtResource("1_q3erv")
+context = NodePath("PanelContainer2/Label")
+expression = NodePath("PanelContainer/TextureRect")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1315668375]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bi3bi")
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer" unique_id=1860766375]
+custom_minimum_size = Vector2(123, 0)
+layout_mode = 2
+texture = ExtResource("1_0lpnj")
+
+[node name="PanelContainer2" type="PanelContainer" parent="." unique_id=434865721]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kyfra")
+
+[node name="Label" type="Label" parent="PanelContainer2" unique_id=1707871295]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_q3erv")
+theme_override_font_sizes/font_size = 51
+text = "只要是好货我就出高价。"

@@ -1,0 +1,89 @@
+extends CanvasLayer
+@export var expand_page:TextureRect
+@export var rewrite_page:TextureRect
+@export var expand_button:Button
+@export var rewrite_button:Button
+@export var money_label:Label
+@export var Selected_card:Control
+@export var card_list:HFlowContainer
+@export var card_display:Card#用于展示被选中的卡牌
+@export var ban:Control#使得被选中的卡牌不可被鼠标互动
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	open_expand()
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_rewrite_pressed() -> void:
+	expand_page.visible=false
+	rewrite_button.disabled=true
+	expand_button.disabled=false
+	rewrite_page.visible=true
+	pass # Replace with function body.
+
+
+func _on_expand_pressed() -> void:
+	
+	open_expand()
+	pass # Replace with function body.
+func open_expand():
+	rewrite_page.visible=false
+	rewrite_button.disabled=false
+	expand_button.disabled=true
+	expand_page.visible=true
+	money_label.text="目前可用金额：%d"%Profile.item.money
+	Selected_card.position=Vector2(570,86)
+	var button=$page1/list/Button
+	button.visible=false
+	var cover=$page1/ScrollContainer
+	cover.visible=false
+	var texture=$page1/list/TextureButton
+	texture.disabled=false
+	card_display.visible=false
+	ban.visible=false
+func _on_button_pressed() -> void:
+	var tween=create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(Selected_card,"position",Vector2(30,86),0.2)
+	await tween.finished
+	var cover=$page1/ScrollContainer
+	cover.visible=true
+	var texture=$page1/list/TextureButton
+	texture.disabled=true
+	show_card_list()
+	pass # Replace with function body.
+func clear_list():
+	if card_list.get_child_count()>0:
+		for _i in card_list.get_children():
+			_i.just_for_check=false
+			_i.just_for_reward=false
+			if _i.reward_is_chosen.is_connected(display_chosen):
+				_i.reward_is_chosen.disconnect(display_chosen)
+			card_list.remove_child(_i)
+func show_card_list():
+	clear_list()
+	for _i in Profile.Deck:
+		card_list.add_child(_i)
+		_i.apply_card()
+		_i.hide_stack()
+		_i.display()
+		_i.just_for_check=true
+		_i.just_for_reward=true#可以使用奖励的判断
+		if !_i.reward_is_chosen.is_connected(display_chosen):
+			_i.reward_is_chosen.connect(display_chosen)
+func display_chosen(card:Card):#用于显示被选中的卡牌
+	#card.reward_is_chosen.disconnect(display_chosen)
+	card_display.visible=true
+	var plate=$page1/list/TextureButton
+	for i in range(card.function_list.size()):
+		card_display.function_list[i]=card.function_list[i]
+	card.apply_card()
+	card_display.hide_stack()
+	card_display.display()
+	ban.visible=true

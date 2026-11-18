@@ -1,0 +1,124 @@
+extends CanvasLayer
+@export var basket: HFlowContainer
+@export var boxForButton: HBoxContainer
+@export var ban:Control
+## 本地枚举别名，方便引用
+const Func = Profile.Function
+
+## 有用模组 ID 列表（对应 Profile.Function 枚举整数值，排除 Lock=13、Blank=14）
+## 负面模组（One_off=11、Consume=12）也算有用模组，参与抽取
+const USEFUL_FUNCTIONS: Array[int] = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+
+## 各模组对应点数（绝对值用于计算稀有度权重）
+const FUNCTION_POINTS: Dictionary = {
+	0:  3,   # Forward
+	1:  3,   # Backward
+	2:  3,   # Discard_one
+	3:  4,   # Discard_two
+	4:  3,   # Draw_one
+	5:  4,   # Draw_two
+	6:  5,   # Draw_three
+	7:  4,   # Load
+	8:  4,   # Replace
+	9:  3,   # Swipe
+	10: 3,   # Turn
+	11: -4,  # One_off
+	12: -5,  # Consume
+}
+
+func _ready() -> void:
+	boxForButton.visible = false
+	# 测试：生成3张卡牌
+	
+func _process(_delta: float) -> void:
+	pass
+
+## 创建一张随机卡牌，挂载到basket前需调用add_child
+func create_card() -> Card:
+	var max_function_num: int = get_random_weighted()   # 有用模组数量 1~4
+	var card_scene = load("res://scenes/Card/card.tscn")
+	var card: Card = card_scene.instantiate() as Card
+	card.function_list.resize(4)
+
+	# 逐槽填充有用模组，保证总点数不超 Card.max_point
+	var current_points: int = 0
+	for slot in range(max_function_num):
+		var chosen = pick_function(current_points)
+		if chosen == -1:
+			# 剩余点数不足以放下任何有用模组，提前填 Lock
+			card.function_list[slot] = Profile.create_function(Profile.Function.Lock)
+		else:
+			card.function_list[slot] = Profile.create_function(chosen as Profile.Function)
+			current_points += abs(FUNCTION_POINTS[chosen])
+
+	# 剩余槽位全部填 Lock
+	for slot in range(max_function_num, 4):
+		card.function_list[slot] = Profile.create_function(Profile.Function.Lock)
+
+	return card
+
+## 从有用模组中随机选一个，保证加入后总点数不超 max_point
+## 返回 Profile.Function 枚举值，无法选时返回 -1
+func pick_function(current_points: int) -> int:
+	var remaining: int = Card.max_point - current_points
+
+	# 筛选出点数绝对值 <= remaining 的候选模组
+	var candidates: Array = []
+	for func_type in USEFUL_FUNCTIONS:
+		var abs_pt: int = abs(FUNCTION_POINTS[func_type])
+		if abs_pt <= remaining:
+			candidates.append(func_type)
+
+	if candidates.is_empty():
+		return -1
+
+	# 稀有度权重：点数越大越稀有，权重 = max_abs_point + 1 - abs_point
+	# 例：3pt → 权重3，4pt → 权重2，5pt → 权重1（点数越大权重越小）
+	var max_abs: int = 0
+	for func_type in candidates:
+		max_abs = max(max_abs, abs(FUNCTION_POINTS[func_type]))
+
+	var weights: Array = []
+	var total_weight: int = 0
+	for func_type in candidates:
+		var w: int = max_abs + 1 - abs(FUNCTION_POINTS[func_type])
+		weights.append(w)
+		total_weight += w
+
+	# 加权随机抽取
+	var rand_val: int = randi() % total_weight
+	var cumulative: int = 0
+	for i in range(candidates.size()):
+		cumulative += weights[i]
+		if rand_val < cumulative:
+			return candidates[i]
+
+	return candidates[0]  # 兜底
+
+## 随机加权返回有用模组数量（1~4），权重 80:10:2:1
+func get_random_weighted() -> int:
+	var weights: Array = [80, 10, 2, 1]
+	var total_weight: int = 0
+	for weight in weights:
+		total_weight += weight
+	var random_value: int = randi() % total_weight
+	var cumulative_weight: int = 0
+	for i in range(weights.size()):
+		cumulative_weight += weights[i]
+		if random_value < cumulative_weight:
+			return i + 1
+	return 1
+func clear_all_card():
+	if basket.get_child_count()>0:
+		for _i in basket.get_children():
+			basket.remove_child(_i)
+func create_reward():#生成奖励
+	clear_all_card()
+	for _i in range(4):
+		var card = create_card()
+		if card != null:
+			basket.add_child(card)
+			card.display()
+			card.hide_stack()
+			card.just_for_check=true
+			card.just_for_reward=true

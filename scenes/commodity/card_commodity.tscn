@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://dhxkboudpjdol"]
+
+[ext_resource type="Script" uid="uid://bkmgflmg5oji4" path="res://scripts/card_commodity.gd" id="1_5uj8y"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="2_fdoop"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tige6"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.2, 0.20784314, 0.22352941, 1)
+border_width_left = 7
+border_width_top = 7
+border_width_right = 7
+border_width_bottom = 7
+border_color = Color(0.81960785, 0.47058824, 0.06666667, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 2
+corner_detail = 1
+
+[node name="card_commodity" type="PanelContainer" unique_id=1627980588 node_paths=PackedStringArray("worth", "goods")]
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(68, 90)
+theme_override_styles/panel = SubResource("StyleBoxFlat_tige6")
+script = ExtResource("1_5uj8y")
+worth = NodePath("VBoxContainer/RichTextLabel")
+goods = NodePath("VBoxContainer/HBoxContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=108975309]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=478964578]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer" unique_id=850079037]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("2_fdoop")
+theme_override_font_sizes/normal_font_size = 23
+bbcode_enabled = true
+text = "11"
+horizontal_alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=1440435044]
+layout_mode = 2
+
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_texture_button_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_texture_button_mouse_exited"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

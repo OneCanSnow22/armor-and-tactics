@@ -1,0 +1,88 @@
+extends CanvasLayer
+@export var expression:TextureRect
+@export var word:Label
+@export var money:RichTextLabel
+@export var plate:PanelContainer
+@export var duration:float=8
+@export var hint:VBoxContainer
+enum Shop_type{
+	Card_shop,
+	Weapon_shop
+}
+var cards: Array[Card] = []  # 6张卡牌，由 open_card_shop 填充
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	hint.visible=false
+	refresh_money()
+	welcome_to_shop()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+func shoper_speak(value:String):
+	word.visible_characters=0
+	word.text=value
+	var time:float=value.length()/duration
+	var tween=create_tween()
+	tween.tween_interval(0.2)
+	tween.tween_property(word,"visible_characters",value.length(),time)
+	await tween.finished
+
+func refresh_money():
+	money.text="当前剩余金额:[color=#FFD700]%d[/color]"%Profile.item.money
+
+func open_card_shop():#打开卡牌商店，生成6张不重复加强稀有度卡牌
+	var box=$PanelContainer/CardShop
+	box.visible=true
+	var card_box=load("res://scenes/commodity/card_commodity.tscn")
+	plate.position.y=4000
+	# 清空旧卡牌
+	if box.get_child_count()>0:
+		for _i in box.get_children():
+			box.remove_child(_i)
+			_i.queue_free()
+	# 生成6张不重复卡牌
+	cards = Profile.random_cards_for_shop(6)
+	# 添加到 UI 并显示
+	var step=0
+	for card in cards:
+		var goods:Card_commodity=card_box.instantiate() as Card_commodity
+		box.add_child(goods)
+		goods.set_card(card)
+		goods.card_is_clicked.connect(card_is_chosen)
+		goods.card_is_hoverd.connect(card_is_hover)
+		goods.cost_is_too_high.connect(say_no)
+		goods.position=Vector2(136+240*step+randi_range(30,48),randi_range(60,400))
+		step+=1
+	refresh_money()
+	var tween=create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(plate,"position",Vector2(5,226),0.2)
+	await  tween.finished
+	for _i in box.get_children():
+		_i.inertia()
+func welcome_to_shop():
+	plate.position.y=4000
+	await shoper_speak("来，看看我的货。")
+	if randi()%2==0:
+		open_card_shop()
+	else:
+		print("武器商店")
+func card_is_chosen(card:Card):
+	refresh_money()
+func card_is_hover(card:Card):
+	if card!=null:
+		var j=0
+		for _i in hint.get_children():
+			_i.show_unit(card.function_list[j])
+			j+=1
+		hint.visible=true
+		var mouse_screen_pos = get_viewport().get_mouse_position()
+		hint.global_position=mouse_screen_pos+Vector2(10,10)
+	else:
+		hint.visible=false
+func say_no():
+	shoper_speak("不景气啊，小老弟。")

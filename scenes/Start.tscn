@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://udiaqbqs00j5"]
+
+[ext_resource type="Script" uid="uid://wbk5xixexmxg" path="res://scripts/start_page.gd" id="1_j3bqk"]
+[ext_resource type="Shader" uid="uid://bb3phx8oxe4i5" path="res://shaders/death_glitch.gdshader" id="2_yx83k"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="3_lynlw"]
+[ext_resource type="PackedScene" uid="uid://dluqch1ybr1d7" path="res://scenes/main_button.tscn" id="4_yx83k"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h1lxu"]
+shader = ExtResource("2_yx83k")
+shader_parameter/intensity = 1.0
+shader_parameter/noise_scale = 682.130032353675
+shader_parameter/flicker_speed = 11.674000554515
+shader_parameter/whiteout = 0.890000042275
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=23992210 node_paths=PackedStringArray("title", "load_button")]
+script = ExtResource("1_j3bqk")
+title = NodePath("RichTextLabel")
+load_button = NodePath("VBoxContainer/load_old")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=907808655]
+material = SubResource("ShaderMaterial_h1lxu")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=84145397]
+anchors_preset = -1
+anchor_left = 0.082
+anchor_top = 0.25
+anchor_right = 0.91800004
+anchor_bottom = 0.42200002
+offset_left = -0.44000244
+offset_right = 0.4399414
+offset_bottom = 0.23999023
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.6509804, 0.8862745, 0.18039216, 1)
+theme_override_fonts/normal_font = ExtResource("3_lynlw")
+theme_override_font_sizes/normal_font_size = 174
+text = "ARMOR_AND_TACTICES"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=755287978]
+anchors_preset = -1
+anchor_left = 0.091000006
+anchor_top = 0.536
+anchor_right = 0.263
+anchor_bottom = 0.84300005
+offset_left = -0.7200165
+offset_top = 0.11999512
+offset_right = 0.039978027
+offset_bottom = -0.44006348
+grow_vertical = 0
+theme_override_constants/separation = 13
+metadata/_edit_group_ = true
+
+[node name="start_new" parent="VBoxContainer" unique_id=193452783 instance=ExtResource("4_yx83k")]
+layout_mode = 2
+title = "开始游戏"
+switch = true
+
+[node name="load_old" parent="VBoxContainer" unique_id=1710800082 instance=ExtResource("4_yx83k")]
+layout_mode = 2
+title = "继续游戏"
+
+[node name="quit_game" parent="VBoxContainer" unique_id=1786077394 instance=ExtResource("4_yx83k")]
+layout_mode = 2
+title = "结束游戏"
+switch = true
+
+[connection signal="button_is_pressed" from="VBoxContainer/start_new" to="." method="_on_start_new_button_is_pressed"]
+[connection signal="button_is_pressed" from="VBoxContainer/load_old" to="." method="_on_load_old_button_is_pressed"]
+[connection signal="button_is_pressed" from="VBoxContainer/quit_game" to="." method="_on_quit_game_button_is_pressed"]

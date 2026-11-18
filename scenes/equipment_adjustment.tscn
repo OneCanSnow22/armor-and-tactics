@@ -1,0 +1,261 @@
+[gd_scene format=3 uid="uid://cr0i3r62oqthi"]
+
+[ext_resource type="Texture2D" uid="uid://vy7xi0cmdcsf" path="res://assets/page/cmd.png" id="1_0h1t4"]
+[ext_resource type="Script" uid="uid://d0irkr5wwicm3" path="res://scripts/equipment_adjustment.gd" id="1_dfbip"]
+[ext_resource type="Texture2D" uid="uid://c7j4jqy0v35cb" path="res://assets/page/quit1.png" id="2_uhhs0"]
+[ext_resource type="Texture2D" uid="uid://1vrmdml76gf0" path="res://assets/page/quit3.png" id="3_nwa2v"]
+[ext_resource type="Texture2D" uid="uid://b05v6i8ieonfe" path="res://assets/page/quit2.png" id="4_dfbip"]
+[ext_resource type="FontFile" uid="uid://dtycrfgtyobi5" path="res://assets/fonts/VT323-Regular.ttf" id="5_s41ql"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="6_uhhs0"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="6_xo136"]
+[ext_resource type="Texture2D" uid="uid://c86i0yaeahq4" path="res://assets/character/side.png" id="8_nwa2v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_spne2"]
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 9
+border_width_top = 9
+border_width_right = 9
+border_width_bottom = 9
+border_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ttwnu"]
+bg_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b2fel"]
+bg_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fusx6"]
+bg_color = Color(1, 0, 0, 1)
+
+[node name="Equipment_adjustment" type="CanvasLayer" unique_id=2018158566 node_paths=PackedStringArray("melee_label", "shoot_label", "shelling_label", "current_weapon_detail", "select_weapon_detail", "detail", "list")]
+script = ExtResource("1_dfbip")
+melee_label = NodePath("robot/VBoxContainer2/Label")
+shoot_label = NodePath("robot/VBoxContainer3/Label")
+shelling_label = NodePath("robot/VBoxContainer/Label")
+current_weapon_detail = NodePath("detail/current_weapon/VBoxContainer/Label2")
+select_weapon_detail = NodePath("detail/select_weapon/VBoxContainer/RichTextLabel")
+detail = NodePath("detail")
+list = NodePath("detail/list/VBoxContainer/ScrollContainer/VBoxContainer")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=52464624]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_0h1t4")
+
+[node name="delete" type="TextureButton" parent="." unique_id=79161284]
+z_index = 2
+anchors_preset = -1
+anchor_left = 0.94200003
+anchor_top = 0.0050000004
+anchor_right = 0.99700004
+anchor_bottom = 0.07700001
+offset_left = -0.64001465
+offset_top = -0.40000057
+offset_right = 0.7598877
+offset_bottom = -0.16001129
+grow_horizontal = 0
+texture_normal = ExtResource("2_uhhs0")
+texture_pressed = ExtResource("3_nwa2v")
+texture_hover = ExtResource("4_dfbip")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1006992363]
+anchors_preset = -1
+anchor_left = 0.030000001
+anchor_top = 0.028
+anchor_right = 0.098000005
+anchor_bottom = 0.071
+offset_left = -0.6000023
+offset_top = -0.24000168
+offset_right = 0.83999634
+offset_bottom = 0.3199997
+
+[node name="title" type="Label" parent="HBoxContainer" unique_id=135177829]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_s41ql")
+theme_override_font_sizes/font_size = 35
+text = "🪛garage"
+
+[node name="robot" type="TextureRect" parent="." unique_id=417338406]
+anchors_preset = -1
+anchor_left = 0.30200002
+anchor_top = 0.23700002
+anchor_right = 0.698
+anchor_bottom = 0.762
+offset_left = 0.15997314
+offset_top = 0.539978
+offset_right = -0.16003418
+offset_bottom = 0.539978
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_nwa2v")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="robot" unique_id=1324496347]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 26.5
+offset_right = 60.0
+offset_bottom = 66.5
+
+[node name="shelling" type="Button" parent="robot/VBoxContainer" unique_id=272277106]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7254902, 0, 1)
+theme_override_fonts/font = ExtResource("6_xo136")
+theme_override_font_sizes/font_size = 34
+text = "飞弹装置"
+
+[node name="Label" type="Label" parent="robot/VBoxContainer" unique_id=1951088845]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_xo136")
+theme_override_font_sizes/font_size = 21
+text = "SG-00001"
+horizontal_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="robot" unique_id=410522235]
+layout_mode = 0
+offset_left = -73.0
+offset_top = 283.5
+offset_right = -33.0
+offset_bottom = 323.5
+
+[node name="melee" type="Button" parent="robot/VBoxContainer2" unique_id=1085988097]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.19607843, 0.3137255, 1)
+theme_override_fonts/font = ExtResource("6_xo136")
+theme_override_font_sizes/font_size = 34
+text = "近战装置"
+
+[node name="Label" type="Label" parent="robot/VBoxContainer2" unique_id=705451850]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_xo136")
+theme_override_font_sizes/font_size = 21
+text = "SG-00001"
+horizontal_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="robot" unique_id=778641662]
+layout_mode = 0
+offset_left = 643.0
+offset_top = 276.5
+offset_right = 683.0
+offset_bottom = 316.5
+
+[node name="shoot" type="Button" parent="robot/VBoxContainer3" unique_id=1930735365]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.9019608, 0.7058824, 1)
+theme_override_fonts/font = ExtResource("6_xo136")
+theme_override_font_sizes/font_size = 34
+text = "远程装置"
+
+[node name="Label" type="Label" parent="robot/VBoxContainer3" unique_id=403998771]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_xo136")
+theme_override_font_sizes/font_size = 21
+text = "SG-00001"
+horizontal_alignment = 1
+
+[node name="detail" type="HBoxContainer" parent="." unique_id=1656539486]
+visible = false
+anchors_preset = -1
+anchor_left = 0.003
+anchor_top = 0.081
+anchor_right = 0.99700004
+anchor_bottom = 0.994
+offset_left = 0.23999977
+offset_top = -0.48000336
+offset_right = -0.2401123
+offset_bottom = 0.47998047
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="current_weapon" type="PanelContainer" parent="detail" unique_id=1598500565]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_spne2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="detail/current_weapon" unique_id=503045670]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="detail/current_weapon/VBoxContainer" unique_id=553229983]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.7807016, 0.7807017, 0.7807016, 1)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("6_uhhs0")
+theme_override_font_sizes/font_size = 41
+text = "当前装备的武器为："
+
+[node name="Label2" type="Label" parent="detail/current_weapon/VBoxContainer" unique_id=997516096]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_uhhs0")
+theme_override_font_sizes/font_size = 32
+text = "SG"
+
+[node name="list" type="PanelContainer" parent="detail" unique_id=1299455547]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_spne2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="detail/list" unique_id=542579690]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="detail/list/VBoxContainer" unique_id=837160701]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ttwnu")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="detail/list/VBoxContainer/PanelContainer" unique_id=144351936]
+layout_mode = 2
+alignment = 2
+
+[node name="Button" type="Button" parent="detail/list/VBoxContainer/PanelContainer/HBoxContainer" unique_id=421135971]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_xo136")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_b2fel")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fusx6")
+text = "X"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="detail/list/VBoxContainer" unique_id=1868863115]
+custom_minimum_size = Vector2(0, 900)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="detail/list/VBoxContainer/ScrollContainer" unique_id=1756382595]
+custom_minimum_size = Vector2(382, 900)
+layout_mode = 2
+
+[node name="select_weapon" type="PanelContainer" parent="detail" unique_id=1754490642]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_spne2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="detail/select_weapon" unique_id=402573179]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="detail/select_weapon/VBoxContainer" unique_id=1693272102]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.7807016, 0.7807017, 0.7807016, 1)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("6_uhhs0")
+theme_override_font_sizes/font_size = 41
+text = "当前选择的武器为："
+
+[node name="RichTextLabel" type="RichTextLabel" parent="detail/select_weapon/VBoxContainer" unique_id=1432293699]
+custom_minimum_size = Vector2(0, 880)
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("6_uhhs0")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+
+[connection signal="pressed" from="delete" to="." method="_on_delete_pressed"]
+[connection signal="pressed" from="robot/VBoxContainer/shelling" to="." method="_on_shelling_pressed"]
+[connection signal="pressed" from="robot/VBoxContainer2/melee" to="." method="_on_melee_pressed"]
+[connection signal="pressed" from="robot/VBoxContainer3/shoot" to="." method="_on_shoot_pressed"]
+[connection signal="pressed" from="detail/list/VBoxContainer/PanelContainer/HBoxContainer/Button" to="." method="_on_button_pressed"]

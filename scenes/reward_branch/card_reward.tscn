@@ -1,0 +1,102 @@
+[gd_scene format=3 uid="uid://t5wnrc8gatut"]
+
+[ext_resource type="Script" uid="uid://dn5kk265fq5hp" path="res://scripts/reward_branch/card_reward.gd" id="1_bm6sh"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="2_bm6sh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrkei"]
+bg_color = Color(0.50507534, 6.617978e-07, 4.813075e-07, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bm6sh"]
+bg_color = Color(1, 0, 0, 1)
+
+[node name="CardReward" type="CanvasLayer" unique_id=1342895362 node_paths=PackedStringArray("basket", "Hint", "ban", "refuseButton")]
+script = ExtResource("1_bm6sh")
+basket = NodePath("ColorRect/HFlowContainer")
+Hint = NodePath("ColorRect/HBoxContainer/Label")
+ban = NodePath("ColorRect/ban")
+refuseButton = NodePath("ColorRect/Button")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=926417804]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3019608, 0.3019608, 0.3019608, 0.34901962)
+
+[node name="HFlowContainer" type="HFlowContainer" parent="ColorRect" unique_id=688704878]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.365
+anchor_top = 0.185
+anchor_right = 0.63500005
+anchor_bottom = 0.66700006
+offset_left = 129.19995
+offset_top = 120.2
+offset_right = -129.20007
+offset_bottom = -140.36005
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(130, 120)
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect" unique_id=1813821973]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.39600003
+anchor_top = 0.73300004
+anchor_right = 0.60400003
+anchor_bottom = 0.785
+offset_left = 39.67993
+offset_top = 8.359985
+offset_right = -39.680054
+offset_bottom = -7.800049
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 90
+alignment = 1
+
+[node name="Label" type="Label" parent="ColorRect/HBoxContainer" unique_id=1352657169]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.8117647, 0.25882354, 1)
+theme_override_fonts/font = ExtResource("2_bm6sh")
+theme_override_font_sizes/font_size = 40
+text = "选择其中一张加入库存"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="ColorRect" unique_id=1742091698]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.467
+anchor_top = 0.83100003
+anchor_right = 0.53800005
+anchor_bottom = 0.89300007
+offset_left = -0.64001465
+offset_top = 0.5199585
+offset_right = 0.039916992
+offset_bottom = -0.44006348
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_bm6sh")
+theme_override_font_sizes/font_size = 43
+theme_override_styles/pressed = SubResource("StyleBoxFlat_yrkei")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bm6sh")
+text = "我拒绝"
+
+[node name="ban" type="Control" parent="ColorRect" unique_id=1565475362]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 19.0
+offset_top = -3.0
+offset_right = 19.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="ColorRect/Button" to="." method="_on_button_pressed"]

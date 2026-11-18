@@ -1,0 +1,262 @@
+[gd_scene format=3 uid="uid://dscf2wxnvqh16"]
+
+[ext_resource type="Script" uid="uid://co1y52j5fg873" path="res://scripts/fight_menu.gd" id="1_qxwj1"]
+[ext_resource type="Texture2D" uid="uid://s1uev8402twh" path="res://assets/background/skill-desc_0003_bg.png" id="2_8khc8"]
+[ext_resource type="Texture2D" uid="uid://cq83rujni7ta4" path="res://assets/background/skill-desc_0002_far-buildings.png" id="3_76ujg"]
+[ext_resource type="Texture2D" uid="uid://ca67vpv83xsq3" path="res://assets/background/skill-desc_0001_buildings.png" id="4_uw41l"]
+[ext_resource type="Texture2D" uid="uid://cluw3naituw1x" path="res://assets/background/skill-desc_0000_foreground.png" id="5_t0ojq"]
+[ext_resource type="PackedScene" uid="uid://22rik1iljku2" path="res://scenes/Card/CardManager.tscn" id="6_76ujg"]
+[ext_resource type="PackedScene" uid="uid://b1lbiym5en8vt" path="res://scenes/position.tscn" id="6_uw41l"]
+[ext_resource type="PackedScene" uid="uid://bufwqdsvouwos" path="res://scenes/stateBar.tscn" id="7_t0ojq"]
+[ext_resource type="PackedScene" uid="uid://cuf7uugxvfxa8" path="res://scenes/player_item.tscn" id="8_5rqup"]
+[ext_resource type="PackedScene" uid="uid://c85mioi3s3gln" path="res://scenes/cmd.tscn" id="10_fnhow"]
+[ext_resource type="PackedScene" uid="uid://cqnbkjvrysbgy" path="res://scenes/news.tscn" id="11_ikbon"]
+
+[node name="Fight_Menu" type="CanvasLayer" unique_id=1309332914 node_paths=PackedStringArray("state_bar", "ground", "playerItem", "cmd_page", "final_report")]
+layer = 0
+script = ExtResource("1_qxwj1")
+state_bar = NodePath("stateBar")
+ground = NodePath("ground")
+playerItem = NodePath("PlayerItem")
+cmd_page = NodePath("CanvasLayer/cmd")
+final_report = NodePath("news")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=177387612]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_8khc8")
+
+[node name="TextureRect" type="TextureRect" parent="TextureRect" unique_id=57832833]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_76ujg")
+
+[node name="TextureRect2" type="TextureRect" parent="TextureRect" unique_id=43711724]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_uw41l")
+
+[node name="TextureRect3" type="TextureRect" parent="TextureRect" unique_id=1570792103]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_t0ojq")
+
+[node name="ground" type="ColorRect" parent="." unique_id=788682521]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 628.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09803922, 0.15686275, 0.12156863, 1)
+
+[node name="HBoxContainer" type="Control" parent="ground" unique_id=1025731706]
+layout_mode = 1
+anchor_top = -0.027
+anchor_right = 0.9990001
+anchor_bottom = 0.040000003
+offset_top = 0.20400238
+offset_right = 0.9199219
+offset_bottom = -0.08000183
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_group_ = true
+
+[node name="Position" parent="ground/HBoxContainer" unique_id=1032273584 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -830.5
+offset_top = -14.999999
+offset_right = -690.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position2" parent="ground/HBoxContainer" unique_id=1926723359 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -678.5
+offset_top = -14.999999
+offset_right = -538.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position3" parent="ground/HBoxContainer" unique_id=1391949902 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -526.5
+offset_top = -14.999999
+offset_right = -386.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position4" parent="ground/HBoxContainer" unique_id=515599192 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -374.5
+offset_top = -14.999999
+offset_right = -234.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position5" parent="ground/HBoxContainer" unique_id=561814247 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -222.5
+offset_top = -14.999999
+offset_right = -82.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position6" parent="ground/HBoxContainer" unique_id=237894766 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.5
+offset_top = -14.999999
+offset_right = 69.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position7" parent="ground/HBoxContainer" unique_id=1448083795 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 81.5
+offset_top = -14.999999
+offset_right = 221.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position8" parent="ground/HBoxContainer" unique_id=508427672 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 233.5
+offset_top = -14.999999
+offset_right = 373.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position9" parent="ground/HBoxContainer" unique_id=583012984 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 385.5
+offset_top = -14.999999
+offset_right = 525.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position10" parent="ground/HBoxContainer" unique_id=2117142529 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 537.5
+offset_top = -14.999999
+offset_right = 677.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Position11" parent="ground/HBoxContainer" unique_id=1705352059 instance=ExtResource("6_uw41l")]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 689.5
+offset_top = -14.999999
+offset_right = 829.5
+offset_bottom = 14.000001
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="stateBar" parent="." unique_id=1078510718 instance=ExtResource("7_t0ojq")]
+
+[node name="PlayerItem" parent="." unique_id=472500566 instance=ExtResource("8_5rqup")]
+
+[node name="Card_manager" parent="." unique_id=1386899687 instance=ExtResource("6_76ujg")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=483360865]
+layer = 3
+
+[node name="cmd" parent="CanvasLayer" unique_id=202584575 instance=ExtResource("10_fnhow")]
+z_index = 2
+
+[node name="news" parent="." unique_id=1116376386 instance=ExtResource("11_ikbon")]
+layer = 4
+visible = false
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=159437960]
+offset = Vector2(960, 540)

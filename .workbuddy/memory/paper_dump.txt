@@ -1,0 +1,366 @@
+[Normal] 本科毕业论文
+[Normal] 摘　　要
+[Normal] 随着《杀戮尖塔》的成功，基于DBG（牌库构筑）模式的卡牌游戏已成为重要游戏品类，其核心玩法在于策略的随机性与构筑的成长感。然而，现有设计在资源管理维度与玩家个性化表达上仍有深化空间。为此，本文提出并实现一套创新的“颜色覆盖规则”以重构卡牌资源管理体系，同时引入高自由度的卡牌DIY机制，旨在拓展策略深度并直接响应玩家对构筑多样性的核心需求，对推动该品类玩法进化具有积极意义。
+[Normal] 在技术上，以Godot引擎为开发框架，采用其原生GDScript语言完成逻辑实现。设计并开发了基于“颜色栈覆盖规则”的卡牌资源管理系统、卡牌功能DIY编辑模块、随机地图移动机制，以及与之联动的能量消耗、金币流通、装备管理、商店与修理等功能模块，共同构建起兼具策略自由度与成长多样性的卡牌游戏原型。
+[Normal] 经过多轮功能模块测试与目标用户体验验证，游戏的核心循环与数值平衡得到有效验证与调优。结果表明，该设计在保留DBG基础乐趣的同时，通过独特的颜色栈覆盖规则强化了资源规划的策略性，其卡牌功能DIY机制亦提供了显著的个性化体验；游戏整体运行稳定，基本达到了拓宽DBG玩法维度的设计预期。
+[Normal] 关键词： 牌库构筑（DBG）； 卡牌游戏； Godot引擎； 游戏设计； 颜色栈覆盖规则
+[Normal] Abstract
+[Normal] With the success of Slay the Spire, card games based on the DBG (deck-building game) model have become an important game genre, whose core gameplay lies in strategic randomness and the sense of progression through deck construction. However, existing designs still have room for deepening in terms of resource management dimension and players' personal expression. To address this, this paper proposes and implements an innovative "color overwriting rule" to reconstruct the card resource management system, while introducing a highly free card DIY mechanism, aiming to expand strategic depth and directly respond to players' core demand for deck diversity, which holds positive significance for promoting the evolution of gameplay in this category.
+[Normal] Technologically, the Godot engine serves as the development framework, with its native GDScript language used for logic implementation. A card resource management system based on the "color-stack overwrite rule," a card function DIY editing module, a random map movement mechanism, and interconnected functional modules such as energy consumption, gold circulation, equipment management, shops, and repairs have been designed and developed. Together, they form a card game prototype that combines strategic freedom and progression diversity.
+[Normal] Through multiple rounds of functional module testing and target user experience validation, the game's core loop and numerical balance have been effectively verified and tuned. The results indicate that while retaining the foundational fun of DBG, the design enhances the strategic aspect of resource planning through the unique color-stack overwrite rule, and its card DIY mechanism also provides a significant personalized experience. The game operates stably overall, essentially achieving the design goal of broadening the gameplay dimensions of DBG.
+[Normal] Keywords:  Deck-Building Game (DBG);  Card Game;  Godot Engine;  Game Design; Color Coverage Rule
+[Heading 1] 1  绪论
+[Heading 2] 1.1  研究背景与研究意义
+[Normal] 牌库构筑（DBG）机制起源于桌游《领土》（Dominion，2008年作品），其“动态构筑牌库”的核心玩法标志着构筑型卡牌游戏的一个重要演进分支。该玩法在数字化进程中，与Roguelike类型深度融合，逐步形成了成熟的电子游戏范式。2017年《杀戮尖塔》及其续作的成功，不仅印证了该玩法持久的市场生命力，更被视为对传统构筑玩法的一次重要创新，通过将牌组构筑与Roguelike机制相结合，创造了一种新颖且极具趣味性的单人游戏体验[1]，从而拓展了DBG品类的边界。
+[Normal] 这一发展脉络契合了游戏行业向“玩法创新驱动”转变的整体趋势。并且玩家对重复游玩价值与构筑多样性体验的核心需求持续增长，预计到2033年，全球独立游戏市场规模将增长至2858亿美元，进一步表明市场对深度策略与创新体验的追求日益增强。在此背景下，《月圆之夜》《欺诈之地》等作品成功地在DBG框架内融合了叙事或对话系统，证明了“机制融合”是推动该品类进化的重要路径，也为后续设计提供了广阔的探索空间。
+[Normal] 在开发工具层面，2023年Unity引擎的收费政策争议促使许多独立开发者寻求可靠、可控的替代方案[2]。由此，采用MIT协议、完全开源免费的Godot引擎获得了广泛关注。值得注意的是，《杀戮尖塔2》开发团队全面转向Godot并取得商业成功，为Godot引擎在复杂卡牌游戏项目的工业级应用提供了有力证明，使其成为追求创新与效率的项目的理想技术选择。
+[Normal] 综上所述，DBG玩法在《杀戮尖塔》等作品的推动下已展现出显著的创新潜力与明确的进化方向。为顺应这一趋势，基于Godot引擎，尝试在卡牌资源管理范式、玩家构筑自由度及策略深度等方面引入新的设计机制，以期为该品类的持续发展提供新的思路与实践参考。
+[Heading 2] 1.2  国内外现状
+[Normal] 牌库构筑（Deck-Building Game, DBG）玩法在全球范围内持续演化，其创作生态与创新路径在国内外呈现出不同的侧重点。
+[Normal] 首先在国内，DBG已形成成熟的创作生态。开发者积极将DBG机制与本土文化叙事或独特玩法进行深度融合，例如《月圆之夜》将黑暗童话叙事融入卡牌构筑，《孤星猎人》则创新性地引入“对波”式战斗机制，均获得了市场的成功验证[7]。这一创新活力得益于国内独立游戏市场的快速增长，据统计，2025年仅国内PC独立游戏市场营收就达到112亿元，同比增长18.3%[3]，为DBG等玩法的实验与创新提供了肥沃的土壤。
+[Normal] 其次在海外，DBG机制的创新探索更侧重于跨类型融合与开发工具革新。一方面，DBG正被尝试与RTS（即时战略）、生存建造、4X SLG（策略游戏）乃至塔防等类型进行结合，以创造更具复合性的策略体验[8][9]。另一方面，在开发工具层面，由于Unity引擎在2023年的收费政策争议，采用MIT协议、完全开源免费的Godot引擎获得了广泛关注。特别是《杀戮尖塔2》（Slay the Spire 2）开发团队全面转向Godot并取得商业成功[5][6]，为Godot引擎在复杂DBG项目中的工业级应用提供了有力证明，使其成为独立开发者进行玩法创新的重要技术选择。全球独立游戏市场的持续扩张（预计到2033年市场规模将达2858亿美元）[4]进一步为这种跨类型实验与技术工具创新提供了广阔的市场空间。
+[Heading 2] 1.3  本文主要工作
+[Normal] 本研究致力于对DBG玩法在资源管理与策略维度上进行深度创新，旨在设计并实现一款融合探索、构筑与战棋策略的复合型卡牌游戏。其核心创新体现在以下三方面：首先，构建了一个大富翁式的随机棋盘作为宏观探索框架，玩家根据系统通掷骰的步数来移动，格子事件与强制触发的战斗共同驱动游戏进程，能量消耗机制则构成了紧迫的资源约束。其次，战斗系统采用了独特的横排位置块队列与装备驱动模式，敌我双方分布在一个由11格位置块组成的队列两侧，玩家需通过手牌让角色在队列中移动，并根据装备的三种攻击模式（对应近战、射击、导弹）来执行差异化的攻击。最后，游戏彻底重构了卡牌的资源管理系统，以“颜色栈”替代了传统能量点，手牌需通过颜色覆盖规则才能被使用；同时引入高自由度的卡牌模组DIY系统，允许玩家通过事件拆解卡牌、获取模组，插入模组，并使用金币解锁槽位以换取对卡牌更自由装配空间，实现了构筑策略的深度个性化。
+[Normal] 本工作期望通过上述设计，在维持DBG构筑乐趣与Roguelike随机性的基础上，融入战棋式的空间策略与高度自由的卡牌定制，从而为DBG品类的玩法进化提供一种融合探索、策略与构筑的新范式。
+[Heading 1] 2  开发环境与技术栈
+[Heading 2] 2.1  开发环境与工具
+[Normal] 在Windows11操作系统环境的支持，采用4.6版本的Godot Engine游戏引擎对游戏进行脚本编写和UI布局。至于美术方面，则利用1.3版本的Aseprite作为辅助工具。
+[Heading 2] 2.2  引擎与关键技术选型
+[Normal] Godot引擎是一款免费可用、代码开源，并且功能全面的跨平台游戏引擎，用户可用其于创建2D和3D游戏。它提供了一整套游戏开发工具，允许开发者专注于制作游戏，而无需从头开始构建所有基础功能[10]。
+[Normal] GDScript作为其官方脚本语言，它是一种专为游戏开发设计的高级、动态类型编程语言。其语法与 Python 相似，简洁易读，但针对 Godot 的节点（Node）和场景（Scene）架构进行了深度优化，能够高效地与引擎编辑器集成，实现快速原型开发和游戏逻辑编写。
+[Normal] 其中Tween动画系统是Godot内置的轻量级插值工具，专门用于创建平滑的属性过渡和动画序列。它支持通过代码动态定义动画的时长、缓动曲线和回调事件，能够便捷地实现位移、变色、缩放等动态效果。该系统的脚本驱动特性尤其适合需要与游戏逻辑紧密配合、甚至包含随机性参数的复杂动画[11][12]。
+[Normal] 至于画面部分，Godot支持通过编写Shader着色器来获得高度的图形控制权。着色器是运行在GPU上的小型程序，用于定义网格表面每个像素（片段着色器）或每个顶点（顶点着色器）的最终渲染效果。通过直接操作渲染管线，开发者可以实现风格化渲染、动态纹理、复杂光照及屏幕后处理等传统材质难以达到的视觉效果[13][14]。
+[Normal] 为实现游戏状态的持久化，系统采用Resource资源进行存档管理。Resource是Godot中用于数据封装与序列化的核心对象，可将复杂的节点结构、变量集合甚至自定义类实例转化为可存储、加载和复用的数据资源。相比直接操作文件流，这种方式更安全、高效，且与引擎的资源管理系统深度整合[12]。
+[Normal] 最后，脚本与节点间的通信则依赖Godot的Signal信号机制。发送者可以“发射”信号，而接收者可以“连接”到该信号并定义回调函数。这种高内聚、低耦合的设计，确保了游戏内各类事件（如角色死亡、物品拾取、界面交互）能够被准确、即时地响应与处理，是构建模块化、可维护游戏架构的关键[11][12]。
+[Heading 1] 3　可行性与需求分析
+[Heading 2] 3.1　可行性分析
+[Normal] 在技术、经济与操作层面均在技术、经济与操作三个层面，本项目均具备充分可行性，能够支撑其从设计到实现的完整流程。
+[Normal] 首先技术层面，本项目以Godot 4.6为开发框架，其成熟稳定的2D渲染管线、节点化场景管理与动画系统，为游戏核心循环的实现提供了坚实基础。并且原生脚本语言GDScript语法简洁且与引擎深度集成[11][12]，尤其适合快速实现“颜色栈覆盖规则”的资源管理逻辑、高自由度的“卡牌DIY”编辑系统等创新机制。引擎完善的开源调试工具与活跃的开发者社区，也为技术问题的排查与性能优化提供了可靠支持。
+[Normal] 其次经济层面，项目开发完全依托免费开源的技术栈。Godot引擎及其配套工具链无任何授权费用，且对硬件要求宽松，普通个人计算机即可满足开发与测试需求，有效控制了开发成本。资源素材可通过开源资源库与自主创作相结合的方式获取，使得项目能够在极低的资金投入下推进，契合个人开发者的实际情况。
+[Normal] 再者操作可行性方面，游戏核心玩法根植于DBG（牌库构筑）与战略战棋这两种玩家群体较为熟悉的玩法范式，降低了理解门槛。通过分阶段的新手引导、直观的UI反馈以及循序渐进的难度曲线设计，能够帮助玩家平滑上手，逐步理解“颜色栈覆盖”与“卡牌DIY”等创新规则，从而保障核心玩法的可接受性与可传播性。
+[Normal] 综上所述，定位清晰，技术路径明确，资源需求可控，在满足毕业设计完整度要求的同时，其具有创新性的玩法设计与系统性的工程实现，亦可作为个人专业能力与项目经验的扎实证明，具备明确的实践价值与展示意义。
+[Heading 2] 3.2　功能分析
+[Normal] 在深入剖析游戏各功能模块之前，我们需要首先从宏观视角把握系统的完整行为轮廓与核心交互关系。为此，我们将引入两张用例图——图3.1和图3.2，它们能直观地界定出系统的边界，并清晰地描绘出核心参与者-玩家-在与系统互动过程中所能达成的所有主要目标。这两张图如同一张功能地图，概括了从游戏启动、探索、遭遇事件、进行策略性战斗到管理卡牌与资源的核心循环，为我们接下来逐层深入、详细展开各个精密设计的模块，提供了一个整体性的逻辑框架和讨论基础，用例图如图3.1和图3.2所示。
+[Normal] 图3.1 用例图1
+[Normal] 图3.2 用例图2
+[Heading 1] 4  游戏设计
+[Heading 2] 4.1  游戏策划
+[Normal] 本游戏的核心设计聚焦于两大创新机制：其一，以独创的“颜色栈覆盖规则”取代传统的能量点数管理体系，为玩家的资源规划引入了全新的策略维度；其二，通过“卡牌DIY”系统，赋予玩家高度的个性化构筑自由。为实现这一设计目标，游戏将棋盘探索、战棋式战斗与动态牌库构筑三大模块有机整合，形成一个紧密的策略循环。
+[Normal] 首先，游戏的整体进程由一种掷骰驱动的地图探索机制所推动。系统随机生成的步数决定玩家移动距离，每次移动均消耗能量并可能触发各类随机事件。此阶段是玩家进行资源初步积累、路径选择与风险决策的核心，为后续环节奠定了资源与情境基础。
+[Normal] 其次，在探索中触发的战斗是核心策略的执行与验证环节。战斗发生在一个11格的横向战场中，敌我单位的相对位置是决策关键。玩家需通过打出手牌来移动己方角色，并依据实时位置关系，在“近战”、“枪击”、“炮击”三种攻击模式间进行策略性切换。出牌行为受到“颜色栈”资源系统的制约，玩家必须策略性地管理栈槽中的颜色组合。通过规划出牌顺序以凑齐特定颜色，可清空栈槽并触发对应的攻击增益，从而将卡牌使用、资源管理与战斗输出深度耦合。
+[Normal] 最后，玩家在探索与战斗中获得的所有卡牌资源，最终汇集于卡牌DIY构筑系统。在此系统中，卡牌可被拆解为多个基础“模组”，玩家不仅能借此精简牌库，更可在“工作台”上，根据每张卡牌内置的“点数”阈值，合法地重新装配模组，以此创造出性能超越常规的定制化卡牌。此系统与上述颜色规则共同构成了游戏底层深度高、可自由定制的策略核心。
+[Normal] 综上所述，本游戏通过构建“探索（资源与情境获取）-战斗（策略即时执行与检验）-构筑（策略长期深化与个性化表达）”这一强耦合的闭环流程，旨在提供一种融合了即时战术决策与宏观战略规划的DBG游戏新范式。
+[Heading 2] 4.2  核心玩法
+[Normal] 4.2.1  颜色栈覆盖规则
+[Normal] 栈槽颜色栈只存在于战斗场景玩家手牌上，且每一回合开始，每张手牌上的栈的类型和位置都会重新刷新，栈槽也会清空。颜色栈直观上分为红，蓝，黄三种类型。并且其镜像于三种攻击模式，红色栈代表近战，蓝色栈代表射击，黄色栈代表炮击。玩家每打出一张牌，卡牌上的栈就会装入栈槽的与其位于卡牌上相同位置的对应位置，比如说打出的手牌的栈位于手牌的右部，栈就会在可覆盖的前提下装备到栈槽的右部槽位。至于什么是可覆盖，首先当栈槽槽位为空是默认就是可覆盖，而当存在栈时就需要遵循表4.1的覆盖规则，表4.1如下所示。
+[Normal] 表4.1 覆盖规则表
+[Normal] 卡牌管理系统每次在栈槽更新后去判断当前哪些手牌的栈可覆盖，对于拥有不可覆盖的栈的手牌直接禁用。最关键的是当栈槽被同一类型栈填满时，其类型对应的攻击模式就会临时增加攻击力，在整场战斗结束前该增益都不会消失，这样极大鼓励玩家去凑齐同一类型栈来弥补输出上的劣势。为角色在单局战斗中提供成长性。
+[Heading 3] 4.2.2  卡牌DIY构筑
+[Normal] 每一张卡牌拥有四个槽位，用来插入模组。而模组是简易功能性组件比如说移动一格，造成攻击等，将原本一张卡牌的多种功能拆分化模块化的产物。每个模组拥有一个内置点数，对玩家是透明的，但默认是收益好的模组其点数越大，对于负面性质的模组其点数为负值。当卡牌上所有模组点数累加超过阈值那就是不合法卡牌无法被制造，这样能保证战斗的平衡性。并且玩家获得和拥有所有卡牌都不存在可插入槽位，可插入槽位需要花费金币解锁，且普通卡牌都是有三个槽位需要解锁。
+[Normal] 再者插入的模组需要通过拆解目前牌库中几张牌，但拆解需要花费金币，    且拆解越多开销越大，因为拆解变相的是在精简卡组，要是不加限制，玩家可以不会卡牌插入任何新的模组，而是一味拆解，这就会导致玩家牌组构筑快速成型，缺乏了挑战性。所要需要增加金币作为限制。
+[Heading 3] 4.2.3  三种不同类型的攻击模式
+[Normal] 攻击模式被分为三种，近战模式，射击模式和炮击模式。三种模式具备不同效果，首先近战攻击，其自带一个攻击范围，由角色位置来决定它的落区，比如玩家目前在位置块1，如果近战攻击的攻击范围为3，那么其有效的攻击范围就落在了位置块2，3，4，当敌人刚好位于这三个位置块其中之一，卡牌执行到攻击模式时，只要是在这个范围内的敌人都会受到伤害，近战类型敌人的伤害判定也是如此。
+[HTML Preformatted] 紧接着是射击模式，射击模式是无视敌人位置，但只能对离自身最近的敌人造成伤害，且存在命中率，一旦未命中就会遭受一回合的50%的额外易伤效果。在考虑到群伤的弱势和前卫敌人遮挡后排关键目标下，存在射击亚种——贯穿射击，设置三个等级，等级越高，所能连续打击的目标就越多，失误的概率也随之加大。
+[HTML Preformatted] 最后是炮击，炮击需要玩家亲自指定目标，且需要等待回合才能触发，但其无视距离，无视敌人互相遮挡。炮击自带跟踪不会因为敌人在其回合移动而脱离攻击范围，但其两个亚种并没有跟踪功能，首先是多目标类型，其可打击所有敌人，但是其在位置块上生成的攻击判定不会因为敌人移动而移动。另一个为溅射类型，具有溅射范围属性，会向目标两边衍生，长度由溅射范围决定。
+[Normal] 4.3  模块设计
+[Normal] 主要功能模块图列出了重要的功能以及它们之间的联系，如图4.1所示。
+[Normal] 图4.1 主要功能模块图
+[Normal] 4.3.1  开始与存档模块
+[Normal] 该模块是玩家进入游戏的首个交互界面，承担着游戏流程的入口与存档管理核心功能。界面为玩家提供了“开始游戏”与“继续游戏”两个明确选项，分别对应全新的流程初始化与既有进度的载入。一个关键的设计在于，系统仅提供一个存档栏位。这意味着，当玩家选择“开始新游戏”时，系统将自动覆盖并清除上一次游玩所保存的全部进度数据。此设计明确了单线性的进程导向，既简化了存档管理的复杂度，也提升了游戏的挑战性。
+[Normal] 4.3.2  地图探索模块
+[Normal] 该模块实现基于随机步数的地图移动机制。具体而言，玩家的每次移动并非由其直接操控，而是由系统在回合初随机生成一个步数值，角色将依此数值沿预设路径自动行进。此设计将移动过程本身抽象为一种受控的随机资源，强化了策略规划中对于不确定性因素的管理。然而，在移动路径出现岔路口时，系统会暂停自动移动，将方向选择权交还给玩家。这一关键设计在随机性框架中嵌入有限的决策点，玩家需根据当前局势、资源储备与战略目标，主动选择通往不同事件、奖励或挑战的分支路径，从而实现随机流程下的策略引导与差异化路线构建。其详细流程图如图4.2所示。
+[Normal] 图4.2 地图模块流程图
+[Normal] 4.3.3  地图事件模块
+[Normal] 棋盘上的每个格子均关联一个事件。玩家的落点是触发大部分事件（如资源点、商店等）的决定性条件。然而，战斗事件与终点事件属于强制性事件，其触发条件为“经过”而非“停留”，即玩家只要路径经过对应格子便会触发。
+[Normal] 为构建资源管理策略，系统为玩家设定了有限的能量点数，每次移动至相邻格子均会消耗1点能量。为防止玩家在抵达终点前能量耗尽，游戏在多数事件中均提供了能量获取的机会。各类事件的具体功能与规则详见表4.2，如下所示。
+[Normal] 表4.2 事件功能表
+[Normal] 4.3.4  卡牌系统模块
+[Normal] 对传统卡牌设计进行了结构性解构，打破了“一张卡牌对应一种固定功能”的范式。卡牌的最终效能不再由其本身唯一决定，而是转化为由其承载的功能模组动态组合而成。每张卡牌均预设四个模组槽位，玩家可通过搭配不同的攻击、移动等模组，从根本上定义并提升该卡牌的策略上限与实战价值。
+[Normal] 然而，为强化资源规划与成长体验，玩家在游戏初期获得或拾取的卡牌，其模组槽位并非默认全部开放。部分槽位处于锁定状态，玩家需在游戏过程中消耗金币，以“解锁”相应槽位。此设计将卡牌的完全体构建，从一个纯粹的构筑选择问题，延伸为一个包含资源管理、长期投资与时机判断的连续决策过程，从而深化了卡牌DIY系统的策略维度。
+[Normal] 4.3.5  战斗系统模块
+[Normal] 围绕“手牌驱动攻击”构筑其核心战斗循环，形成了一个融合了位置策略、资源管理与卡牌构筑的复合决策空间。战场被设定为一条横向延伸的11格区域，玩家的核心操作是打出手牌。打出带有移动模组的卡牌时，首先驱动己方角色在战场上移动，随后，系统将依据角色与敌人之间的实时相对位置，动态提供“近战”、“枪击”、“炮击”三种差异化的攻击模式供玩家选择。这三种模式分别对应范围攻击、直线射击攻击和需预锁定回合的高伤害攻击，从而将简单的“出牌”动作深化为一个需综合考量站位、敌我分布与后续策略的立体决策。
+[Normal] 出牌决策进一步受到一套独特的“栈”系统的约束与赋能。每张手牌在打出时，除产生战斗效果外，还会将一个特定颜色的“栈”置入一个容量有限的公共栈槽中。玩家必须遵循预设的“颜色覆盖规则”来管理这些栈，其核心策略在于：通过规划出牌顺序与颜色，主动“凑齐”同色栈组合。一旦达成特定条件，栈槽将被清空，并为对应的攻击模式提供显著的临时属性增益或特效。此机制在基础战斗循环之上，叠加了一层资源规划与时机把握的深度，创造了“管理栈槽以积累优势，触发清空以打出爆发”的次级策略循环。
+[Normal] 战斗的胜利并非终点，而是持续成长的起点。胜利后，玩家通常会获得卡牌、装备、金币等奖励。这些资源被用于在游戏进程中不断强化与调整自己的牌库与装备，构成一个正向的能力成长循环。此循环与游戏动态提升的关卡难度相匹配，驱动玩家必须优化资源管理，并依据当前卡组特点灵活调整战术，以此来应对越来越严峻的挑战，从而确保游戏策略深度的持续性和成长反馈的满足感。
+[Normal] 4.3.6  结算系统模块
+[Normal] 在战斗模块的逻辑终端，系统将严格依据玩家角色的生存状态作为核心判定条件，以决定该轮游戏的胜利与失败。判定生成后，系统将自动结算本场战斗的收益、损耗与数据，并生成一份详细的战后结算清单呈现给玩家。此清单通常包含金币、战斗统计数据、物品获取情况等关键信息。在玩家查看完毕并确认后，界面将引导或由玩家自行操作，返回至游戏的主开始界面。与此同时，系统将执行关键的进程管理操作：当前游戏存档会被重置。这意味着，无论是胜利后开启新一轮的征程，还是失败后重头再来，玩家再次选择“开始游戏”时，面对的都将是一个初始化后的全新世界，以此确保单次游戏进程的独立性与公平性。
+[Heading 1] 5  游戏实现
+[Heading 2] 5.1  地图探索系统的实现
+[Normal] 地图由 TileMapLayer （瓦片地图）实现，TileMapLayer 是 Godot 游戏引擎里，用来把地图元素（如地面、物体、特效）分门别类放在不同“透明图层”上的工具。它让制作、修改和管理复杂的游戏地图变得非常清晰和高效。使用该系统自带的棋盘格坐标系管理角色位置，通过map_to_local函数获取世界坐标，代码如下。
+[Normal] var where_pos=map.map_to_local(pos)
+[Normal] robot.position=where_pos
+[Normal] 其中pos是robot在TileMapLayer上的相对坐标，将其转化为世界坐标where_pos，再将where_pos赋值给角色用于指定其生成位置。整体地图效果如图5.1所示。
+[Normal] 图5.1  TileMapLayer下的地图
+[Normal] 系统在角色每次移动前通过 RandomNumberGenerator 投骰子，会根据玩家目前能量数来更改随机区间并决定步数，再按当前方向逐格移动，Tween 插值完成平滑位移动画。能量是探索资源，以整数上限 15 储存于 Item 资源中，其UI界面效果如图5.2所示。
+[Normal] 图5.2 能量条
+[Normal] 每踩一格扣除对应能量，耗尽则无法继续探索，代码部分如下。
+[Normal] if id<14:#不是转向格
+[Normal] step-=1
+[Normal] Profile.remained_step=step
+[Normal] Profile.item.energy-=1
+[Normal] Profile.item.move_step+=1
+[Normal] #消耗能量条最右端一格，带淡出动画，完成后执行回调
+[Normal] energy_bar.consume_one(on_finished)
+[Normal] 其中item用于存储玩家主要数据，并且通过Profile向多个脚本共享。玩家的能量energy就存储于其中。
+[Normal] 路径分叉时由玩家在界	面上选择方向，如图5.3所示。
+[Normal] 图5.3 玩家方向选择
+[Normal] 整个地图模块脚本维护当前朝向枚举（UP/RIGHT/DOWN/LEFT），角色图片翻转跟随方向同步。被战斗事件拦截时，Profile.intercepted 标记置真，剩余步数写入 Profile.remained_step，战斗结束后重回地图场景可直接继续移动，不重新投骰，实现跨场景步数保留。每次移动完毕调用 save_robot() 将格坐标和方向写入 Item，存档时持久化，代码如下。
+[Normal] elif  tile_id==10 and step>0:#经过战斗事件块也会触发战斗
+[Normal] is_moving = false
+[Normal] Profile.remained_step=step
+[Normal] Profile.intercepted=true
+[Normal] save_robot()
+[Normal] danger.becomeDanger()
+[Normal] return
+[Normal] 其中is_moving是用于对移动动画的调控，不影响整个触发逻辑。danger.becomeDanger是用来进入战斗场景的调用。
+[Heading 2] 5.2  战斗系统的实现
+[Normal] 战斗场景以 11 格线性位置块队列为空间基础，玩家固定在左侧，敌人分布于右侧，所有攻击判定均基于位置块 index 差值计算，与 UI 显示层完全解耦。如图5.4所示。
+[Normal] 图5.4 近战攻击下情景
+[Normal] 每种攻击模式会显示不同攻击范围，图5.4中，当前玩家和敌人都为近战模式，近战的攻击距离都为3，蓝色区域代表玩家的攻击范围，红色区域代表敌人的攻击范围，并且敌人的攻击力数值显示在其头顶。战斗开始时，玩家的攻击模式默认为近战模式，当玩家在其回合中打出带有转换模组的手牌，攻击模式按其循环顺序而改变，其攻击范围的显示也会相应做出改变，如图5.5所示。
+[Normal] 图5.5 远程攻击下情景
+[Normal] 三种攻击模式各有独立判定逻辑。近战（Melee）在位置差不超过判定范围时命中范围内全部敌人。若玩家处于过热（Overheated）状态，范围缩减但伤害随之提升，计算公式为 damage + damage / actual_range，逻辑代码如下。
+[Normal] var overheated:Buff=CharacterArray[0].get_buff("Overheated")
+[Normal] var actual_range:int=mode.range
+[Normal] var actual_damage:int=mode.damage
+[Normal] if overheated!=null:
+[Normal] actual_range=max(1, mode.range - overheated.level)
+[Normal] if actual_range>0:
+[Normal] actual_damage=mode.damage + mode.damage/actual_range
+[Normal] 射击（Shoot）直接命中最近的敌人，命中与否由概率随机数决定，致盲（Blinded）状态每层使命中率降低 15%，未命中时攻击者自身获得易伤（Fragile）层数，如果是设计模式的亚种贯穿攻击（Through_shoot），那么就要考虑其贯穿等级来决定有多少名敌人可以受到伤害，逻辑代码如下。
+[Normal] var blinded:Buff=CharacterArray[0].get_buff("Blinded")
+[Normal] var actual_probability:int=mode.probability
+[Normal] if blinded!=null:
+[Normal] actual_probability=max(0, mode.probability - 15*blinded.level)
+[Normal] if mode is Through_shoot:
+[Normal] var times=min(CharacterArray.size()-1,mode.level+1)
+[Normal] for i in range(times):
+[Normal] var hit:bool=CharacterArray[i+1].isShot(...)
+[Normal] if not hit:
+[Normal] # 未命中，攻击者自加易伤
+[Normal] _add_buff_to_character(CharacterArray[0],"Fragile",1)
+[Normal] 炮击（Shelling）采用两阶段机制：首次触发时记录锁定状态并启动倒计时，每次角色回合开始前倒计时减一，归零后自动发射；炮击方若主动移动则重置倒计时，迫使重新锁定。炮击支持三种属性弹子类：燃烧弹命中施加过热，闪光弹命中施加致盲，干扰弹命中施加哑火（每层增加炮击等待回合数），由 current_missile 字段决定当前装填类型。但是目前属性弹还未具备模组用来真正的装备使用，代码如下。
+[Normal] if !enemyIsTarget:
+[Normal] enemyIsTarget=true
+[Normal] mode.current_time=mode.time
+[Normal] show_player_hit_range()
+[Normal] 由于炮击模式不直接造成伤害，所以是先通过show_player_hit_range函数重新更新玩家的攻击范围，与其他两种模式代码有较大区别。
+[Normal] 敌人 AI 基于行为枚举（EnemyBehavior）分发，在 fight_menu.gd 统一处理逻辑，不在数据类中存储。近战型 AI 能打到玩家时，先调用 _calc_teammate_total_damage() 估算其他敌人对玩家可造成的预期伤害（射击按命中率随机判定，炮击仅计入下回合即将发射的），若队友预期伤害超过自身且玩家是近战模式则选择压位移动而非攻击，形成协同决策，代码逻辑如下。
+[Normal] var my_mode: Melee = enemy.setting.attack_mode as Melee
+[Normal] var my_damage: int = my_mode.damage if my_mode != null else 0
+[Normal] var teammate_max_damage: int = _calc_teammate_total_damage(enemy)
+[Normal] if teammate_max_damage > my_damage and CharacterArray[0].setting.attack_mode==Melee:
+[Normal] # 当玩家是近战攻击时，队友潜在伤害更高，移动压位（自己仍在攻击范围内）
+[Normal] show_enemy_hit_range(enemy)
+[Normal] else:
+[Normal] # 自己打更有价值
+[Normal] show_enemy_hit_range(enemy)
+[Normal] 射击型、不可移动型不走位直接攻击；炮击型锁定后等待触发。回合结构为玩家回合与敌人回合严格交替，胜负由角色存活状态判定，胜利时自动还原三种武器伤害数值。
+[Heading 2] 5.3  卡牌与栈覆盖系统的实现
+[Normal] 每张卡牌持有 4 个模组槽 function_list[4]，每个槽位存储 function 子类实例（共 14 种：前进、后退、攻击、调节、弃牌 ×2、抽牌 ×3、加载、替换、一次性、消耗、封锁）。模组有点数属性，对玩家透明，所有槽位点数之和不超过 10 为合法卡牌（max_point = 10），一次性（-4 点）和消耗（-5 点）为负代价模组，允许在有限点数内装入更多功能。卡牌流向由模组组合决定：含消耗模组在使用或回合结束时被消耗入消耗牌堆，含一次性被使用后不进入任何牌堆，普通卡牌使用后进弃牌堆，弃牌堆耗尽时整体洗回主牌堆。
+[Normal] 出牌流程分两阶段执行。第一阶段：玩家点击卡牌，apply_function() 遍历模组列表，逐个调用 apply() 将对应 AnimationUnit 压入 _anim_queue，遇到 Lock 模组立即终止遍历，整个过程同步完成。第二阶段：consume_queue() 递归串行 await 执行队列中每个动画单元，一个执行完毕再执行下一个。需要玩家交互的模组（弃牌、加载、替换）在 play() 内部通过 await signal 挂起，玩家完成操作后信号触发，继续执行队列剩余内容，无需回调嵌套。卡牌离场聚拢动画设计为 fire-and-forget（不 await），与功能队列并行，视觉上手牌整理与效果执行同时发生。卡牌被点击的信号向卡牌管理器脚本传递，卡牌管理器根据当前类型对这张卡牌进行一系列处理，代码如下。
+[Normal] func cope_with_card_clicked(card:Card):#处理点击信号
+[Normal] is_function=false
+[Normal] match click_mode:
+[Normal] Click_mode.Fuction_mode:
+[Normal] #卡牌发挥功能
+[Normal] Click_mode.Discard_mode:
+[Normal] #点击后被丢弃
+[Normal] Click_mode.Load_mode:
+[Normal] #更改卡牌上的栈
+[Normal] Click_mode.Replace_mode:
+[Normal] #交换卡牌上的栈
+[Normal] 三槽栈覆盖系统是出牌策略的核心约束。每张手牌携带一个栈对象，包含类型（近战/射击/炮击）和目标位置（左/中/右）如图5.6示例。
+[Normal] 图5.6 位于手牌堆中的一张卡牌
+[Normal] 图5.6中右侧红色部分即为栈。
+[Normal] 玩家出牌时 is_coverd() 判定是否可覆盖：空槽位无限制，同类型不可覆盖，覆盖规则沿克制链方向（射击覆盖近战、炮击覆盖射击、近战覆盖炮击），利用字典实现该机制，代码如下。
+[Normal] var cover_list:Dictionary={
+[Normal] Stack.Stack_mode.Melee:Stack.Stack_mode.Shoot,
+[Normal] Stack.Stack_mode.Shoot:Stack.Stack_mode.Shelling,
+[Normal] Stack.Stack_mode.Shelling:Stack.Stack_mode.Melee
+[Normal] }
+[Normal] var current: Stack = stackArray[stack.stack_pos]
+[Normal] # 空位置直接放
+[Normal] if current == null:
+[Normal] return true
+[Normal] # 传入的栈是空类型，不能覆盖
+[Normal] if stack.stack_mode == Stack.Stack_mode.Empty:
+[Normal] return false
+[Normal] # 当前槽位是空类型，可以直接放
+[Normal] if current.stack_mode == Stack.Stack_mode.Empty:
+[Normal] return true
+[Normal] # 当前槽位与传入栈同类型，不能覆盖
+[Normal] if current.stack_mode == stack.stack_mode:
+[Normal] return false
+[Normal] # 查克制链
+[Normal] if cover_list.has(current.stack_mode) and cover_list[current.stack_mode] == stack.stack_mode:
+[Normal] return true
+[Normal] 三槽同色则清空栈条并对该攻击模式提供 +2 伤害增益，每回合可触发多次，栈类型匹配代码如下。
+[Normal] for i in range(stackArray.size()-1):
+[Normal] if stackArray[0].stack_mode!=stackArray[i+1].stack_mode:
+[Normal] return
+[Normal] 依次遍历栈槽，若出现差异便直接退出。这样就做到了最快捷的类型匹配。当匹配成功后，增加相应攻击模式的攻击力。
+[Heading 2] 5.4  数据持久化与存档系统的实现
+[Normal] 本游戏所有跨场景共享的运行时数据均以 Godot Resource 为基础类型存储，存档则利用 ResourceSaver 将资源序列化为 .tres 文件写入 user:// 目录。
+[Normal] 玩家背包数据由 Item 类承载（继承 Resource），其中包含金币、能量、地图坐标、武器背包三个数组、统计字段等，全部标注 @export，Godot 序列化引擎可自动识别并写入文件。武器继承体系为 Attack → Melee / Shoot / Shelling，三者均继承 Resource，可直接作为 Item 的 @export 字段嵌套序列化。SaveData 类同样继承 Resource，聚合 Item、武器快照、玩家血量和牌库索引，调用 save_data() 时先执行 record() 从 Profile 拉取当前运行状态，再调用 ResourceSaver.save(self, path) 写入磁盘，整个过程无需手写文件格式，由引擎完成序列化，保存的数据为如下序列。
+[Normal] [gd_resource type="Resource" script_class="SaveData" format=3]
+[Normal] [ext_resource type="Script" path="res://scripts/Weapon/Melee.gd" id="1_2vpbn"]
+[Normal] [ext_resource type="Script" path="res://scripts/Weapon/Missile/Firebomb.gd" id="2_msjot"]
+[Normal] [ext_resource type="Script" path="res://scripts/Weapon/Missile/Flare.gd" id="3_tt8gf"]
+[Normal] [ext_resource type="Script" path="res://scripts/Weapon/Missile/FlashBang.gd" id="4_arxco"]
+[Normal] [ext_resource type="Script" path="res://scripts/Weapon/Shelling.gd" id="5_q6dt8"]
+[Normal] [ext_resource type="Script" path="res://scripts/Weapon/Shoot.gd" id="6_5uojg"]
+[Normal] [ext_resource type="Script" path="res://scripts/Item.gd" id="7_3frwo"]
+[Normal] [ext_resource type="Script" path="res://scripts/SaveData.gd" id="8_7oxi8"]
+[Normal] ...
+[Normal] 牌库的序列化是本系统中的特殊处理点。Card 是场景节点而非纯资源，不能直接序列化为 @export 字段。为此，SaveData 使用 deck_ids: Array[Array] 字段，保存每张卡牌的模组 id 二维数组（每张卡对应一个[id0,id1,id2,id3] 数组）；读档时通过 Profile.function_factory() 根据 id 重建各模组实例，再拼装为完整的卡牌对象，恢复整副牌库，避免了场景节点序列化的兼容性问题。之所以采用 id 索引而非直接存储节点，核心原因在于：Resource 序列化要求被序列化的对象须有无参 _init()，且类结构保持稳定；若将 Card 节点内嵌为 SubResource 写入 .tres，任何对模组类的重构都会导致存档反序列化失败，将id序列转化为可用牌库代码如下。
+[Normal] func load_deck(value:Array[Array]):#加载牌库
+[Normal] Deck.clear()
+[Normal] for array in value:
+[Normal] var card_scene=load("res://scenes/Card/card.tscn")
+[Normal] var card :Card= card_scene.instantiate() as Card
+[Normal] card.function_list.resize(4)
+[Normal] for i in array.size():
+[Normal] card.function_list[i]=id_to_function(array[i])
+[Normal] Deck.append(card)
+[Normal] id_to_function函数将序列中元素转换为对应模组，然后包装成卡牌存入牌库数组。
+[Normal] 读档流程：游戏启动读取 save.tres，以 ResourceLoader.load() 获得 SaveData 实例，调用 Item 数据写回 Profile.item，根据 deck_ids 重建 Profile.Deck玩家牌库，武器引用直接赋值到 Profile.player 的三个武器字段，完成状态还原。由于所有场景都通过 Profile 这一 Autoload 单例读取数据，存档恢复后各场景无需额外初始化。
+[Heading 2] 5.5  卡牌DIY系统的实现
+[Normal] 工作台（workshop.gd）提供扩容和改造两个功能，均对 Profile.Deck 玩家牌库中的实际卡牌对象直接操作，改动实时反映到牌库，其界面如图5.7所示。
+[Normal] 图5.7 扩容界面
+[Normal] 点击中央白色区域后，右侧弹出选项栏，如图5.8所示。
+[Normal] 图5.8 选择需要扩容对象
+[Normal] 从右侧卡牌中选择一张卡加入到白色选区中，从中选择一张牌后，界面如图5.9所示。
+[Normal] 图5.9 已选择需要扩容的对象
+[Normal] 点击“-100”后，在who_is_the_target函数中对目前可用金额进行更新代码如下。
+[Normal] Profile.item.money-=cost
+[Normal] current_money.text="目前还剩资金：%d"%Profile.item.money
+[Normal] item中的money用于存储玩家的可支配金钱，每次对卡牌进行扩容都需要对该成员变量进行数值的更新，并且cost会通过_calc_cost函数进行数值上的增加。防止玩家连续多次扩容。扩容后的界面如图5.10所示。
+[Normal] 图5.10 对象已扩容
+[Normal] 扩容原理就是把锁模组替换为空白模组，代码如下。
+[Normal] for i in range(Chosen_card.function_list.size()):
+[Normal] if Chosen_card.function_list[i] is Card.Lock:
+[Normal] Chosen_card.change_function(Card.Blank.new(),i)
+[Normal] break
+[Normal] 通过遍历卡牌上的模组，优先将第一个锁模组替换为空白模组。
+[Normal] 然后点击左上“改写”进入改写界面，如图5.11所示。
+[Normal] 图5.11 改写界面
+[Normal] 点击“开始修改”按钮，左侧弹出选择栏，并且只显示拥有空白模组的卡牌，如图5.11所示。
+[Normal] 图5.11 选择需要改写对象
+[Normal] 选择选择栏中的卡牌后，系统弹出提示，避免玩家误选无法返回，如图5.12所示。
+[Normal] 图5.12 确定选项框
+[Normal] 点击“返回”将回到上一步的操作。反之选择“是的”，左侧选择栏更新为牌库和有用信息，方便玩家进行选择拆解目标，并且排除了被选择的带空白模组卡牌。如图5.13所示。
+[Normal] 图5.13 选择拆解对象
+[Normal] 选择拆解目标后点击是没有确认步骤的并且拆解不可还原，根据当前经济情况进行拆解，左下信息栏做出更新，如图5.14所示。
+[Normal] 图5.14 拆解对象后界面
+[Normal] 点击空白模组区域，右侧弹出模组栏，其中包含所有拆解出来的可用模组，锁模组和空白模组定义为不可用模组，界面如图5.15所示。
+[Normal] 图5.15 选择模组
+[Normal] 点击右侧目前可用模组后，被选中的卡牌做出画面更新，如图5.16所示。
+[Normal] 图5.16 模组插入完毕
+[Normal] 系统根据其点数进行合法性计算，代码如下。
+[Normal] var sum=0
+[Normal] if Chosen_card!=null:
+[Normal] for i in Chosen_card.function_list:
+[Normal] sum+=i.point
+[Normal] if sum<=Chosen_card.max_point:
+[Normal] return true
+[Normal] return false
+[Normal] 当返回值为false时，说明该卡牌不合法，“应用”按钮将被禁用，玩家可以点击原空白模组区域，进行重新编辑，如图5.17所示。
+[Normal] 图5.17 撤回插入操作
+[Normal] 在此选择右侧模组，并且点击应用后即可返回地图界面，通过地图界面查看当前牌库信息，如图5.18所示。
+[Normal] 图5.18 牌库界面
+[Normal] 第一排第三列为被修改卡牌，修改成功。
+[Heading 2] 5.6  装备替换的实现
+[Normal] 由于随机性无法保证测试条件一定触发，所以通过fill_test_weapons函数为玩家生成多种初始武器。玩家需要通过触发装备事件，进入装备界面，该界面如图5.19所示。
+[Normal] 图5.19 装备信息界面
+[Normal] 三个文本框按钮代表三种不同的攻击模式，其三个的副标题指明了玩家当前装备的名称，点击“近战装置”按钮，进入装备栏目录，玩家可以通过预览装备栏来选择需要装备的武器，如图5.20所示。
+[Normal] 图5.20 近战装备信息栏
+[Normal] 在图5.20中，装备栏位于中央，并且排除玩家目前所装备的武器，左侧显示目前装备的面板，右侧显示可装备武器的面板，如图5.21所示。
+[Normal] 图5.21 鼠标悬浮于“ME-00004”
+[Normal] 系统会自动为玩家分析可装备武器和装备武器的对比，并显示在右侧面板中，绿色字体代表优，红色字体代表劣，其部分代码如下。
+[Normal] select_weapon_detail.text=value.code+"\n"
+[Normal] select_weapon_detail.text+="攻击力：%d "%value.damage
+[Normal] if value is Melee:
+[Normal] var gap=value.damage-Profile.player.melee.damage
+[Normal] if gap>0:
+[Normal] select_weapon_detail.text+="[color=#00ff00]+%d[/color]\n" % gap
+[Normal] elif gap<0:
+[Normal] select_weapon_detail.text+="[color=#ff0000]%d[/color]\n" % gap
+[Normal] else:
+[Normal] select_weapon_detail.text+="\n"
+[Normal] select_weapon_detail.text+="攻击范围：%d "%value.max_range
+[Normal] gap=value.max_range-Profile.player.melee.max_range
+[Normal] if gap>0:
+[Normal] select_weapon_detail.text+="[color=#00ff00]+%d[/color]\n" % gap
+[Normal] elif gap<0:
+[Normal] select_weapon_detail.text+="[color=#ff0000]%d[/color]\n" % gap
+[Normal] else:
+[Normal] select_weapon_detail.text+="\n"
+[Normal] 其中文本采用BBCode格式，其是一套用简单中括号标签（如 [b]、[color]）来告诉电脑“如何美化这段文字”的规则[15]。对一段文本的部分字体进行差异化样式修改。
+[Normal] 点击第二个武器作为当前装备武器后，返回主装备界面，并且更新副标题，界面如图5.22所示。
+[Normal] 图5.22 近战装备按钮与附标题
+[Normal] 再次点击“近战装置”来到装备选择界面，原装备武器已出现在中央的武器栏中，如图5.23所示。
+[Normal] 图5.23 当前近战装备选项
+[Normal] 其他两种类型装备具备相同功能，但存在分支亚种，这里补充细节说明，当射击武器更替为拥有贯穿词条的射击武器时，系统判定为优质，如图5.24所示。
+[Normal] 图5.24 待选择远程武器的信息栏
+[Normal] 如果装备武器也具备贯穿等级那么就是数值上的普通比较。
+[Normal] 再者是炮击类型的武器，其分支与普通炮击特点上不存在优劣区别，各有其长处与劣势，所以没有做出显示。但对于可装备的属性弹种类做出了较为明确的优劣判断，如图5.25所示。
+[Normal] 图5.25 待选择导弹武器的信息栏
+[Normal] 最后，如何判断其武器是否属于亚种，玩家可以通过名称前缀字母推断，同一种分支的名称前缀是相同的，后缀编码是有所区别的，其编码例子如下。
+[Normal] best.code = "ME-" + str(get_random(10000, 99999))
+[Normal] 此为近战攻击，后五位编号由系统随机生成。
+[Heading 2] 5.7  武器变卖实现
+[Normal] 首先需要通过evaluate_price函数对每种武器进行价值评估，以近战武器为例，其代码如下。
+[Normal] price=20
+[Normal] price*=(1+0.08*damage+0.12*max_range)
+[Normal] 系统会根据其词条数值，在初始价值的基础上对其价值进行重新计算。
+[Normal] 玩家需要触发当铺事件进入当铺界面，其界面如图5.26。
+[Normal] 图5.26 当铺界面
+[Normal] 与装备界面相似向玩家提供三种武器类型选项，依次打开对应的武器栏。以远程装置为例，点击“远程装置”，界面如图5.27所示。
+[Normal] 图5.27 远程装备选项栏
+[Normal] 武器栏会排除目前所装备的武器，选择武器栏中其中之一，玩家可以通过移动鼠标阅览其价值，如图5.28所示。
+[Normal] 图5.28 鼠标悬停在“ST-00002”
+[Normal] 点击武器名称即可卖出武器，当前金额的文本进行更新，如图5.29所示。
+[Normal] 图5.29  “ST-00002”已卖出
+[Normal] 因为卖出的武器以不存在于玩家的资源中，所以其因为武器栏的更细而消失在武器栏中。
+[Heading 1] 6  游戏测试
+[Heading 2] 6.1  测试方法
+[Normal] 以人工测试为主，目前游戏的整体流程以及各个环节由开发者和测试员多次测试。开发者即时获取测试员问题反馈对游戏进行逻辑和数值的调整。测试员以玩家的身份向开发者反馈个人体验，提供有效的修改建议。
+[Normal] 并且Godot引擎本身自带调试功能，可以通过print日志的方式来判断脚本的执行情况，如图6.1所示。
+[Normal] 图6.1 print日志
+[Normal] 开发者可以根据日志的输出来判断脚本的执行情况。并且下一节点测试过程    与结果内容主要以调试性测试为主。
+[Heading 2] 6.2  测试过程与结果
+[Normal] 总体测试结果已记录与表6.1中，表6.1如下所示。
+[Normal] 表6.1 测试过程与结果表
+[Heading 1] 7  总结与展望
+[Heading 2] 7.1  总结
+[Normal] 成功设计并实现了一款基于Godot引擎、融合“颜色栈覆盖规则”与“卡牌DIY”机制的创新性DBG卡牌游戏。总体上达成了预设的核心目标：通过“颜色栈”系统重构了卡牌资源管理，为策略规划引入了新维度；通过高自由度的卡牌模组装配系统，显著提升了卡牌构筑的个性化表达。技术层面，基于Godot引擎及其GDScript脚本语言，完成了从棋盘探索、战棋战斗到卡牌编辑、数据持久化等全套功能模块的开发与集成，游戏核心循环运行稳定。
+[Normal] 并且通过开发实践，积累了超出技术实现层面的宝贵经验，并引发了多角度的深度反思。首先，由于“颜色栈”规则与“卡牌DIY”系统均属创新设计，市场上缺乏可直接对标的成熟产品作为参照，这使得游戏的策略平衡性与长期体验验证无法通过简单参考完成，而必须依赖构建快速可玩原型，并通过多轮玩家测试的反馈数据进行持续迭代与优化。这一过程不仅证实了“设计-测试-调整”循环在创新玩法开发中的核心价值，也凸显了在缺乏先例时，将定量数据与定性反馈相结合以驱动决策的必要性。
+[Normal] 其次，在项目初期，开发精力过度聚焦于核心机制的可行性验证，相对忽视了对整体代码架构的前瞻性规划与脚本的系统性管理。这直接导致了两个严重后果：一是各个功能模块间的接口定义模糊或缺失，使得后续调整时常引发意想不到的连锁问题，代码的一致性与可维护性逐渐劣化；二是所有脚本文件缺乏清晰的分类与命名规范，混合存放于同一目录，极大地增加了后期定位特定功能代码、修复缺陷以及进行系统性优化的时间成本。此教训深刻揭示了，即使是小型原型项目，前期的技术规范与架构设计也是保障开发效率、支撑持续迭代不可缩减的基础工作。
+[Normal] 再者，受限于单人开发的周期与资源，在游戏内容丰富度、美术素材质量及UI打磨上未能完全达到预期，深刻体会到现代游戏开发中团队协作与专业分工对项目效率与成果质量的至关重要性。
+[Heading 2] 7.2  展望
+[Normal] 基于测试反馈与设计反思，本游戏的后续发展将主要围绕玩法机制优化、技术债务清理与内容规模扩展三个方向进行系统性规划。
+[Normal] 在玩法机制层面，核心目标是增强玩家的策略主动性与决策深度。首要改进是将现有的随机步数移动机制，调整为由玩家自主控制移动，并通过消耗能量来主动触发地图事件的新模式。此举旨在彻底解决因随机性导致玩家无法体验核心玩法（如“工作台”事件）的挫败感，将地图探索转化为一个需要规划能量资源、权衡事件收益的主动策略环节。同时，为了优化操作体验并提升事件的价值密度，计划将部分功能相近或触发频繁的操作型事件进行合理合并，使每次能量消耗都能带来更充实、综合的反馈，让决策更聚焦。与之配套，战斗系统也将进行针对性调整：通过更加约束手牌上限来凸显“弃牌”模组的战略价值，并将“炮击”模式的移动惩罚调整为“解除锁定”，以增加其风险博弈的维度。
+[Normal] 在技术实现层面，项目将着力重构代码架构以支撑上述复杂玩法的灵活迭代。当前版本因开发周期紧张而积累的脚本管理混乱、接口缺失等问题，将通过模块化重构与建立清晰的资源规范来系统性地解决。重点在于为游戏系统设计可扩展的数据接口与事件通信机制，确保新功能的高效集成与长期维护性，为持续开发奠定坚实的工程基础。
+[Normal] 在内容与生产维度，长远来看，游戏的进一步深化必然需要走向内容扩充与团队化开发。计划通过添加更多的卡牌模组、敌人类型、关卡主题和叙事元素来大幅提升游戏的丰富度与可重玩性。而要实现这一内容规模和品质的飞跃，单一开发者的能力与时间瓶颈将愈发凸显。因此，最终走向小型、专业的协作开发模式，汇聚策划、程序、美术与音效等专业力量，是推动本项目从一个毕业设计原型进化为一款完整、成熟作品的必经之路。
+[Normal] 参考文献
+[Normal] 张苏杭. 构筑型卡牌游戏的“流派”设计研究[D].中国美术学院, 2024：16-18.
+[Normal] Unity Technologies. Unity Pricing and Packaging Updates[EB/OL]. (2023-09-12)[2024-05-15].
+[Normal] PC游戏行业正处十字路口:机遇、困境与未来走向[EB/OL]. (2026-04-24)[2026-05-15].
+[Normal] 独立游戏市场规模、份额及成长分析(依游戏类型、平台、主题、发行管道及地区划分)-2026-2033年产业预测[EB/OL]. (2026-01-02)[2026-05-15].
+[Normal] 《杀戮尖塔2》团队谈平衡设计:先做「帅又好玩」的卡牌,再让玩家尽情玩坏游戏[EB/OL]. (2026-02-28)[2026-05-15].
+[Normal] 游戏动态丨《杀戮尖塔2》与Godot引擎的转型之路[EB/OL]. (2026-03-10)[2026-05-15].
+[Normal] 卡牌构筑[EB/OL]. (2026-04-27)[2026-05-15].
+[Normal] 【爆款新游】像素塔防DBG,或称为SLG下一个新方向?-《9 Kings》产品分析[EB/OL]. [2026-05-15].
+[Normal] With a mix of RTS and deckbuilding, Warcana is truly one of the strangest genre patchworks I've ever seen[EB/OL]. (2026-03-20)[2026-05-15].
+[Normal] Godot Engine,Godot Engine documentation[EB/OL],[2026-05-14]
+[Normal] VANHOVE S. Learning GDScript by Developing a Game with Godot 4: A fun introduction to programming in GDScript 2.0 and game development using the Godot Engine[M]. Birmingham: Packt Publishing, 2024.
+[Normal] HENNING R. Godot 4 for Beginners: Develop engaging 2D and 3D games with Godot 4's scripting and design features[M]. Birmingham: Packt Publishing, 2025.
+[Normal] HALLADAY K. Practical Shader Development: Vertex and Fragment Shaders for Game Developers[M]. [S.l.]: Apress, 2019.
+[Normal] Godot Engine. Introduction to shaders — Godot Engine (latest) documentation in English[EB/OL].
+[Normal] Godot Engine. GDScript reference[EB/OL]. [2026-05-15].
+[Normal] 致谢
+[Normal] 时光如白驹过隙，四年大学岁月已悄然步入尾声。在这最后的校园时光里，我倾力完成了这份毕业设计及论文。在此期间，幸得诸多良师益友的鼎力相助，谨以此文，聊表寸心。
+[Normal] 首先，由衷感谢我的导师赵红武教授。从选题立意、框架构建，到细节推敲、文稿润色，赵老师始终以严谨的治学态度和深厚的专业学识，给予我悉心指导。
+[Normal] 感谢我可爱的室友们。四年同窗，我们不仅分享了求知的快乐，更在无数个日夜的相伴中，成为了彼此扶持的家人。那些一起挑灯夜战、畅谈理想的时光，那些互相鼓励、共度难关的时刻，是大学生活中最温暖的光亮。天涯未远，山水有期，愿我们此去前程似锦，情谊长青。
+[Normal] 深深感谢我远方的父母与挚友。你们的理解与支持，是我在外求学的坚实后盾；你们的牵挂与鼓励，化为我前行路上不竭的动力。每通电话里的嘘寒问暖，每次归家时的无声期盼，让我深知，无论走多远，总有一盏灯为我而亮。
+[Normal] 最后，感谢所有在此过程中给予我帮助、启发与温暖的师长、同窗。每一份善意，都曾照亮我某段略显晦暗的路途。
+[Normal] 凡是过往，皆为序章。带着这份收获与感恩，我将继续保持对知识的热忱、对专业的敬畏，脚踏实地，奔赴下一场山海。衷心祝愿每一位帮助过我的人，平安喜乐，万事顺遂。

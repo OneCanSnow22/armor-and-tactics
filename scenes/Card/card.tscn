@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://c81vx1a47mxea"]
+
+[ext_resource type="Script" uid="uid://c43cls7f71pqc" path="res://scripts/card.gd" id="1_nufwx"]
+[ext_resource type="Texture2D" uid="uid://dqlr8m6eb53rt" path="res://assets/cards/select.png" id="2_bclmf"]
+[ext_resource type="PackedScene" uid="uid://qkra5gt8se0v" path="res://scenes/Card/stack.tscn" id="2_r0nle"]
+[ext_resource type="Texture2D" uid="uid://cnx7clf0p8mhp" path="res://assets/cards/ban.png" id="3_nufwx"]
+[ext_resource type="Texture2D" uid="uid://b2ipcbcubi1tn" path="res://assets/cards/discard.png" id="5_r0nle"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iopka"]
+bg_color = Color(0.011764706, 0.3529412, 0.1764706, 0.827451)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="Card" type="Control" unique_id=1249424169 node_paths=PackedStringArray("discard_logo", "line_box")]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1800.0
+offset_bottom = -960.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(60, 60)
+script = ExtResource("1_nufwx")
+discard_logo = NodePath("discard")
+line_box = NodePath("func_background/HFlowContainer")
+
+[node name="background" type="ColorRect" parent="." unique_id=1594458100]
+layout_mode = 0
+offset_right = 120.0
+offset_bottom = 120.0
+color = Color(0, 0.3137255, 0.23529412, 1)
+
+[node name="stack" parent="." unique_id=548979824 instance=ExtResource("2_r0nle")]
+layout_mode = 0
+offset_bottom = 120.0
+stack_mode = 1
+stack_pos = 1
+
+[node name="func_background" type="PanelContainer" parent="." unique_id=200094400]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 9.0
+offset_right = 77.0
+offset_bottom = 77.0
+scale = Vector2(1.5, 1.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_iopka")
+
+[node name="HFlowContainer" type="HFlowContainer" parent="func_background" unique_id=926878872]
+custom_minimum_size = Vector2(68, 68)
+layout_mode = 2
+
+[node name="select" type="TextureRect" parent="." unique_id=1534829617]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_bclmf")
+
+[node name="interact" type="Control" parent="." unique_id=1999462173]
+anchors_preset = 0
+offset_right = 120.0
+offset_bottom = 120.0
+
+[node name="ban" type="TextureRect" parent="." unique_id=1803961704]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_nufwx")
+
+[node name="discard" type="TextureRect" parent="." unique_id=899657572]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("5_r0nle")
+
+[connection signal="mouse_entered" from="interact" to="." method="_on_select_mouse_entered"]
+[connection signal="mouse_exited" from="interact" to="." method="_on_interact_mouse_exited"]

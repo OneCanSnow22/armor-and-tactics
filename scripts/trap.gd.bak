@@ -1,0 +1,98 @@
+extends CanvasLayer
+@export var speaker:Speaker
+@export var word:HBoxContainer#拿来吧你的显示
+@export var coin_page:HBoxContainer
+@export var energy_page:HBoxContainer
+@export var card_page:HBoxContainer
+@export var weapon_page:HBoxContainer
+@export var money_label:Label
+@export var energy_label:Label
+@export var weapon_label:Label
+@export var price_label:Label
+var trap_cost:int
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	speaker.set_expression("res://assets/character/monster_01/monster01_smile.png")
+	speaker.start("拿来吧，你！")
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+func hide_all_page():
+	coin_page.visible=false
+	energy_page.visible=false
+	card_page.visible=false
+	weapon_page.visible=false
+func open_coin_page():#减少金币
+	hide_all_page()
+	coin_page.visible=true
+	trap_cost=Profile.item.money*0.1
+	money_label.text="%d$"%trap_cost
+	money_label.visible_characters=0
+	var speed=10
+	var duration=money_label.text.length()/speed
+	var tween=create_tween()
+	tween.tween_property(money_label,"visible_characters",money_label.text.length(),duration)
+	await tween.finished
+	Profile.item.money-=trap_cost
+func open_energy_page():#减少能量
+	hide_all_page()
+	energy_page.visible=true
+	var max_energy_range=Profile.item.energy
+	var energy_cost=Profile.rng.randi_range(min(2,max_energy_range),min(5,max_energy_range))
+	energy_label.text="%dgrid_energy"%energy_cost
+	energy_label.visible_characters=0
+	var speed=10
+	var duration=energy_label.text.length()/speed
+	var tween=create_tween()
+	tween.tween_property(money_label,"visible_characters",money_label.text.length(),duration)
+	await tween.finished
+	Profile.item.energy-=energy_cost
+func open_card_page():#减少卡牌
+	hide_all_page()
+	card_page.visible=0
+	var used_card:Card=Profile.Deck[0]
+	for _i in Profile.Deck:#寻找使用次数最多的卡牌
+		var card:Card=_i as Card
+		if used_card.used_times<card.used_times:
+			used_card=card
+	if used_card!=null:
+		card_page.add_child(used_card)
+		used_card.apply_card()
+		used_card.display()
+		used_card.just_for_check=true
+func open_weapon_page():#减少武器
+	var weapons:Array
+	for _i in Profile.item.meleeBag:
+		if _i !=Profile.player.melee:
+			weapons.append(_i)
+	for _i in Profile.item.shootBag:
+		if _i!=Profile.player.shoot:
+			weapons.append(_i)
+	for _i in Profile.item.shellingBag:
+		if _i!=Profile.player.Shelling:
+			weapons.append(_i)
+	var the_best:Profile.Attack
+	if weapons.size()>=1:#抛开玩家装备的三件武器来选取最有价值的一件
+		for _i in weapons:
+			var w:Profile.Attack=_i as Profile.Attack
+			if w.evaluate_price()>the_best.evaluate_price():
+				the_best=w
+	if the_best!=null:
+		weapon_label.text=the_best.code
+		price_label.text="PRICE:%d$"%the_best.evaluate_price()
+func randomIndex()->int:
+	print("随机页面ID")
+	return 0
+func randomPage():#根据id生成页面
+	match randomIndex():
+		0:
+			open_coin_page()
+		1:
+			open_energy_page()
+		2:
+			open_card_page()
+		3:
+			open_weapon_page()

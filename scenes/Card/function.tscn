@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dq3es102sq2hp"]
+
+[ext_resource type="Script" uid="uid://dgo44tlkuvao8" path="res://scripts/function.gd" id="1_auhgj"]
+
+[node name="function" type="TextureRect" unique_id=1639971585]
+custom_minimum_size = Vector2(32, 32)
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_auhgj")

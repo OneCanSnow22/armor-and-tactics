@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://bqdao1on5af7e"]
+
+[ext_resource type="Script" uid="uid://ch3ptx1cxlkb" path="res://scripts/select_function.gd" id="1_3imrm"]
+[ext_resource type="PackedScene" uid="uid://dq3es102sq2hp" path="res://scenes/Card/function.tscn" id="2_aeoxn"]
+[ext_resource type="Texture2D" uid="uid://bmu4cfrt55pvl" path="res://assets/cards/chosen_mode.png" id="3_q7wen"]
+[ext_resource type="Texture2D" uid="uid://bfvvve857weje" path="res://assets/cards/lock_mode.png" id="4_aeoxn"]
+
+[node name="Select_function" type="Control" unique_id=1168018617 node_paths=PackedStringArray("measure", "button", "locked")]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+script = ExtResource("1_3imrm")
+measure = NodePath("function")
+button = NodePath("TextureButton")
+locked = NodePath("TextureRect")
+
+[node name="function" parent="." unique_id=1639971585 instance=ExtResource("2_aeoxn")]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=221610132]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+texture_hover = ExtResource("3_q7wen")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1355336539]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+texture = ExtResource("4_aeoxn")
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

@@ -1,0 +1,195 @@
+[gd_scene format=3 uid="uid://ydjr8axjp24u"]
+
+[ext_resource type="Script" uid="uid://c6457xbseok7g" path="res://scripts/repair.gd" id="1_bagiw"]
+[ext_resource type="Texture2D" uid="uid://vy7xi0cmdcsf" path="res://assets/page/cmd.png" id="1_px4h1"]
+[ext_resource type="Texture2D" uid="uid://c7j4jqy0v35cb" path="res://assets/page/quit1.png" id="2_bagiw"]
+[ext_resource type="Texture2D" uid="uid://1vrmdml76gf0" path="res://assets/page/quit3.png" id="3_a55er"]
+[ext_resource type="Texture2D" uid="uid://b05v6i8ieonfe" path="res://assets/page/quit2.png" id="4_cllaj"]
+[ext_resource type="Texture2D" uid="uid://3j0jhk3ox6i7" path="res://assets/character/monster_02/monster02_cool.png" id="5_s4jut"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="6_xb7nv"]
+[ext_resource type="FontFile" uid="uid://dtycrfgtyobi5" path="res://assets/fonts/VT323-Regular.ttf" id="7_50g5t"]
+[ext_resource type="Shader" uid="uid://btjd1ux6vt0yj" path="res://shaders/mech_repair.gdshader" id="8_vu1mo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4mgs"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kx0gj"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.34509805, 0.34509805, 0.34509805, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_id3o8"]
+shader = ExtResource("8_vu1mo")
+shader_parameter/color_cold = Color(0.05, 0.18, 0.38, 1)
+shader_parameter/color_arc = Color(0.2, 0.7, 1, 1)
+shader_parameter/speed = 0.8
+shader_parameter/scan_density = 10.0
+shader_parameter/scan_speed = 1.2
+shader_parameter/circuit_scale = 4.0
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=110248918 node_paths=PackedStringArray("list", "context", "money", "free_button", "normal_button", "vip_button")]
+script = ExtResource("1_bagiw")
+list = NodePath("PanelContainer/HBoxContainer/VBoxContainer")
+context = NodePath("HBoxContainer2/PanelContainer2/Label")
+money = NodePath("Label")
+free_button = NodePath("PanelContainer/HBoxContainer/VBoxContainer/free")
+normal_button = NodePath("PanelContainer/HBoxContainer/VBoxContainer/normal")
+vip_button = NodePath("PanelContainer/HBoxContainer/VBoxContainer/vip")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=965584625]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_px4h1")
+
+[node name="delete" type="TextureButton" parent="." unique_id=2024137781]
+z_index = 2
+anchors_preset = -1
+anchor_left = 0.94200003
+anchor_top = 0.0050000004
+anchor_right = 0.99700004
+anchor_bottom = 0.07700001
+offset_left = -0.64001465
+offset_top = -0.40000057
+offset_right = 0.7598877
+offset_bottom = -0.16001129
+grow_horizontal = 0
+texture_normal = ExtResource("2_bagiw")
+texture_pressed = ExtResource("3_a55er")
+texture_hover = ExtResource("4_cllaj")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=560073489]
+anchors_preset = -1
+anchor_left = 0.008
+anchor_top = 0.080000006
+anchor_right = 0.42800003
+anchor_bottom = 0.194
+offset_left = -0.3600006
+offset_top = -0.40000916
+offset_right = 0.2399292
+offset_bottom = -0.5200043
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer2" unique_id=1171709617]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o4mgs")
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer2/PanelContainer" unique_id=1593579885]
+custom_minimum_size = Vector2(123, 0)
+layout_mode = 2
+texture = ExtResource("5_s4jut")
+
+[node name="PanelContainer2" type="PanelContainer" parent="HBoxContainer2" unique_id=31452044]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kx0gj")
+
+[node name="Label" type="Label" parent="HBoxContainer2/PanelContainer2" unique_id=1897141661]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_xb7nv")
+theme_override_font_sizes/font_size = 51
+text = "本店提供最好的维修服务。"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=634076801]
+anchors_preset = -1
+anchor_left = 0.030000001
+anchor_top = 0.028
+anchor_right = 0.098000005
+anchor_bottom = 0.071
+offset_left = -0.6000023
+offset_top = -0.24000168
+offset_right = 0.83999634
+offset_bottom = 0.3199997
+
+[node name="title" type="Label" parent="HBoxContainer" unique_id=1218341771]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_50g5t")
+theme_override_font_sizes/font_size = 35
+text = "🩹repair"
+
+[node name="Label" type="RichTextLabel" parent="." unique_id=1539448214]
+anchors_preset = -1
+anchor_left = 0.74200004
+anchor_top = 0.082
+anchor_right = 0.994
+anchor_bottom = 0.194
+offset_left = -117.64014
+offset_top = -0.5600052
+offset_right = 0.52001953
+offset_bottom = -1.5200043
+grow_horizontal = 0
+theme_override_fonts/normal_font = ExtResource("6_xb7nv")
+theme_override_font_sizes/normal_font_size = 62
+bbcode_enabled = true
+text = "目前剩余金额：1000"
+horizontal_alignment = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=439718934]
+anchors_preset = -1
+anchor_left = 0.003
+anchor_top = 0.19900002
+anchor_right = 0.99700004
+anchor_bottom = 0.99500006
+offset_left = -0.7600002
+offset_top = 0.07998657
+offset_right = 0.7598877
+offset_bottom = 0.39990234
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="background" type="ColorRect" parent="PanelContainer" unique_id=1864409650]
+material = SubResource("ShaderMaterial_id3o8")
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=1846693180]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer" unique_id=305063057]
+layout_mode = 2
+alignment = 1
+
+[node name="free" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer" unique_id=57688933]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.8745098, 0, 1)
+theme_override_fonts/font = ExtResource("6_xb7nv")
+theme_override_font_sizes/font_size = 47
+text = "免费维修：0费用/回复15点生命值"
+alignment = 0
+
+[node name="normal" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer" unique_id=1370103186]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.6978424, 0, 1)
+theme_override_fonts/font = ExtResource("6_xb7nv")
+theme_override_font_sizes/font_size = 47
+text = "初级维修：50费用/回复30点生命值"
+alignment = 0
+
+[node name="vip" type="Button" parent="PanelContainer/HBoxContainer/VBoxContainer" unique_id=837114773]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.5221893, 0, 1)
+theme_override_fonts/font = ExtResource("6_xb7nv")
+theme_override_font_sizes/font_size = 47
+text = "高级维修：100费用/增加20点最大生命值"
+alignment = 0
+
+[connection signal="pressed" from="delete" to="." method="_on_delete_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/VBoxContainer/free" to="." method="_on_free_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/VBoxContainer/normal" to="." method="_on_normal_pressed"]
+[connection signal="pressed" from="PanelContainer/HBoxContainer/VBoxContainer/vip" to="." method="_on_vip_pressed"]

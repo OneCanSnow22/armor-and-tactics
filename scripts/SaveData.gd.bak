@@ -1,0 +1,37 @@
+extends Resource
+class_name SaveData
+
+@export var item_data:Profile.Item
+@export var deck_ids:Array[Array]
+@export var player_health:int
+@export var player_max_health:int
+@export var current_melee:Profile.Melee
+@export var current_shoot:Profile.Shoot
+@export var current_shelling:Profile.Shelling
+@export var current_time:int
+func save_deck():#保存牌库
+	deck_ids.clear()
+	for _i in Profile.Deck:
+		var card_ids:Array
+		var card=_i as Card
+		for _j in card.function_list:
+			card_ids.append(_j.id)
+		deck_ids.append(card_ids)
+func save_player():
+	player_health=Profile.player.health
+	player_max_health=Profile.player.max_health
+	current_melee=Profile.player.melee
+	current_shoot=Profile.player.shoot
+	current_shelling=Profile.player.shelling
+func record():
+	item_data=Profile.item
+	current_time=Profile.item.time.get_elapsed_time()
+	save_deck()
+	save_player()
+func write_to_file():
+	var path = "user://savadata/save.tres"
+	DirAccess.make_dir_recursive_absolute("user://savadata")
+	ResourceSaver.save(self, path)
+func save_data():
+	record()
+	write_to_file()

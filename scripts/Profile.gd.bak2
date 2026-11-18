@@ -1,0 +1,484 @@
+extends Node
+const CardScript = preload("res://scripts/card.gd")
+var rng:RandomNumberGenerator#随机生成器
+var player:Player
+var enemy:Array[Role]
+var item:Item
+const max_energy:int=10
+## 卡牌配方定义：[function类型, 数量]
+## 创建卡组时根据配方表批量生成，不用再写重复代码
+enum Function{
+	Forward,
+	Backward,
+	Discard_one,
+	Discard_two,
+	Draw_one,
+	Draw_two,
+	Draw_three,
+	Load,
+	Replace,
+	Swipe,
+	Turn,
+	One_off,
+	Consume,
+	Lock,
+	Blank
+}
+var Func_picture:Dictionary={
+	Function.Forward:"res://assets/cards/forward.png",
+	Function.Backward:"res://assets/cards/backward.png",
+	Function.Discard_one:"res://assets/cards/discard_one.png",
+	Function.Discard_two:"res://assets/cards/discard_two.png",
+	Function.Draw_one:"res://assets/cards/draw_one.png",
+	Function.Draw_two:"res://assets/cards/draw_two.png",
+	Function.Draw_three:"res://assets/cards/draw_three.png",
+	Function.Load:"res://assets/cards/load.png",
+	Function.Replace:"res://assets/cards/replace.png",
+	Function.Swipe:"res://assets/cards/swipe.png",
+	Function.Turn:"res://assets/cards/turn.png",
+	Function.One_off:"res://assets/cards/one_off.png",
+	Function.Consume:"res://assets/cards/consume.png",
+	Function.Lock:"res://assets/cards/lock.png",
+	Function.Blank:"res://assets/cards/blank.png"
+}
+var Deck:Array[Card]=[]
+var CharacterArray:Array[Role]
+var miss_times:int=0
+var last_round_missed:bool
+class AnimationUnit:
+	func play(main:Main_menu):
+		print("不实现任何东西")
+class Forward_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		print("Forward_animation.play() 被调用")
+		var player:Character = main.CharacterArray[0] as Character
+		if player != null:
+			await main.move_character(player, 1)
+		print("Forward_animation.play() 结束")
+		#await main.move_character(main.CharacterArray[0], 1) 
+class Backward_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		var player:Character = main.CharacterArray[0] as Character
+		if player != null:
+			await main.move_character(player, -1)	
+		#await main.move_character(main.CharacterArray[0], -1)	
+class Discard_animation extends Profile.AnimationUnit:
+	var count: int
+	func _init(n: int):
+		count = n
+	func play(main:Main_menu):
+		if main.card_manager != null:
+			await main.card_manager.enter_discard_time(count)
+		print("弃牌完成")
+class Discard_one_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		if main.card_manager != null:
+			await main.card_manager.enter_discard_time(1)
+		print("丢弃一张牌")
+class Discard_two_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		if main.card_manager != null:
+			await main.card_manager.enter_discard_time(2)
+		print("丢弃两张牌")
+class Draw_one_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		if main.card_manager!=null:
+			await main.card_manager.draw_cards(1)
+		print("抽一张牌")
+class Draw_two_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		if main.card_manager!=null:
+			await main.card_manager.draw_cards(2)
+		print("抽两张牌")
+class Draw_three_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		print("抽三张牌")
+class Load_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		if main.card_manager!=null:
+			await main.card_manager.enter_load_time()
+		print("加载栈")
+class Replace_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		if main.card_manager!=null:
+			await main.card_manager.enter_replace_time()
+		print("替换栈")
+class Swipe_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		await main.execute_attack()
+		print("打击")
+class Turn_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		await main.change_player_mode()
+		print("转换")
+class Lock_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		print("锁")
+class Consume_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		print("消耗")
+class One_off_animation extends Profile.AnimationUnit:
+	func play(main:Main_menu):
+		print("一次性")
+class Attack:
+	var code:String
+	var damage:int
+	var price:int
+	func _init(ui:int)->void:
+		damage=ui
+	func attack():
+		print("攻击")
+	func enhance(value:int):
+		damage+=value
+	func evaluate_price():
+		print("评估价格")
+class Melee extends Attack:
+	var range:int#攻击范围
+	var max_range:int
+	func _init(damage:int,info:int):
+		self.damage=damage
+		range=info
+		max_range=range
+	func attack():
+		print("斩击")
+	func evaluate_price():
+		price=20
+		price*=(1+0.08*damage+0.12*max_range)
+		return price
+class Shoot extends Attack:
+	var probability:int#攻击命中率
+	var max_probability:int
+	func _init(damage:int,info:int):
+		self.damage=damage
+		probability=info
+		max_probability=probability
+	func attack():
+		print("射击")
+	func evaluate_price():
+		price=20
+		price*=(1+0.1*damage+0.04*max_probability)
+		return price
+class Through_shoot extends Shoot:#贯穿射击
+	var level:int#贯穿等级
+	func _init(damage:int,info:int,level:int):
+		self.damage=damage
+		probability=info
+		max_probability=probability
+		self.level=level
+	func attack():
+		print("射击")
+	func evaluate_price():
+		price=30
+		price*=(1+0.1*damage+0.04*max_probability+0.15*level)
+		return price
+class Missile:#导弹类型
+	var isCanBeUsed:bool
+	var Mname
+class Firebomb extends Missile:
+	func _init(value:bool) -> void:
+		Mname="燃烧弹"
+		isCanBeUsed=value
+class FlashBang extends Missile:
+	func _init(value:bool) -> void:
+		Mname="闪光弹"
+		isCanBeUsed=value
+class Flare extends Missile:
+	func _init(value:bool) -> void:
+		Mname="干扰弹"
+		isCanBeUsed=value
+class Shelling extends Attack:
+	var time:int#延时回合
+	var firebomb:Firebomb
+	var flashbang:FlashBang
+	var flare:Flare
+	var current_missile:Missile
+	var max_time:int
+	var current_time:int#触发炮击还需要的回合数
+	var bonus_damage:int = 0#等待期内由攻击模组叠加的额外伤害
+	var is_targeting:bool = false#敌人炮击专用：是否已锁定玩家（替代全局 playerIsTarget）
+	func _init(damage:int,info:int):
+		firebomb=Firebomb.new(true)
+		flashbang=FlashBang.new(true)
+		flare=Flare.new(true)
+		current_missile=null
+		self.damage=damage
+		time=info
+		max_time=time
+	func attack():
+		print("炮击")
+	func evaluate_price():
+		price=30
+		var rate=1.0
+		if firebomb.isCanBeUsed:
+			rate+=0.08
+		if flashbang.isCanBeUsed:
+			rate+=0.08
+		if flare.isCanBeUsed:
+			rate+=0.08
+		rate+=(damage*0.08)
+		rate-=(max_time*0.08)
+		if rate<0.3:
+			rate=0.3
+		price*=rate
+		return price
+class Multi_target_missile extends Shelling:
+	func attack():
+		print("多目标炮击")
+	func evaluate_price():
+		price=40
+		var rate=1.0
+		if firebomb.isCanBeUsed:
+			rate+=0.08
+		if flashbang.isCanBeUsed:
+			rate+=0.08
+		if flare.isCanBeUsed:
+			rate+=0.08
+		rate+=(damage*0.08)
+		rate-=(max_time*0.08)
+		if rate<0.3:
+			rate=0.3
+		price*=rate
+		return price
+class Sputtering_type_artillery extends Shelling:
+	var sputter_range:int
+	func _init(damage:int,info:int,sr:int):
+		super._init(damage,info)
+		self.damage=damage
+		self.sputter_range=sr
+	func attack():
+		print("溅射型炮击")
+	func evaluate_price():
+		price=40
+		var rate=1.0
+		if firebomb.isCanBeUsed:
+			rate+=0.08
+		if flashbang.isCanBeUsed:
+			rate+=0.08
+		if flare.isCanBeUsed:
+			rate+=0.08
+		rate+=(damage*0.08)
+		rate-=(max_time*0.1)
+		rate+=(sputter_range*0.12)
+		if rate<0.3:
+			rate=0.3
+		price*=rate
+		return price
+class Strike_type_artillery extends Shelling:
+	## 打击型炮击：直接锁定所有目标，不需要选中某个敌人
+	func attack():
+		print("打击型炮击")
+	func evaluate_price():
+		price=40
+		var rate=1.0
+		if firebomb.isCanBeUsed:
+			rate+=0.08
+		if flashbang.isCanBeUsed:
+			rate+=0.08
+		if flare.isCanBeUsed:
+			rate+=0.1
+		rate+=(damage*0.08)
+		rate-=(max_time*0.08)
+		if rate<0.3:
+			rate=0.3
+		price*=rate
+		return price
+class Role:
+	var Rname:String
+	var health:int
+	var max_health:int
+	var attack_mode:Attack
+	var origin_place:int
+class Player extends Role:
+	var melee:Melee
+	var shoot:Shoot
+	var shelling:Shelling
+	func _init() -> void:
+		Rname="GP-3"
+		health=60
+		max_health=60
+		melee=Melee.new(6,4)
+		melee.code="ME-00001"
+		melee.price=10
+		shoot=Shoot.new(4,90)
+		shoot.code="ST-00001"
+		shoot.price=10
+		shelling=Shelling.new(6,1)
+		shelling.price=10
+		shelling.code="SG-00001"
+		origin_place=2
+		attack_mode=melee
+class Item:#用于记录玩家的金币，能量值等信息
+	var money:int
+	var energy:int
+	var meleeBag:Array[Melee]
+	var shootBag:Array[Shoot]
+	var shellingBag:Array[Shelling]
+	func _init() -> void:
+		meleeBag.clear()
+		shootBag.clear()
+		shellingBag.clear()
+	func set_money(value:int):
+		money=value
+		
+## 敌人行为枚举，用于 fight_menu 分发 AI 逻辑
+## Role 只存标识，不存逻辑，判定由 fight_menu 统一处理
+enum EnemyBehavior {
+	BASIC_MELEE,    ## 基础近战：能打就打，打不到就向玩家移动
+	BASIC_SHOOT,    ## 基础射击：永远不移动，直接攻击
+	BASIC_SHELLING, ## 基础炮击：永远不移动，锁定后触发
+	IMMOVABLE,      ## 不可移动型（如重装兵）：不移动，受伤减免
+	MUTANT,         ## 变异体：可在近战/射击间切换
+}
+class Enemy extends Role:
+	var isAimed:bool
+	var reward:int
+	var behavior: EnemyBehavior = EnemyBehavior.BASIC_MELEE
+class Test_Melee extends Enemy:
+	func _init() -> void:
+		Rname="TM-1"
+		reward=30
+		health=30
+		max_health=health
+		origin_place=8
+		attack_mode=Melee.new(5,3)
+		behavior=EnemyBehavior.BASIC_MELEE
+class Test_Shoot extends Enemy:
+	func _init() -> void:
+		Rname="TS-2"
+		reward=30
+		health=20
+		max_health=health
+		origin_place=9
+		attack_mode=Shoot.new(10,88)
+		behavior=EnemyBehavior.BASIC_SHOOT
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	rng = RandomNumberGenerator.new()
+	initial_player()
+	enemy.resize(4)
+	enemy[0]=Test_Melee.new()
+	enemy[1]=Test_Shoot.new()
+	CharacterArray.append(player)
+	CharacterArray.append(enemy[0])
+	CharacterArray.append(enemy[1])
+	fill_test_weapons()
+	create_initial_deck()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+func initial_player():
+	player=Player.new()
+	item=Item.new()
+	item.set_money(999)
+	item.energy=max_energy
+	item.meleeBag.append(player.melee)
+	item.shootBag.append(player.shoot)
+	item.shellingBag.append(player.shelling)
+
+## [测试用] 往三个武器包各塞3把武器，后期删除即可
+func fill_test_weapons() -> void:
+	# --- 近战包 ---
+	var weapon:Attack
+	weapon=Melee.new(8, 5)
+	weapon.code="ME-00002"
+	item.meleeBag.append(weapon)        # 高伤害高范围
+	weapon=Melee.new(10, 2)
+	weapon.code="ME-00004"
+	item.meleeBag.append(weapon)       # 高伤害低范围
+	weapon=Melee.new(3, 7)
+	weapon.code="ME-00003"
+	item.meleeBag.append(weapon)        # 低伤害高范围
+	# --- 射击包 ---
+	weapon=Shoot.new(6, 85)
+	weapon.code="ST-00002"
+	item.shootBag.append(weapon)       # 均衡型
+	weapon=Through_shoot.new(4, 70, 2)
+	weapon.code="TS-00002"
+	item.shootBag.append(weapon)  # 贯穿射击 等级2
+	weapon=Through_shoot.new(3, 60, 3)
+	weapon.code="TS-00003"
+	item.shootBag.append(weapon)  # 贯穿射击 等级3
+	# --- 炮击包 ---
+	weapon=Shelling.new(10, 2)
+	weapon.firebomb.isCanBeUsed=false
+	weapon.code="SG-00002"
+	item.shellingBag.append(weapon)      # 高伤害延时2
+	weapon=Multi_target_missile.new(6, 1)
+	weapon.flashbang.isCanBeUsed=false
+	weapon.code="MTM-00001"
+	item.shellingBag.append(weapon)  # 多目标导弹
+	weapon=Sputtering_type_artillery.new(4, 1, 3)
+	weapon.flare.isCanBeUsed=false
+	weapon.flashbang.isCanBeUsed=false
+	weapon.code="STA-00001"
+	item.shellingBag.append(weapon)  # 散射炮 范围3
+
+func get_random(low:int,high:int):
+	print("随机数生成")
+	return rng.randi_range(low,high)
+## Function 枚举 → CardScript 内部类的映射表
+## 新增 function 类型时只需在这里加一行，不用再到处改代码
+var _function_class_map: Dictionary = {
+	Function.Forward: CardScript.Forward,
+	Function.Backward: CardScript.Backward,
+	Function.Discard_one: CardScript.Discard_one,
+	Function.Discard_two: CardScript.Discard_two,
+	Function.Draw_one: CardScript.Draw_one,
+	Function.Draw_two: CardScript.Draw_two,
+	Function.Draw_three: CardScript.Draw_three,
+	Function.Load: CardScript.Load,
+	Function.Replace: CardScript.Replace,
+	Function.Swipe: CardScript.Swipe,
+	Function.Turn: CardScript.Turn,
+	Function.Lock: CardScript.Lock,
+	Function.One_off: CardScript.One_off,
+	Function.Consume: CardScript.Consume,
+}
+
+## 根据枚举值创建对应的 function 实例
+func create_function(mode: Function) -> function:
+	if _function_class_map.has(mode):
+		return (_function_class_map[mode] as GDScript).new()
+	push_error("Profile: 未知的 Function 类型: %d" % mode)
+	return CardScript.Lock.new()
+
+## 创建一张卡，function_list 按 [主功能, 填充功能, 数量] 排列
+func create_card(primary: Function, secondary: Function = Function.Lock, fill_count: int = 3) -> Card:
+	var card_scene=load("res://scenes/Card/card.tscn")
+	var card :Card= card_scene.instantiate() as Card 
+	card.function_list.resize(4)
+	card.function_list[0] = create_function(primary)
+	for i in range(1, min(fill_count + 1, 4)):
+		card.function_list[i] = create_function(secondary)
+	return card
+
+func create_initial_deck() -> void:
+	Deck.clear()
+	# 前进卡 ×3
+	for _i in range(3):
+		Deck.append(create_card(Function.Forward))
+	# 后退卡 ×3
+	for _i in range(3):
+		Deck.append(create_card(Function.Backward))
+	# 打击卡 ×3
+	for _i in range(3):
+		Deck.append(create_card(Function.Swipe))
+	# 转向卡 ×1（特殊配方）
+	var card_scene = load("res://scenes/Card/card.tscn")
+	var turn_card: Card = card_scene.instantiate() as Card
+	turn_card.function_list.resize(4)
+	turn_card.function_list[0] = create_function(Function.Draw_two)
+	turn_card.function_list[1] = create_function(Function.Turn)
+	for _i in range(2):
+		turn_card.function_list[_i + 2] = create_function(Function.Lock)
+	Deck.append(turn_card)
+	#var turn_card2:Card=card_scene.instantiate() as Card
+	#turn_card2.function_list.resize(4)
+	#turn_card2.function_list[0] = create_function(Function.Discard_two)
+	#turn_card2.function_list[1] = create_function(Function.Replace)
+	#for _i in range(2):
+		#turn_card2.function_list[_i + 2] = create_function(Function.Lock)
+	#Deck.append(turn_card2)
+	print("创建完成")

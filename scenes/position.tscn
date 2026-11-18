@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://b1lbiym5en8vt"]
+
+[ext_resource type="Script" uid="uid://b5lakvj1wh2mt" path="res://scripts/position.gd" id="1_deb4o"]
+[ext_resource type="Texture2D" uid="uid://beaauk02hcq0w" path="res://assets/position/locked.png" id="1_s3ic6"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="2_deb4o"]
+[ext_resource type="Texture2D" uid="uid://cf7np8htqjuif" path="res://assets/position/player_locked.png" id="2_vkjdu"]
+[ext_resource type="Texture2D" uid="uid://b4o41r6w4etpg" path="res://assets/position/aimed.png" id="5_go83o"]
+
+[node name="Position" type="ColorRect" unique_id=1032273584 node_paths=PackedStringArray("Enemy_danger", "Player_danger", "aimed", "enemy_danger_wait_label", "player_danger_wait_label")]
+offset_right = 140.0
+offset_bottom = 30.0
+pivot_offset = Vector2(70, 0)
+color = Color(0.2140558, 0.31474298, 0.25419647, 1)
+script = ExtResource("1_deb4o")
+Enemy_danger = NodePath("lock2")
+Player_danger = NodePath("lock")
+aimed = NodePath("aimed")
+enemy_danger_wait_label = NodePath("lock2/Label")
+player_danger_wait_label = NodePath("lock/Label")
+
+[node name="lock" type="TextureRect" parent="." unique_id=1473468515]
+layout_mode = 0
+offset_right = 140.0
+offset_bottom = 30.0
+texture = ExtResource("1_s3ic6")
+
+[node name="Label" type="Label" parent="lock" unique_id=832984126]
+layout_mode = 0
+offset_left = 61.0
+offset_top = 2.0
+offset_right = 101.000015
+offset_bottom = 32.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.8862745, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("2_deb4o")
+theme_override_font_sizes/font_size = 29
+text = "0"
+horizontal_alignment = 1
+
+[node name="lock2" type="TextureRect" parent="." unique_id=544496706]
+layout_mode = 0
+offset_right = 140.0
+offset_bottom = 30.0
+texture = ExtResource("2_vkjdu")
+
+[node name="Label" type="Label" parent="lock2" unique_id=1361117020]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 2.0
+offset_right = 83.0
+offset_bottom = 32.0
+theme_override_colors/font_color = Color(0, 0.84705883, 1, 1)
+theme_override_colors/font_outline_color = Color(0.2784314, 0.4392157, 0.46666667, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("2_deb4o")
+theme_override_font_sizes/font_size = 29
+text = "0"
+horizontal_alignment = 1
+
+[node name="aimed" type="TextureRect" parent="." unique_id=1252732069]
+layout_mode = 0
+offset_right = 140.0
+offset_bottom = 30.0
+texture = ExtResource("5_go83o")

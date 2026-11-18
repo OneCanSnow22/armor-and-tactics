@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://c8ke2hj0e2eqn"]
+
+[ext_resource type="Script" uid="uid://l5sa5soo2clt" path="res://scripts/final_report.gd" id="1_rlj3m"]
+[ext_resource type="Texture2D" uid="uid://dvlcdqiam0a3u" path="res://assets/report/printer1.png" id="2_vyu83"]
+[ext_resource type="Texture2D" uid="uid://c7guum88qb6gv" path="res://assets/report/oldpage.png" id="3_o18cw"]
+[ext_resource type="Texture2D" uid="uid://dmdh5su5vrc2c" path="res://assets/report/printer2.png" id="4_q7g5n"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="5_o18cw"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="6_q7g5n"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v2bmp"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+texture = ExtResource("3_o18cw")
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=412423919 node_paths=PackedStringArray("out_page", "report_page", "context", "title")]
+script = ExtResource("1_rlj3m")
+out_page = NodePath("TextureRect/TextureButton")
+report_page = NodePath("report")
+context = NodePath("report/VBoxContainer/HBoxContainer/VBoxContainer/Label")
+title = NodePath("report/VBoxContainer/Label")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=975195243]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2509804, 0.2509804, 0.2509804, 0.4627451)
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=924634936]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -685.0
+offset_right = 685.0
+offset_bottom = 209.0
+grow_horizontal = 2
+texture = ExtResource("2_vyu83")
+
+[node name="TextureButton" type="TextureButton" parent="TextureRect" unique_id=1958465793]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -553.0
+offset_top = 239.99998
+offset_right = 559.0
+offset_bottom = 1776.0
+grow_horizontal = 2
+scale = Vector2(0.4, 0.4)
+pivot_offset = Vector2(556, 0)
+texture_normal = ExtResource("3_o18cw")
+
+[node name="TextureRect" type="TextureRect" parent="TextureRect" unique_id=8969423]
+layout_mode = 0
+offset_right = 1370.0
+offset_bottom = 209.0
+texture = ExtResource("4_q7g5n")
+
+[node name="report" type="PanelContainer" parent="." unique_id=875697215]
+anchors_preset = -1
+anchor_left = 0.31300002
+anchor_top = 0.08400001
+anchor_right = 0.68700004
+anchor_bottom = 0.91600007
+offset_left = -0.46002197
+offset_top = 0.52999115
+offset_right = 0.45996094
+offset_bottom = -0.53009033
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_v2bmp")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="report" unique_id=118396072]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="report/VBoxContainer" unique_id=550701976]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="report/VBoxContainer" unique_id=1199633225]
+layout_mode = 2
+theme_override_colors/font_color = Color(2.6471912e-07, 0.50689006, 4.813075e-07, 1)
+theme_override_colors/font_shadow_color = Color(0.18431373, 0.18431373, 0.18431373, 0.08235294)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("5_o18cw")
+theme_override_font_sizes/font_size = 70
+text = "Death_report"
+horizontal_alignment = 1
+
+[node name="Control2" type="Control" parent="report/VBoxContainer" unique_id=962448762]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="report/VBoxContainer" unique_id=745590521]
+custom_minimum_size = Vector2(0, 600)
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="report/VBoxContainer/HBoxContainer" unique_id=350078153]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="report/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=321539865]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_q7g5n")
+theme_override_font_sizes/font_size = 31
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="report/VBoxContainer" unique_id=561175096]
+layout_mode = 2
+alignment = 1
+
+[node name="Button" type="Button" parent="report/VBoxContainer/HBoxContainer2" unique_id=1815695190]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_q7g5n")
+theme_override_font_sizes/font_size = 42
+text = "返回主页"
+
+[connection signal="mouse_entered" from="TextureRect/TextureButton" to="." method="_on_texture_button_mouse_entered"]
+[connection signal="mouse_exited" from="TextureRect/TextureButton" to="." method="_on_texture_button_mouse_exited"]
+[connection signal="pressed" from="TextureRect/TextureButton" to="." method="_on_texture_button_pressed"]
+[connection signal="pressed" from="report/VBoxContainer/HBoxContainer2/Button" to="." method="_on_button_pressed"]

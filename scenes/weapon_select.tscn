@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cwgaxekhqvag3"]
+
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="1_o823n"]
+[ext_resource type="Script" uid="uid://pf3fqpv730pu" path="res://scripts/weapon_select.gd" id="2_fmlg3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fmlg3"]
+bg_color = Color(0.02745098, 0.02745098, 0.02745098, 1)
+border_width_bottom = 1
+border_color = Color(0, 0.48557895, 3.85046e-07, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xuduw"]
+bg_color = Color(0.5158667, 0.5158667, 0.51586664, 1)
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+
+[node name="Button" type="Button" unique_id=719545577]
+custom_minimum_size = Vector2(380, 41)
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(0, 0.4862745, 0, 1)
+theme_override_fonts/font = ExtResource("1_o823n")
+theme_override_font_sizes/font_size = 39
+theme_override_styles/normal = SubResource("StyleBoxFlat_fmlg3")
+theme_override_styles/hover = SubResource("StyleBoxFlat_xuduw")
+text = "SG-00001"
+script = ExtResource("2_fmlg3")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]

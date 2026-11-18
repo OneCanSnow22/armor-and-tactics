@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://qkra5gt8se0v"]
+
+[ext_resource type="Script" uid="uid://dgxojboqi81r1" path="res://scripts/stack.gd" id="1_62oru"]
+
+[node name="stack" type="ColorRect" unique_id=548979824]
+custom_minimum_size = Vector2(40, 120)
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_62oru")

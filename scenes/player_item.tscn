@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://cuf7uugxvfxa8"]
+
+[ext_resource type="Script" uid="uid://cnqr2hi4wp3bj" path="res://scripts/player_item.gd" id="1_7q3do"]
+[ext_resource type="Texture2D" uid="uid://q0stl4j660gb" path="res://assets/statebar/coin24.png" id="1_y7dmt"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="2_7q3do"]
+[ext_resource type="Texture2D" uid="uid://cpbc1i7xv00mn" path="res://assets/statebar/gear.png" id="3_885a0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ojrw0"]
+bg_color = Color(0.16078432, 0.16078432, 0.16078432, 1)
+border_width_left = 5
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 5
+border_color = Color(0.078431375, 0.078431375, 0.078431375, 1)
+corner_radius_bottom_left = 15
+corner_detail = 1
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0354a"]
+atlas = ExtResource("1_y7dmt")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_77mxh"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.3019608, 0.3019608, 0.3019608, 1)
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[node name="PlayerItem" type="PanelContainer" unique_id=472500566 node_paths=PackedStringArray("gear", "total")]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -207.0
+offset_bottom = 52.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ojrw0")
+script = ExtResource("1_7q3do")
+gear = NodePath("HBoxContainer/TextureButton/gear")
+total = NodePath("HBoxContainer/PanelContainer/total")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1153116259]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="HBoxContainer" unique_id=1837955059]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer" unique_id=1249700664]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+texture = SubResource("AtlasTexture_0354a")
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=169408514]
+custom_minimum_size = Vector2(94, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_77mxh")
+
+[node name="total" type="Label" parent="HBoxContainer/PanelContainer" unique_id=521031090]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98039216, 0.84705883, 0.003921569, 1)
+theme_override_fonts/font = ExtResource("2_7q3do")
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="HBoxContainer" unique_id=715237746]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+
+[node name="gear" type="Sprite2D" parent="HBoxContainer/TextureButton" unique_id=523511712]
+position = Vector2(23, 23.000002)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("3_885a0")
+
+[connection signal="mouse_entered" from="HBoxContainer/TextureButton" to="." method="_on_texture_button_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/TextureButton" to="." method="_on_texture_button_mouse_exited"]

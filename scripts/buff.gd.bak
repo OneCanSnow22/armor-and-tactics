@@ -1,0 +1,45 @@
+extends Control
+class_name Buff
+@export var pic:TextureRect#用于显示图标
+@export var level_label:Label#用于显示层数
+var level:int#层数
+# Called when the node enters the scene tree for the first time.
+class Fragile extends Buff:#易伤
+	#角色受到的伤害暂时性增加，层数不会增加受伤量只会增加其回合延续时间
+	func _ready():
+		super._ready()
+		if pic:
+			pic.texture=load("res://assets/buff/dangerous.png")
+		if level_label:
+			level_label.text=str(1)
+class Overheated extends Buff:#过热
+	#角色近战攻击范围会随着层数增加而减少，但攻击力暂且会因为每减少一个攻击位而翻一倍，直到攻击范围变为0
+	func _ready():
+		super._ready()
+		if pic:
+			pic.texture=load("res://assets/buff/overheated.png")
+		if level_label:
+			level_label.text=str(1)
+class Blinded extends Buff:#致盲
+	#暂时性降低角色远程命中率，层数越高，命中率越低
+	func _ready():
+		super._ready()
+		if pic:
+			pic.texture=load("res://assets/buff/blinded.png")
+		if level_label:
+			level_label.text=str(1)
+class Dud extends Buff:#哑火
+	#增加角色炮击开火需要等待的时间，层数越高，等待时间就越长，还要更新角色攻击范围显示的数字，每加一层都要增加一次等待时间，最高可达99
+	func _ready():
+		super._ready()
+		if pic:
+			pic.texture=load("res://assets/buff/dud.png")
+		if level_label:
+			level_label.text=str(1)
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass

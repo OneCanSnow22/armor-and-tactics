@@ -1,0 +1,554 @@
+[gd_scene format=4 uid="uid://ddv6fuyrmoyg5"]
+
+[ext_resource type="Texture2D" uid="uid://xws34h57afp1" path="res://assets/chessboard/cheese.png" id="1_4xfga"]
+[ext_resource type="Script" uid="uid://b7g16ounswqno" path="res://scripts/move_robot.gd" id="2_2klcf"]
+[ext_resource type="Texture2D" uid="uid://cxxjvujxh65vy" path="res://assets/character/shadow.png" id="2_gldc4"]
+[ext_resource type="Texture2D" uid="uid://jbe2e175pqmx" path="res://assets/character/Robot Spritesheet.png" id="3_0cso3"]
+[ext_resource type="Script" uid="uid://b32sqwk81r0ty" path="res://scripts/map_manager.gd" id="5_2lpho"]
+[ext_resource type="FontFile" uid="uid://cqtidfb3gx7ll" path="res://assets/fonts/ZLabsBitmap_12px_HC.ttf" id="5_c00ee"]
+[ext_resource type="Texture2D" uid="uid://ceukg0ko8t3mg" path="res://assets/character/direction_button.png" id="5_nakos"]
+[ext_resource type="Texture2D" uid="uid://boeaanwq5g8im" path="res://assets/chessboard/dice/dice_roll1.png" id="7_mlgqr"]
+[ext_resource type="Texture2D" uid="uid://du2w5ipdthm15" path="res://assets/chessboard/dice/dice_roll2.png" id="8_wslke"]
+[ext_resource type="Texture2D" uid="uid://cd1k10skkae0b" path="res://assets/chessboard/dice/dice_roll3.png" id="9_gw3fx"]
+[ext_resource type="Texture2D" uid="uid://dcopbnwnenhjt" path="res://assets/chessboard/dice/dice_roll4.png" id="10_n1psn"]
+[ext_resource type="Texture2D" uid="uid://pmgqks1ytoc" path="res://assets/chessboard/dice/dice_roll5.png" id="11_c00ee"]
+[ext_resource type="Texture2D" uid="uid://unt1648avgt8" path="res://assets/chessboard/dice/dice_1.png" id="12_wslke"]
+[ext_resource type="Shader" uid="uid://bek3ab6h84lv0" path="res://shaders/CRT.gdshader" id="13_gw3fx"]
+[ext_resource type="PackedScene" uid="uid://ba2b4k31u2vpw" path="res://scenes/information.tscn" id="13_n1psn"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="15_c70he"]
+[ext_resource type="PackedScene" uid="uid://cihrbenol83oc" path="res://scenes/danger.tscn" id="15_p7tei"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_paxxb"]
+texture = ExtResource("1_4xfga")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+1:0/0/custom_data_0 = 1
+2:0/0 = 0
+2:0/0/custom_data_0 = 2
+3:0/0 = 0
+3:0/0/custom_data_0 = 3
+4:0/0 = 0
+4:0/0/custom_data_0 = 4
+0:1/0 = 0
+0:1/0/custom_data_0 = 20
+1:1/0 = 0
+1:1/0/custom_data_0 = 5
+2:1/0 = 0
+2:1/0/custom_data_0 = 6
+3:1/0 = 0
+3:1/0/custom_data_0 = 7
+4:1/0 = 0
+4:1/0/custom_data_0 = 8
+0:2/0 = 0
+0:2/0/custom_data_0 = 9
+1:2/0 = 0
+1:2/0/custom_data_0 = 10
+2:2/0 = 0
+2:2/0/custom_data_0 = 11
+3:2/0 = 0
+3:2/0/custom_data_0 = 12
+4:2/0 = 0
+4:2/0/custom_data_0 = 13
+0:3/0 = 0
+0:3/0/custom_data_0 = 14
+1:3/0 = 0
+1:3/0/custom_data_0 = 15
+2:3/0 = 0
+2:3/0/custom_data_0 = 16
+3:3/0 = 0
+3:3/0/custom_data_0 = 17
+4:3/0 = 0
+0:4/0 = 0
+0:4/0/custom_data_0 = 18
+1:4/0 = 0
+1:4/0/custom_data_0 = 19
+
+[sub_resource type="TileSet" id="TileSet_gldc4"]
+tile_size = Vector2i(32, 32)
+custom_data_layer_0/name = "id"
+custom_data_layer_0/type = 2
+sources/0 = SubResource("TileSetAtlasSource_paxxb")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2klcf"]
+atlas = ExtResource("3_0cso3")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2lpho"]
+atlas = ExtResource("3_0cso3")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nakos"]
+atlas = ExtResource("3_0cso3")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jh32y"]
+atlas = ExtResource("3_0cso3")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_be0no"]
+atlas = ExtResource("3_0cso3")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_blm8a"]
+atlas = ExtResource("3_0cso3")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nakos"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2klcf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2lpho")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nakos")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jh32y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_be0no")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_blm8a")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mlgqr"]
+atlas = ExtResource("5_nakos")
+region = Rect2(0, 24, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wslke"]
+atlas = ExtResource("5_nakos")
+region = Rect2(16, 24, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gw3fx"]
+atlas = ExtResource("5_nakos")
+region = Rect2(8, 24, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n1psn"]
+atlas = ExtResource("5_nakos")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c00ee"]
+atlas = ExtResource("5_nakos")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p7tei"]
+atlas = ExtResource("5_nakos")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c70he"]
+atlas = ExtResource("5_nakos")
+region = Rect2(0, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mo32q"]
+atlas = ExtResource("5_nakos")
+region = Rect2(16, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6k6j1"]
+atlas = ExtResource("5_nakos")
+region = Rect2(8, 8, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m335s"]
+atlas = ExtResource("5_nakos")
+region = Rect2(0, 16, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sq6bu"]
+atlas = ExtResource("5_nakos")
+region = Rect2(16, 16, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4b7dj"]
+atlas = ExtResource("5_nakos")
+region = Rect2(8, 16, 8, 8)
+
+[sub_resource type="Animation" id="Animation_p7tei"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("dice:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("7_mlgqr")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("result:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_c70he"]
+resource_name = "roll"
+length = 1.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("dice:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("7_mlgqr"), ExtResource("8_wslke"), ExtResource("9_gw3fx"), ExtResource("10_n1psn"), ExtResource("11_c00ee")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("result:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mo32q"]
+_data = {
+&"RESET": SubResource("Animation_p7tei"),
+&"roll": SubResource("Animation_c70he")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mo32q"]
+content_margin_left = 10.0
+content_margin_top = 2.0
+content_margin_right = 10.0
+content_margin_bottom = 2.0
+bg_color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+border_width_left = 4
+border_width_right = 4
+border_color = Color(0.45882353, 0.4627451, 0.4627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6k6j1"]
+content_margin_left = 10.0
+content_margin_top = 2.0
+content_margin_right = 10.0
+content_margin_bottom = 2.0
+bg_color = Color(0.024002722, 0.060281016, 0.0712742, 1)
+border_width_left = 4
+border_width_right = 4
+border_color = Color(0.45882353, 0.4627451, 0.4627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m335s"]
+content_margin_left = 10.0
+content_margin_top = 2.0
+content_margin_right = 10.0
+content_margin_bottom = 2.0
+bg_color = Color(0.26469463, 0.41364786, 0.45643294, 1)
+border_width_left = 4
+border_width_right = 4
+border_color = Color(0.45882353, 0.4627451, 0.4627451, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n1psn"]
+shader = ExtResource("13_gw3fx")
+shader_parameter/resolution = Vector2(320, 180)
+shader_parameter/scan_line_amount = 1.0
+shader_parameter/warp_amount = 0.1
+shader_parameter/noise_amount = 0.09600000456
+shader_parameter/interference_amount = 0.610000028975
+shader_parameter/grille_amount = 0.1
+shader_parameter/grille_size = 1.0
+shader_parameter/vignette_amount = 0.5710000271225
+shader_parameter/vignette_intensity = 1.0
+shader_parameter/aberation_amount = 0.8510000404225
+shader_parameter/roll_line_amount = 0.066000003135
+shader_parameter/roll_speed = 1.0
+shader_parameter/scan_line_strength = -8.0
+shader_parameter/pixel_strength = -3.66399998404
+
+[node name="Map" type="Node2D" unique_id=1869676855]
+
+[node name="background" type="CanvasLayer" parent="." unique_id=1060651103]
+layer = -3
+
+[node name="ColorRect" type="ColorRect" parent="background" unique_id=1285836166]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05490196, 0.10980392, 0.1254902, 1)
+
+[node name="chess_table" type="TileMapLayer" parent="." unique_id=940445626]
+tile_map_data = PackedByteArray("AAADAAoAAAAAAAAAAAAEAAoAAAABAAQAAAAEAAkAAAADAAIAAAAEAAgAAAABAAAAAAAEAAcAAAABAAIAAAAEAAYAAAACAAAAAAAEAAUAAAACAAIAAAAEAAQAAAACAAMAAAAEAAsAAAABAAAAAAAEAAwAAAABAAIAAAAEAA0AAAADAAMAAAAFAA0AAAADAAAAAAAGAA0AAAACAAAAAAAHAA0AAAAAAAMAAAAFAAQAAAABAAIAAAAGAAQAAAADAAAAAAAHAAQAAAADAAIAAAAIAAQAAAABAAMAAAAIAAAAAAACAAMAAAAIAAEAAAACAAAAAAAIAAIAAAABAAIAAAAIAAMAAAADAAEAAAAFAAoAAAABAAAAAAAGAAoAAAADAAAAAAAHAAoAAAABAAMAAAAHAAcAAAACAAMAAAAHAAgAAAABAAEAAAAHAAkAAAABAAIAAAAIAAcAAAACAAAAAAAJAAcAAAACAAIAAAAKAAcAAAAAAAMAAAAKAAgAAAABAAIAAAAKAAkAAAABAAEAAAAKAAoAAAADAAIAAAAKAAsAAAADAAMAAAAJAAAAAAAEAAAAAAAKAAAAAAACAAIAAAALAAAAAAABAAIAAAAMAAAAAAADAAAAAAANAAAAAAADAAIAAAAOAAAAAAACAAEAAAAPAAAAAAACAAAAAAAQAAAAAAABAAIAAAARAAAAAAABAAAAAAASAAAAAAAAAAMAAAASAAEAAAADAAEAAAASAAIAAAABAAQAAAASAAMAAAACAAEAAAASAAQAAAABAAMAAAARAAQAAAADAAIAAAAQAAQAAAACAAAAAAAPAAQAAAABAAEAAAAOAAQAAAACAAMAAAALAAsAAAACAAEAAAAMAAsAAAACAAAAAAANAAsAAAABAAIAAAAOAAsAAAABAAMAAAAOAAUAAAACAAAAAAAOAAYAAAABAAIAAAAOAAcAAAAEAAAAAAAOAAgAAAABAAQAAAAOAAkAAAACAAAAAAAOAAoAAAACAAEAAAAPAAgAAAACAAAAAAAQAAgAAAACAAIAAAARAAgAAAAAAAMAAAARAAkAAAADAAAAAAARAAoAAAABAAIAAAARAAsAAAABAAEAAAAHAA4AAAADAAIAAAAHAA8AAAACAAAAAAAHABAAAAABAAIAAAAHABEAAAACAAEAAAAHABIAAAACAAIAAAARAAwAAAADAAIAAAARAA0AAAACAAAAAAARAA4AAAACAAEAAAARAA8AAAADAAMAAAASAA8AAAABAAIAAAATAA8AAAABAAEAAAAUAA8AAAACAAIAAAAVAA8AAAAAAAQAAAAHABMAAAADAAMAAAAIABMAAAACAAEAAAAJABMAAAACAAAAAAAKABMAAAABAAIAAAALABMAAAADAAIAAAAMABMAAAAEAAAAAAANABMAAAABAAIAAAAOABMAAAADAAAAAAAPABMAAAADAAEAAAAQABMAAAACAAAAAAARABMAAAACAAIAAAASABMAAAABAAEAAAATABMAAAABAAIAAAAUABMAAAACAAAAAAAVABMAAAABAAMAAAAVABIAAAADAAIAAAAVABAAAAAEAAAAAAAWAA8AAAADAAAAAAAXAA8AAAABAAIAAAAYAA8AAAACAAAAAAAZAA8AAAADAAIAAAAaAA8AAAABAAMAAAATAAIAAAABAAIAAAAUAAIAAAAEAAAAAAAVAAIAAAACAAIAAAAWAAIAAAACAAAAAAAXAAIAAAABAAIAAAAYAAIAAAADAAAAAAAZAAIAAAADAAIAAAAaAA4AAAADAAEAAAAaAA0AAAAEAAAAAAAaAAwAAAACAAAAAAAaAAsAAAABAAIAAAAaAAoAAAABAAAAAAAaAAkAAAABAAAAAAAaAAgAAAABAAQAAAAaAAcAAAABAAAAAAAaAAYAAAABAAIAAAAaAAUAAAACAAEAAAAaAAQAAAACAAAAAAAaAAMAAAADAAEAAAAaAAIAAAAAAAMAAAAVABEAAAACAAAAAAAbAAgAAAAAAAEAAAA=")
+tile_set = SubResource("TileSet_gldc4")
+
+[node name="robot" type="CharacterBody2D" parent="." unique_id=801079787]
+script = ExtResource("2_2klcf")
+
+[node name="shadow" type="Sprite2D" parent="robot" unique_id=256846517]
+position = Vector2(0, 14)
+scale = Vector2(1.1, 1.1)
+texture = ExtResource("2_gldc4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="robot" unique_id=548568795]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_nakos")
+animation = &"walk"
+autoplay = "idle"
+frame_progress = 0.042511083
+
+[node name="Camera2D" type="Camera2D" parent="robot" unique_id=115042951]
+zoom = Vector2(4, 4)
+
+[node name="direction" type="Node2D" parent="robot" unique_id=918706181]
+
+[node name="Label" type="Label" parent="robot/direction" unique_id=2118569222]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -72.0
+offset_top = -59.0
+offset_right = 72.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 0.8784314, 1)
+theme_override_colors/font_outline_color = Color(0.1532206, 0.2522863, 0.25356612, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_c00ee")
+text = "Remaining_steps:6"
+horizontal_alignment = 1
+
+[node name="up" type="TextureButton" parent="robot/direction" unique_id=969797098]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -30.0
+offset_right = 4.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(4, 8)
+texture_normal = SubResource("AtlasTexture_mlgqr")
+texture_pressed = SubResource("AtlasTexture_wslke")
+texture_hover = SubResource("AtlasTexture_gw3fx")
+
+[node name="right" type="TextureButton" parent="robot/direction" unique_id=581683593]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 22.0
+offset_top = -4.0
+offset_right = 30.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(0, 4)
+texture_normal = SubResource("AtlasTexture_n1psn")
+texture_pressed = SubResource("AtlasTexture_c00ee")
+texture_hover = SubResource("AtlasTexture_p7tei")
+
+[node name="down" type="TextureButton" parent="robot/direction" unique_id=887935838]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = 22.0
+offset_right = 4.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(4, 0)
+texture_normal = SubResource("AtlasTexture_c70he")
+texture_pressed = SubResource("AtlasTexture_mo32q")
+texture_hover = SubResource("AtlasTexture_6k6j1")
+
+[node name="left" type="TextureButton" parent="robot/direction" unique_id=18326157]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -4.0
+offset_right = -22.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(8, 4)
+texture_normal = SubResource("AtlasTexture_m335s")
+texture_pressed = SubResource("AtlasTexture_sq6bu")
+texture_hover = SubResource("AtlasTexture_4b7dj")
+
+[node name="GameManager" type="Node" parent="." unique_id=1658220869 node_paths=PackedStringArray("danger", "setting_page", "crt_button", "crt_screen")]
+script = ExtResource("5_2lpho")
+robot_direction = 1
+originPositon = Vector2(3, 10)
+energy = 10
+danger = NodePath("../CanvasLayer")
+setting_page = NodePath("../setting")
+crt_button = NodePath("../setting/HBoxContainer/VBoxContainer/close")
+crt_screen = NodePath("../CRT")
+
+[node name="dice" type="CanvasLayer" parent="." unique_id=836773766]
+
+[node name="ColorRect" type="ColorRect" parent="dice" unique_id=1510612077]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.18039216, 0.18039216, 0.18039216, 0.4862745)
+
+[node name="dice" type="TextureRect" parent="dice" unique_id=1400704001]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -715.0
+offset_top = -88.0
+offset_right = -515.0
+offset_bottom = -48.00003
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4, 4)
+texture = ExtResource("7_mlgqr")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="dice" unique_id=1997949816]
+libraries/ = SubResource("AnimationLibrary_mo32q")
+
+[node name="result" type="TextureRect" parent="dice" unique_id=942486402]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -88.0
+offset_right = -35.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4, 4)
+texture = ExtResource("12_wslke")
+
+[node name="information" parent="." unique_id=1052764519 instance=ExtResource("13_n1psn")]
+
+[node name="setting" type="CanvasLayer" parent="." unique_id=2014816337]
+
+[node name="ColorRect" type="ColorRect" parent="setting" unique_id=1830282517]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3137255, 0.3137255, 0.3137255, 0.34509805)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="setting" unique_id=553263838]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="setting/HBoxContainer" unique_id=69588677]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="close" type="Button" parent="setting/HBoxContainer/VBoxContainer" unique_id=2045633559]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.003921569, 0.7882353, 0.38431373, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
+theme_override_fonts/font = ExtResource("15_c70he")
+theme_override_font_sizes/font_size = 105
+theme_override_styles/normal = SubResource("StyleBoxFlat_mo32q")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_6k6j1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_m335s")
+text = "关闭滤镜"
+
+[node name="back" type="Button" parent="setting/HBoxContainer/VBoxContainer" unique_id=61409901]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.003921569, 0.7882353, 0.38431373, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
+theme_override_fonts/font = ExtResource("15_c70he")
+theme_override_font_sizes/font_size = 105
+theme_override_styles/normal = SubResource("StyleBoxFlat_mo32q")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_6k6j1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_m335s")
+text = "返回主页"
+
+[node name="quit" type="Button" parent="setting/HBoxContainer/VBoxContainer" unique_id=1429336784]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.003921569, 0.7882353, 0.38431373, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
+theme_override_fonts/font = ExtResource("15_c70he")
+theme_override_font_sizes/font_size = 105
+theme_override_styles/normal = SubResource("StyleBoxFlat_mo32q")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_6k6j1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_m335s")
+text = "保存退出"
+
+[node name="setting" type="Button" parent="setting/HBoxContainer/VBoxContainer" unique_id=1718613925]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.003921569, 0.7882353, 0.38431373, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
+theme_override_fonts/font = ExtResource("15_c70he")
+theme_override_font_sizes/font_size = 105
+theme_override_styles/normal = SubResource("StyleBoxFlat_mo32q")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_6k6j1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_m335s")
+text = "关闭设置"
+
+[node name="CanvasLayer" parent="." unique_id=416353444 instance=ExtResource("15_p7tei")]
+
+[node name="CRT" type="CanvasLayer" parent="." unique_id=1559593545]
+
+[node name="ColorRect" type="ColorRect" parent="CRT" unique_id=1585246430]
+material = SubResource("ShaderMaterial_n1psn")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="robot/direction/up" to="GameManager" method="_on_up_pressed"]
+[connection signal="pressed" from="robot/direction/right" to="GameManager" method="_on_right_pressed"]
+[connection signal="pressed" from="robot/direction/down" to="GameManager" method="_on_down_pressed"]
+[connection signal="pressed" from="robot/direction/left" to="GameManager" method="_on_left_pressed"]
+[connection signal="animation_finished" from="dice/AnimationPlayer" to="GameManager" method="_on_animation_player_animation_finished"]
+[connection signal="pressed" from="setting/HBoxContainer/VBoxContainer/close" to="GameManager" method="_on_close_pressed"]
+[connection signal="pressed" from="setting/HBoxContainer/VBoxContainer/back" to="GameManager" method="_on_back_pressed"]
+[connection signal="pressed" from="setting/HBoxContainer/VBoxContainer/quit" to="GameManager" method="_on_quit_pressed"]
+[connection signal="pressed" from="setting/HBoxContainer/VBoxContainer/setting" to="GameManager" method="_on_setting_pressed"]

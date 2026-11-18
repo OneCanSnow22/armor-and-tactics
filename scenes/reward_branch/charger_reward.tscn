@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://7fu0ux4xctkm"]
+
+[ext_resource type="Script" uid="uid://rdbyoajld5pa" path="res://scripts/reward_branch/charger_reward.gd" id="1_mx00n"]
+[ext_resource type="PackedScene" uid="uid://c85mioi3s3gln" path="res://scenes/cmd.tscn" id="2_55tg1"]
+
+[node name="charger_reward" type="CanvasLayer" unique_id=1790492287 node_paths=PackedStringArray("page")]
+script = ExtResource("1_mx00n")
+page = NodePath("cmd")
+
+[node name="cmd" parent="." unique_id=202584575 instance=ExtResource("2_55tg1")]

@@ -1,0 +1,23 @@
+{
+  "name": "_auto_75e202acb09145d7947c9f11ecc3245b",
+  "leadAgentId": "75e202acb09145d7947c9f11ecc3245b",
+  "workspacePath": "e:\\毕设项目\\装甲与战术",
+  "createdAt": "2026-05-12T12:21:08.399Z",
+  "options": {
+    "workspacePath": "e:\\毕设项目\\装甲与战术",
+    "isAutoTeam": true
+  },
+  "members": [
+    {
+      "memberId": "team-lead@_auto_75e202acb09145d7947c9f11ecc3245b",
+      "name": "team-lead",
+      "role": "Team Lead - coordinates the team and interacts with the user"
+    },
+    {
+      "memberId": "code-explorer@_auto_75e202acb09145d7947c9f11ecc3245b",
+      "name": "code-explorer",
+      "role": "读取核心创新脚本"
+    }
+  ],
+  "isAutoTeam": true
+}

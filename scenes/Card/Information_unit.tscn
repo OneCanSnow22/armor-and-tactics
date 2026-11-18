@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://dbgpuf8gpijp6"]
+
+[ext_resource type="Script" uid="uid://df1a7igwydtye" path="res://scripts/information_unit.gd" id="1_cnwow"]
+[ext_resource type="Texture2D" uid="uid://cof3x4yea1rks" path="res://assets/cards/backward.png" id="1_nj4ui"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="2_cnwow"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="3_5yk2d"]
+[ext_resource type="Texture2D" uid="uid://172hjpjfy07r" path="res://assets/cards/select_function.png" id="5_5yk2d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1wgxw"]
+content_margin_left = 1.0
+content_margin_top = 1.0
+content_margin_right = 1.0
+content_margin_bottom = 1.0
+bg_color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x0etx"]
+content_margin_left = 1.0
+content_margin_top = 1.0
+content_margin_right = 1.0
+content_margin_bottom = 1.0
+bg_color = Color(0.72156864, 0.72156864, 0.72156864, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="PanelContainer" type="PanelContainer" unique_id=1095313832 node_paths=PackedStringArray("picture", "title", "context", "selected")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_1wgxw")
+script = ExtResource("1_cnwow")
+picture = NodePath("HBoxContainer/VBoxContainer/TextureRect")
+title = NodePath("HBoxContainer/VBoxContainer/Label")
+context = NodePath("HBoxContainer/PanelContainer/Label")
+selected = NodePath("TextureButton")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1867085898]
+layout_mode = 2
+
+[node name="space" type="Control" parent="HBoxContainer" unique_id=1688521593]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=491884772]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer" unique_id=655568812]
+layout_mode = 2
+texture = ExtResource("1_nj4ui")
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=1323360875]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.5019608, 0, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("2_cnwow")
+theme_override_font_sizes/font_size = 12
+text = "后退"
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=321863472]
+custom_minimum_size = Vector2(158, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_x0etx")
+
+[node name="Label" type="Label" parent="HBoxContainer/PanelContainer" unique_id=1345715285]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = -4
+theme_override_fonts/font = ExtResource("3_5yk2d")
+theme_override_font_sizes/font_size = 12
+text = "你的打鼻涕我真的很感动非常
+可以为我
+胃肠"
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=1615328195]
+layout_mode = 2
+texture_hover = ExtResource("5_5yk2d")
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

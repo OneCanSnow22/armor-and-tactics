@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://dwxxlunqenyrl"]
+
+[ext_resource type="Shader" uid="uid://bb3phx8oxe4i5" path="res://shaders/death_glitch.gdshader" id="1_x5qfr"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="2_p7pyi"]
+[ext_resource type="FontFile" uid="uid://c34i515qyy8m6" path="res://assets/fonts/MapleMonoNormal-Light.ttf" id="3_5ij7y"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fqsj4"]
+shader = ExtResource("1_x5qfr")
+shader_parameter/intensity = 0.66000003135
+shader_parameter/noise_scale = 595.2830282284425
+shader_parameter/flicker_speed = 7.022000333545
+shader_parameter/whiteout = 0.24800001178
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=1294129459]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=103502765]
+material = SubResource("ShaderMaterial_fqsj4")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect" unique_id=1635259259]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/VBoxContainer" unique_id=2080777844]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/VBoxContainer" unique_id=1196774076]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_p7pyi")
+theme_override_font_sizes/font_size = 120
+text = "Death_report"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/VBoxContainer/VBoxContainer" unique_id=2017927463]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1629562754]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_5ij7y")
+theme_override_font_sizes/font_size = 49
+text = "杀敌数："

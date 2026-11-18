@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://bwda2v0jyn55v"]
+
+[ext_resource type="Script" uid="uid://cvpgkdt1pi8na" path="res://scripts/weapon_commodity.gd" id="1_cefky"]
+[ext_resource type="Texture2D" uid="uid://x2y7en50ctmk" path="res://assets/statebar/melee_mode.png" id="1_mtrur"]
+[ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="2_cefky"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a7cfx"]
+bg_color = Color(0.007843138, 0.07058824, 0.09411765, 1)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0.58431375, 0.54509807, 0.54901963, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 3
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6arfo"]
+bg_color = Color(0.0043466995, 0.04322862, 0.06163346, 1)
+border_width_bottom = 10
+border_color = Color(0.58431375, 0.54509807, 0.54901963, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wltfm"]
+border_width_right = 10
+border_color = Color(0.58431375, 0.54509807, 0.54901963, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nmgf8"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+
+[node name="weapon_commodity" type="PanelContainer" unique_id=1060897520 node_paths=PackedStringArray("context", "title", "pic")]
+offset_right = 334.0
+offset_bottom = 434.0
+pivot_offset = Vector2(167, 217)
+theme_override_styles/panel = SubResource("StyleBoxFlat_a7cfx")
+script = ExtResource("1_cefky")
+context = NodePath("VBoxContainer/PanelContainer2/RichTextLabel")
+title = NodePath("VBoxContainer/PanelContainer/HBoxContainer/Label")
+pic = NodePath("VBoxContainer/PanelContainer/HBoxContainer/PanelContainer/TextureRect")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1379843506]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=998380899]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6arfo")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=1835142255]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/PanelContainer/HBoxContainer" unique_id=194307987]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wltfm")
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/PanelContainer/HBoxContainer/PanelContainer" unique_id=295358299]
+layout_mode = 2
+texture = ExtResource("1_mtrur")
+
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/HBoxContainer" unique_id=1237813162]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.47058824, 1)
+theme_override_fonts/font = ExtResource("2_cefky")
+theme_override_font_sizes/font_size = 29
+text = "SG+00010"
+horizontal_alignment = 1
+
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer" unique_id=1265511747]
+custom_minimum_size = Vector2(0, 320)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_nmgf8")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/PanelContainer2" unique_id=1660716214]
+layout_mode = 2
+theme_override_colors/default_color = Color(0, 0.8, 0.3882353, 1)
+theme_override_fonts/normal_font = ExtResource("2_cefky")
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "回合数"
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=1813288460]
+layout_mode = 2
+
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_texture_button_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_texture_button_mouse_exited"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]
