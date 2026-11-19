@@ -11,6 +11,7 @@ const TYPE_FRAGILE := "Fragile"
 const TYPE_OVERHEATED := "Overheated"
 const TYPE_BLINDED := "Blinded"
 const TYPE_DUD := "Dud"
+const TYPE_LOCK := "Lock"
 
 ## 根据类型名设置图标和标识
 func setup_by_type(type_name: String) -> void:
@@ -25,6 +26,8 @@ func setup_by_type(type_name: String) -> void:
 				pic.texture = load("res://assets/buff/blinded.png")
 			TYPE_DUD:
 				pic.texture = load("res://assets/buff/dud.png")
+			TYPE_LOCK:
+				pic.texture = load("res://assets/buff/lock.png")
 			_:
 				pass
 

@@ -23,17 +23,23 @@ func is_not_aimed():
 func EnemybecomeSafe():
 	EnemyisDangerous=false
 	Enemy_danger.visible=false
+	enemy_danger_wait_label.visible=false
 func PlayerbecomeSafe():
 	PlayerisDangerous=false
 	Player_danger.visible=false
-func Player_turn_danger(value:int):#玩家攻击范围
+	player_danger_wait_label.visible=false
+func Player_turn_danger(value:int, show_wait:bool=true):#玩家攻击范围
 	Enemy_danger.visible=true
 	EnemyisDangerous=true
-	enemy_danger_wait_label.text=str(value)
-func Enemy_turn_danger(value:int):#敌人攻击范围
+	enemy_danger_wait_label.visible=show_wait
+	if show_wait:
+		enemy_danger_wait_label.text=str(value)
+func Enemy_turn_danger(value:int, show_wait:bool=true):#敌人攻击范围
 	Player_danger.visible=true
 	PlayerisDangerous=true
-	player_danger_wait_label.text=str(value)
+	player_danger_wait_label.visible=show_wait
+	if show_wait:
+		player_danger_wait_label.text=str(value)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	PlayerbecomeSafe()

@@ -107,13 +107,7 @@ func show_player_hit_range():
 						enemy.place.Player_turn_danger(0)
 			elif mode is Shelling:
 				var shelling_mode := mode as Shelling
-				# 哑火检查：每层Dud让炮击显示的等待回合数
-				var dud:Buff=CharacterArray[0].get_buff("Dud")
-				var extra_wait:int=0
-				if dud!=null:
-					extra_wait=dud.level
-				var display_time:int=shelling_mode.current_time+extra_wait
-				if enemyIsTarget:#只有攻击模组触发后开始显示攻击范围，并会随回合数更新
+				if enemyIsTarget:#瞄准期间仅显示攻击范围，不显示倒计时
 					if mode is Multi_target_missile:
 						# 打击型：锁定所有敌人
 						for _i in CharacterArray:
@@ -121,7 +115,7 @@ func show_player_hit_range():
 								continue
 							if _i.setting is Profile.Player:
 								continue
-							_i.place.Player_turn_danger(display_time)
+							_i.place.Player_turn_danger(0, false)
 					elif mode is Sputtering_type_artillery:
 						# 溅射型：锁定目标 + 向左右扩散溅射范围
 						var aimedCharacter:Character
@@ -129,23 +123,23 @@ func show_player_hit_range():
 							if _i is not Character:
 								continue
 							if _i.isAimed and _i.setting is not Profile.Player:
-								_i.place.Player_turn_danger(display_time)
+								_i.place.Player_turn_danger(0, false)
 								aimedCharacter=_i
 								break
 						if aimedCharacter != null:
 							var places=ground.get_child(0).get_children()
 							var index=places.find(aimedCharacter.place)
 							for i in range(index+1, min(index+shelling_mode.sputter_range+1, places.size())):
-								places[i].Player_turn_danger(display_time)
+								places[i].Player_turn_danger(0, false)
 							for i in range(max(0, index-shelling_mode.sputter_range), index):
-								places[i].Player_turn_danger(display_time)
+								places[i].Player_turn_danger(0, false)
 					else:
 						# 普通型：锁定目标，可追踪
 						for _i in CharacterArray:
 							if _i is not Character:
 								continue
 							if _i.isAimed and _i.setting is not Profile.Player:
-								_i.place.Player_turn_danger(display_time)
+								_i.place.Player_turn_danger(0, false)
 								_i.viscosity=true
 								break
 				else:
@@ -168,17 +162,10 @@ func show_enemy_hit_range(character:Character):
 			if player!=null:
 				player.place.Enemy_turn_danger(0)
 		elif mode is Shelling:
-			# 敌人炮击：显示玩家位置为危险区域，附带等待回合数
-			var shelling_mode := mode as Shelling
-			# 哑火检查：每层Dud让炮击显示的等待回合数+1
-			var dud:Buff=character.get_buff("Dud")
-			var extra_wait:int=0
-			if dud!=null:
-				extra_wait=dud.level
-			var display_time:int=shelling_mode.current_time+extra_wait
+			# 敌人炮击瞄准期间仅显示危险区域，不显示倒计时。
 			var player=CharacterArray[0] as Character
 			if player!=null:
-				player.place.Enemy_turn_danger(display_time)
+				player.place.Enemy_turn_danger(0, false)
 func enemy_is_locked(character:Character):#锁定目标并显示其攻击范围
 	clear_aimed()
 	clear_enemy_range()
@@ -288,19 +275,11 @@ func _do_move(character: Character, target_place: Position) -> void:
 	tween.tween_property(character, "global_position",
 		target_place.global_position + Vector2(70, -70), 0.2)
 	await tween.finished
-	# 炮击方移动会重置锁定回合数
+	# 追踪炮击移动后保留瞄准；非追踪炮击移动后取消瞄准。
 	if character.setting.attack_mode is Shelling:
 		var shelling := character.setting.attack_mode as Shelling
-		if character.setting is Profile.Player:
-			# 玩家炮击：重置倒计时 + 清掉已积累的叠加伤害
-			if enemyIsTarget:
-				shelling.current_time = shelling.time
-				shelling.bonus_damage = 0
-		else:
-			# 敌人炮击：被迫移动时重置锁定状态，无叠加伤害机制
-			if shelling.is_targeting:
-				shelling.current_time = shelling.time
-				shelling.is_targeting = false
+		if shelling is Multi_target_missile or shelling is Sputtering_type_artillery:
+			_cancel_shelling_aim(character)
 func execute_attack(attacker:Character = CharacterArray[0] as Character):#统一入口：造成伤害 + 更新血条
 	await causeDamage(attacker)
 func causeDamage(attacker:Character = CharacterArray[0] as Character):#通用伤害函数，默认为玩家
@@ -336,18 +315,12 @@ func _player_causeDamage(mode:Attack):#玩家攻击逻辑
 			else:
 				await get_tree().create_timer(0.2).timeout
 	elif mode is Shelling:
-		# 炮击不立即造成伤害，只更新锁定区域显示
-		if !enemyIsTarget:
-			enemyIsTarget=true
-			mode.current_time=mode.time
-			show_player_hit_range()
-		#else:
-			## 等待期内再次触发攻击模组：累计额外伤害
-			#mode.bonus_damage+=mode.damage
-			#print("炮击等待期叠加伤害：+" + str(mode.damage) + "，当前bonus=" + str(mode.bonus_damage))
-		# 锁定完成时发射（当前回合 current_time 已被 Turn_for_player 递减过）
-		if mode.current_time<=0 and enemyIsTarget:
-			await _player_shelling_fire(mode)
+		# 首次 Swipe 进入瞄准；瞄准期间的后续 Swipe 直接失效。
+		if enemyIsTarget:
+			return
+		enemyIsTarget=true
+		_add_buff_to_character(CharacterArray[0] as Character, Buff.TYPE_LOCK, mode.time)
+		show_player_hit_range()
 	elif mode is Melee:
 		var uflag=false
 		# 检查过热：近战范围减少，攻击力增加
@@ -377,16 +350,47 @@ func _player_causeDamage(mode:Attack):#玩家攻击逻辑
 		await get_tree().create_timer(0.2).timeout
 ## 玩家炮击发射：独立函数，供 _player_causeDamage 和 trigger_shelling_attacks 共用
 func _player_shelling_fire(mode: Shelling) -> void:
-	var total_damage = mode.damage + mode.bonus_damage
 	enemyIsTarget=false
-	mode.bonus_damage=0
 	for _c in CharacterArray:
 		if _c.place.EnemyisDangerous:
-			_c.ishitted(total_damage)
+			_c.ishitted(mode.damage)
 			# 对每个被炮击命中的敌人施加属性弹buff
 			_apply_missile_buff(mode, _c)
 	fresh_player_range()
+	state_bar.refresh_shelling_mode_label(CharacterArray[0] as Character)
 	await get_tree().create_timer(0.3).timeout
+func _enemy_shelling_fire(attacker: Character, mode: Shelling) -> void:
+	var player: Character = CharacterArray[0] as Character
+	var can_hit: bool = _can_shelling_hit_player(attacker)
+	_cancel_shelling_aim(attacker)
+	if can_hit and player != null:
+		player.ishitted(mode.damage)
+		_apply_missile_buff(mode, player)
+		await get_tree().create_timer(0.5).timeout
+	else:
+		print(attacker.setting.Rname + "的炮击范围内没有目标")
+		await get_tree().create_timer(0.2).timeout
+func _cancel_shelling_aim(character: Character) -> void:
+	character.remove_buff_by_type(Buff.TYPE_LOCK)
+	if character.setting is Profile.Player:
+		enemyIsTarget=false
+		clear_player_range()
+	else:
+		var mode: Attack = character.setting.attack_mode
+		if mode is Shelling:
+			(mode as Shelling).is_targeting=false
+		clear_enemy_range()
+	if character == state_bar.current_role:
+		state_bar.refresh_buff_basket(character)
+	state_bar.refresh_shelling_mode_label(character)
+func _finish_shelling_turn(character: Character) -> void:
+	var mode: Attack = character.setting.attack_mode
+	var is_aiming: bool = enemyIsTarget if character.setting is Profile.Player else mode is Shelling and (mode as Shelling).is_targeting
+	if not is_aiming:
+		return
+	if character.tick_lock_buff_on_turn_end() and character == state_bar.current_role:
+		state_bar.refresh_buff_basket(character)
+	state_bar.refresh_shelling_mode_label(character)
 func _enemy_causeDamage(attacker:Character):#敌人攻击逻辑，用 index 计算判定
 	var player=CharacterArray[0] as Character
 	if player==null:
@@ -418,22 +422,11 @@ func _enemy_causeDamage(attacker:Character):#敌人攻击逻辑，用 index 计�
 			player.ishitted(actual_damage)
 			hit=true
 	elif mode is Shelling:
-		# 炮击：每个敌人用自己实例的 is_targeting，不再共用全局变量
+		# 首次炮击行动进入瞄准；瞄准期间不重复添加或重置 Buff。
 		if !mode.is_targeting:
 			mode.is_targeting=true
-			mode.current_time=mode.time
-			if attacker.isAimed:
-				show_enemy_hit_range(attacker)
-		if mode.is_targeting:
-			mode.current_time-=1
-			if attacker.isAimed:
-				show_enemy_hit_range(attacker)
-		if _can_shelling_hit_player(attacker) and mode.current_time<=0:
-			mode.is_targeting=false
-			player.ishitted(mode.damage)
-			# 施加属性弹buff（被命中方是玩家）
-			_apply_missile_buff(mode, player)
-			hit=true
+			_add_buff_to_character(attacker, Buff.TYPE_LOCK, mode.time)
+			show_enemy_hit_range(attacker)
 	if hit:
 		await get_tree().create_timer(0.5).timeout
 	else:
@@ -441,6 +434,9 @@ func _enemy_causeDamage(attacker:Character):#敌人攻击逻辑，用 index 计�
 		await get_tree().create_timer(0.2).timeout
 func change_player_mode():#改变玩家攻击模式
 	if CharacterArray[0].setting is Profile.Player:
+		var player: Character = CharacterArray[0] as Character
+		if enemyIsTarget:
+			_cancel_shelling_aim(player)
 		var trans_mode:Attack
 		if CharacterArray[0].setting.attack_mode is Melee:
 			trans_mode=CharacterArray[0].setting.shoot
@@ -451,7 +447,9 @@ func change_player_mode():#改变玩家攻击模式
 		if trans_mode!=null:
 			CharacterArray[0].setting.attack_mode=trans_mode
 			fresh_player_range()
-			await state_bar.change_mode(trans_mode)
+			if state_bar.current_role==player:
+				state_bar.change_mode(trans_mode)
+				await state_bar.fresh_mode(trans_mode, player)
 			
 		else:
 			print("转化的攻击模式是空的")
@@ -598,7 +596,8 @@ func enemy_turn(enemy: Character) -> void:
 	if e == null:
 		return
 	print(e.Rname + " 开始行动")
-	clear_enemy_range()  # 每个敌人行动前清理上一个敌人残留的范围标记
+	await trigger_shelling_attacks(enemy)
+	clear_enemy_range()  # 自动炮击结算后清理旧范围，再展示本次行动的范围
 	match e.behavior:
 		Profile.EnemyBehavior.BASIC_MELEE:
 			await _ai_basic_melee(enemy)
@@ -614,9 +613,8 @@ func enemy_turn(enemy: Character) -> void:
 			await _ai_basic_melee(enemy)
 	clear_enemy_range()  # 该敌人行动完毕，清理范围标记
 
-## 计算队友（射击/炮击）的最大潜在伤害
-## 射击：用命中率随机判定是否命中，命中则取 damage
-## 炮击：只考虑即将触发的（current_time <= 1），取 damage + bonus_damage
+## 计算队友（射击/炮击）的最大潜在伤害。
+## 炮击仅在瞄准态且 Lock Buff 已耗尽时，会在该角色回合开始自动发射。
 func _calc_teammate_total_damage(enemy: Character) -> int:
 	var total_damage: int = 0
 	for i in range(1, CharacterArray.size()):
@@ -631,8 +629,7 @@ func _calc_teammate_total_damage(enemy: Character) -> int:
 			if Profile.rng.randi_range(0, 99) < mode.probability:
 				total_damage+= mode.damage
 		elif mode is Shelling:
-			# 仅考虑下回合即将触发的炮击
-			if mode.time == 1:
+			if mode.is_targeting and teammate.get_buff(Buff.TYPE_LOCK) == null:
 				total_damage+=mode.damage
 	return total_damage
 
@@ -694,7 +691,6 @@ func confirm_aimed_target()->int:#获取玩家所指的位置
 func Turn_for_enemys():#进入敌人的回合
 	if money_reward>0:
 		money_reward-=1
-	update_enemy_shelling_time()
 	# 敌人buff回合开始递减
 	for _c in CharacterArray:
 		if _c is not Character:
@@ -704,45 +700,34 @@ func Turn_for_enemys():#进入敌人的回合
 		var changed:bool=_c.tick_buffs()
 		if changed and _c==state_bar.current_role:
 			state_bar.refresh_buff_basket(_c)
-	#await _enemy_shelling_attack()
+		if changed:
+			state_bar.refresh_shelling_mode_label(_c)
 	await show_turn_title("敌人回合")
 	var m=confirm_aimed_target()
 	for enemy in CharacterArray:
 		if enemy.setting is not Profile.Player:
 			enemy_is_locked(enemy)
 			await enemy_turn(enemy)
+			_finish_shelling_turn(enemy)
 			await get_tree().create_timer(0.2).timeout
 	if m != -1 and m < CharacterArray.size():#当玩家死亡时，代码运行出现了问题
 		enemy_is_locked(CharacterArray[m])
 	else:
 		print("不存在任何可锁定目标")
 	Turn_for_player()
-## 触发所有锁定完成的炮击（玩家回合开始时调用）
-## 检查玩家当前炮击模式，锁定回合 time <= 0 则触发攻击
+## 角色回合开始时，瞄准态但 Lock Buff 已消失则自动发射。
 func trigger_shelling_attacks(character:Character) -> void:
-	var mode=character.setting.attack_mode
+	var mode: Attack = character.setting.attack_mode
+	if mode is not Shelling:
+		return
+	if character.get_buff(Buff.TYPE_LOCK) != null:
+		return
 	if character.setting is Profile.Player:
-		if mode is Shelling and mode.current_time<=0 and enemyIsTarget:
+		if enemyIsTarget:
 			await _player_shelling_fire(mode as Shelling)
 	else:
-		if mode is Shelling and mode.current_time<=0:
-			await causeDamage(character)
-## 玩家炮击攻击逻辑：根据炮击类型对锁定目标造成伤害
-func _enemy_shelling_attack() -> void:
-	for _c in CharacterArray:
-		if _c is not Character:
-			continue
-		if _c.setting is Profile.Player:
-			continue
-		if _c.setting.attack_mode is Shelling:
-			await trigger_shelling_attacks(_c)
-func update_enemy_shelling_time():
-	for _c in CharacterArray:
-		if _c.setting is not Profile.Player:
-			var mode=_c.setting.attack_mode
-			if mode is Shelling:
-				if mode.is_targeting:
-					mode.current_time-=1
+		if (mode as Shelling).is_targeting:
+			await _enemy_shelling_fire(character, mode as Shelling)
 func Turn_for_player():
 	# 玩家buff回合开始递减
 	var player:Character=CharacterArray[0] as Character
@@ -750,13 +735,10 @@ func Turn_for_player():
 		var changed:bool=player.tick_buffs()
 		if changed and player==state_bar.current_role:
 			state_bar.refresh_buff_basket(player)
+		if changed:
+			state_bar.refresh_shelling_mode_label(player)
 	Profile.last_round_missed = Profile.miss_times > 0
 	Profile.miss_times = 0
-	if enemyIsTarget:
-		if CharacterArray[0].setting.attack_mode is Shelling:
-			CharacterArray[0].setting.attack_mode.current_time-=1
-			if CharacterArray[0].setting.attack_mode.current_time>=0:
-				fresh_player_range()
 	await show_turn_title("玩家回合")
 	await trigger_shelling_attacks(CharacterArray[0])
 	await card_manager.draw_cards(7)
@@ -787,6 +769,7 @@ func _add_buff_to_character(character:Character, buff_type:String, level:int) ->
 	# 如果该角色是当前state_bar选中的目标，刷新UI
 	if character==state_bar.current_role:
 		state_bar.refresh_buff_basket(character)
+	state_bar.refresh_shelling_mode_label(character)
 ## 根据炮击的current_missile给被命中一方施加对应属性弹buff
 func _apply_missile_buff(mode:Shelling, target:Character) -> void:
 	if mode.current_missile==null:

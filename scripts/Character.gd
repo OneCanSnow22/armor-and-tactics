@@ -191,11 +191,31 @@ func get_buff(buff_type: String) -> Buff:
 func tick_buffs() -> bool:
 	var changed: bool = false
 	for i in range(buffs.size() - 1, -1, -1):
+		if buffs[i].get_buff_type() == Buff.TYPE_LOCK:
+			continue
+		# 瞄准期间，Dud 由回合结束的炮击结算优先消耗。
+		if buffs[i].get_buff_type() == Buff.TYPE_DUD and get_buff(Buff.TYPE_LOCK) != null:
+			continue
 		if not buffs[i].is_permanent:
 			if not buffs[i].on_turn_start():
 				buffs.remove_at(i)
 				changed = true
 	return changed
+## 瞄准期间，回合结束时优先扣除一层 Dud；无 Dud 时才扣除一层 Lock。
+func tick_lock_buff_on_turn_end() -> bool:
+	var dud_buff: Buff = get_buff(Buff.TYPE_DUD)
+	if dud_buff != null:
+		dud_buff.set_level(dud_buff.level - 1)
+		if dud_buff.level <= 0:
+			remove_buff_by_type(Buff.TYPE_DUD)
+		return true
+	var lock_buff: Buff = get_buff(Buff.TYPE_LOCK)
+	if lock_buff == null:
+		return false
+	lock_buff.set_level(lock_buff.level - 1)
+	if lock_buff.level <= 0:
+		remove_buff_by_type(Buff.TYPE_LOCK)
+	return true
 ## 战斗结束时清除所有临时型buff
 func clear_temp_buffs() -> void:
 	for i in range(buffs.size() - 1, -1, -1):

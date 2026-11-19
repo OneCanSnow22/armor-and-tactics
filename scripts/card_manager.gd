@@ -610,6 +610,7 @@ func _on_finished_button_pressed() -> void:#结束回合
 		if card != null:
 			await card.decide_card_where_to_go()
 			await get_tree().create_timer(0.15).timeout
+	Fight_Menu._finish_shelling_turn(Fight_Menu.CharacterArray[0] as Character)
 	Fight_Menu.Turn_for_enemys()
 func consume_queue():
 	if _is_playing or _anim_queue.is_empty():

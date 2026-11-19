@@ -33,7 +33,7 @@ func show_information(character:Character):
 		if attack_mode!=character.setting.attack_mode:
 			change_mode(character.setting.attack_mode)
 			print("更改攻击模式")
-		fresh_mode(character.setting.attack_mode)
+		fresh_mode(character.setting.attack_mode, character)
 		max_health=character.setting.max_health
 		current_health=character.setting.health
 		var length:float=Max_size*(float(current_health)/float(max_health))
@@ -48,34 +48,44 @@ func show_information(character:Character):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-func fresh_mode(mode:Attack):
+func fresh_mode(mode:Attack, role:Character=null):
+	var display_role: Character = role if role != null else current_role
 	var tween=create_tween()
 	tween.set_trans(Tween.TRANS_BACK)
 	tween.set_ease(Tween.EASE_OUT)
 	if mode is Melee:
 		mode_bar.texture_progress=load("res://assets/statebar/bar10.png")
 		mode_bar.max_value=mode.max_range
+		mode_label.text="目前攻击距离为"+str(mode.range)+"单位"
 		tween.tween_property(mode_bar,"value",mode.range,0.2)
 		await tween.finished
-		mode_label.text="目前攻击距离为"+str(mode.range)+"单位"
 	elif mode is Shoot:
 		mode_bar.texture_progress=load("res://assets/statebar/bar11.png")
 		mode_bar.max_value=mode.max_probability
+		mode_label.text="目前命中率为"+str(mode.probability)+"%"
 		tween.tween_property(mode_bar,"value",mode.probability,0.2)
 		await tween.finished
-		mode_label.text="目前命中率为"+str(mode.probability)+"%"
 	elif mode is Shelling:
 		mode_bar.texture_progress=load("res://assets/statebar/bar12.png")
 		mode_bar.max_value=mode.max_time
+		refresh_shelling_mode_label(display_role)
 		tween.tween_property(mode_bar,"value",mode.time,0.2)
 		await tween.finished
-		# 哑火检查：每层Dud让显示的等待时间+1
-		var dud_extra:int=0
-		if current_role!=null:
-			var dud:Buff=current_role.get_buff("Dud")
-			if dud!=null:
-				dud_extra=dud.level
-		mode_label.text="目标锁定所需时间为"+str(mode.max_time+dud_extra)+"回合"
+func refresh_shelling_mode_label(role:Character) -> void:
+	if role==null or role!=current_role:
+		return
+	var mode:Attack=role.setting.attack_mode
+	if mode is not Shelling:
+		return
+	var shelling:Shelling=mode as Shelling
+	var dud:Buff=role.get_buff(Buff.TYPE_DUD)
+	var lock:Buff=role.get_buff(Buff.TYPE_LOCK)
+	var remaining_time:int=shelling.time
+	if lock!=null:
+		remaining_time=lock.level
+	if dud!=null:
+		remaining_time+=dud.level
+	mode_label.text="目标锁定所需时间为"+str(remaining_time)+"回合"
 func _get_mode_index(mode:Attack)->int:
 	if mode is not Shelling:
 		if mode is Melee:

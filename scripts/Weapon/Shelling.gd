@@ -6,7 +6,6 @@ class_name Shelling
 @export var flare:Flare
 @export var current_missile:Missile
 @export var max_time:int
-@export var current_time:int#触发炮击还需要的回合数
 @export var bonus_damage:int = 0#等待期内由攻击模组叠加的额外伤害
 @export var is_targeting:bool = false#敌人炮击专用：是否已锁定玩家（替代全局 playerIsTarget）
 func attack():
