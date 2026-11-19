@@ -7,6 +7,8 @@ var playerNeedWaitTime:int
 var enemyNeedWaitTime:int
 var playerIsTarget:bool#玩家被敌人导弹锁定了
 var enemyIsTarget:bool#敌人被玩家导弹锁定了
+var battle_actors:Node2D
+const UI_Z_INDEX:int = 100
 @export var state_bar:State_bar
 @export var ground:ColorRect
 @export var playerItem:PanelContainer
@@ -31,6 +33,9 @@ func _ready() -> void:
 				child.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ground.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card_manager = get_node("Card_manager") as Card_Manager
+	battle_actors = _create_battle_actors()
+	state_bar.z_index = UI_Z_INDEX
+	playerItem.z_index = UI_Z_INDEX
 	Profile.lock_enemy_array()
 	Character_list=Profile.CharacterArray
 	deployCharacter()
@@ -51,8 +56,46 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _process(_delta: float) -> void:
+	_refresh_actor_z_order()
+
+## 角色放在战场背景内，使用小范围相对 z 值排序；所有 UI 保持在更高层。
+func _create_battle_actors() -> Node2D:
+	var actors: Node2D = Node2D.new()
+	actors.name = "BattleActors"
+	actors.z_index = 0
+	ground.add_child(actors)
+	return actors
+
+func _refresh_actor_z_order() -> void:
+	var player_faction: Array[Character] = []
+	var enemy_faction: Array[Character] = []
+	for character in CharacterArray:
+		if character is not Character or character.setting == null:
+			continue
+		if _is_player_faction(character as Character):
+			player_faction.append(character as Character)
+		else:
+			enemy_faction.append(character as Character)
+	player_faction.sort_custom(_sort_characters_by_x)
+	enemy_faction.sort_custom(_sort_characters_by_x)
+	_apply_actor_z_order(player_faction, false)
+	_apply_actor_z_order(enemy_faction, true)
+
+func _sort_characters_by_x(left: Character, right: Character) -> bool:
+	return left.global_position.x < right.global_position.x
+
+## 玩家阵营使用 x 排序；敌方使用 -x 排序（越靠左越在上层）。
+func _apply_actor_z_order(characters: Array[Character], left_is_above: bool) -> void:
+	for index in range(characters.size()):
+		var z_order: int = characters.size() - index if left_is_above else index + 1
+		characters[index].z_index = z_order
+
+func _is_player_faction(character: Character) -> bool:
+	return character != null and character.setting != null and character.setting.faction == Profile.Faction.PLAYER
+
+func _are_allies(first: Character, second: Character) -> bool:
+	return first != null and second != null and first.setting != null and second.setting != null and first.setting.faction == second.setting.faction
 func locate(value:int)->Position:#绑定位置块
 	if value < 1 or value > 11:
 		return null
@@ -61,7 +104,7 @@ func deployCharacter():
 	for _i in Character_list:
 		var CharacterScene=preload("res://scenes/character.tscn")
 		var role=CharacterScene.instantiate() as Character
-		ground.add_child(role)
+		battle_actors.add_child(role)
 		role.setting=_i as Profile.Role
 		role.sprite.texture=load(role.setting.pic_path)
 		role.place=locate(role.getIndex())
@@ -238,8 +281,8 @@ func move_character(character: Character, direction: int) -> bool:
 	var target_index: int = current_index + direction
 	# 先尝试原方向
 	clear_player_range()
-	if can_move_to(target_index, character, places):
-		await _do_move(character, places[target_index])
+	var moved: bool = await _try_move_to_index(target_index, character, places)
+	if moved:
 		show_player_hit_range()
 		# 玩家移动后刷新敌人攻击范围显示，让远程/近战判定跟随新位置
 		if character.setting is Profile.Player:
@@ -247,8 +290,8 @@ func move_character(character: Character, direction: int) -> bool:
 		return true
 	# 原方向走不了，反弹到反方向
 	var reverse_index: int = current_index - direction
-	if can_move_to(reverse_index, character, places):
-		await _do_move(character, places[reverse_index])
+	moved = await _try_move_to_index(reverse_index, character, places)
+	if moved:
 		show_player_hit_range()
 		if character.setting is Profile.Player:
 			show_enemy_hit_range_for_all()
@@ -257,15 +300,25 @@ func move_character(character: Character, direction: int) -> bool:
 	print(str(character.name) + " 无法移动")
 	show_player_hit_range()
 	return false
-## 判断目标位置块是否可以移动过去
-func can_move_to(index: int, mover: Character, places: Array) -> bool:
+## 尝试移动至目标位置；同阵营角色占位时同步换位，敌对阵营仍不可穿越。
+func _try_move_to_index(index: int, mover: Character, places: Array) -> bool:
 	if index < 0 or index >= places.size():
-		return false # 超出边界
+		return false
 	var target_pos: Position = places[index]
-	for c in CharacterArray:
-		if c != mover and c.place == target_pos:
-			return false # 被其他角色占据
-	return true
+	var occupant: Character = _get_character_at(target_pos, mover)
+	if occupant == null:
+		await _do_move(mover, target_pos)
+		return true
+	if _are_allies(mover, occupant):
+		await _swap_character_positions(mover, occupant)
+		return true
+	return false
+
+func _get_character_at(target_pos: Position, excluded: Character) -> Character:
+	for character in CharacterArray:
+		if character is Character and character != excluded and character.place == target_pos:
+			return character as Character
+	return null
 ## 执行移动动画并更新 place 引用
 func _do_move(character: Character, target_place: Position) -> void:
 	character.place = target_place
@@ -275,6 +328,26 @@ func _do_move(character: Character, target_place: Position) -> void:
 	tween.tween_property(character, "global_position",
 		target_place.global_position + Vector2(70, -70), 0.2)
 	await tween.finished
+	_handle_character_position_changed(character)
+
+func _swap_character_positions(first: Character, second: Character) -> void:
+	var first_place: Position = first.place
+	var second_place: Position = second.place
+	if first_place == null or second_place == null:
+		return
+	first.place = second_place
+	second.place = first_place
+	var tween: Tween = create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_parallel(true)
+	tween.tween_property(first, "global_position", second_place.global_position + Vector2(70, -70), 0.2)
+	tween.tween_property(second, "global_position", first_place.global_position + Vector2(70, -70), 0.2)
+	await tween.finished
+	_handle_character_position_changed(first)
+	_handle_character_position_changed(second)
+
+func _handle_character_position_changed(character: Character) -> void:
 	# 追踪炮击移动后保留瞄准；非追踪炮击移动后取消瞄准。
 	if character.setting.attack_mode is Shelling:
 		var shelling := character.setting.attack_mode as Shelling
@@ -585,7 +658,10 @@ func all_enemies_turn() -> void:
 
 ## 显示回合标题，动画播完才返回
 func show_turn_title(text_value: String) -> void:
-	var title := preload("res://scenes/Effects/turn_title.tscn").instantiate()
+	var title: Label = preload("res://scenes/Effects/turn_title.tscn").instantiate() as Label
+	if title == null:
+		return
+	title.z_index = UI_Z_INDEX
 	title.set_turn_text(text_value)
 	add_child(title)
 	await title.finished

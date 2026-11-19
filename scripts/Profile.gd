@@ -46,10 +46,14 @@ var Deck:Array[Card]=[]
 var CharacterArray:Array[Role]
 var miss_times:int=0
 var last_round_missed:bool
+enum Faction {
+	PLAYER,
+	ENEMY,
+}
 class AnimationUnit:
 	func play(main:Main_menu):
 		print("不实现任何东西")
-class Forward_animation extends Profile.AnimationUnit:
+class Forward_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		print("Forward_animation.play() 被调用")
 		var player:Character = main.CharacterArray[0] as Character
@@ -57,13 +61,13 @@ class Forward_animation extends Profile.AnimationUnit:
 			await main.move_character(player, 1)
 		print("Forward_animation.play() 结束")
 		#await main.move_character(main.CharacterArray[0], 1) 
-class Backward_animation extends Profile.AnimationUnit:
+class Backward_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		var player:Character = main.CharacterArray[0] as Character
 		if player != null:
 			await main.move_character(player, -1)	
 		#await main.move_character(main.CharacterArray[0], -1)	
-class Discard_animation extends Profile.AnimationUnit:
+class Discard_animation extends AnimationUnit:
 	var count: int
 	func _init(n: int):
 		count = n
@@ -71,56 +75,56 @@ class Discard_animation extends Profile.AnimationUnit:
 		if main.card_manager != null:
 			await main.card_manager.enter_discard_time(count)
 		print("弃牌完成")
-class Discard_one_animation extends Profile.AnimationUnit:
+class Discard_one_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		if main.card_manager != null:
 			await main.card_manager.enter_discard_time(1)
 		print("丢弃一张牌")
-class Discard_two_animation extends Profile.AnimationUnit:
+class Discard_two_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		if main.card_manager != null:
 			await main.card_manager.enter_discard_time(2)
 		print("丢弃两张牌")
-class Draw_one_animation extends Profile.AnimationUnit:
+class Draw_one_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		if main.card_manager!=null:
 			await main.card_manager.draw_cards(1)
 		print("抽一张牌")
-class Draw_two_animation extends Profile.AnimationUnit:
+class Draw_two_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		if main.card_manager!=null:
 			await main.card_manager.draw_cards(2)
 		print("抽两张牌")
-class Draw_three_animation extends Profile.AnimationUnit:
+class Draw_three_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		if main.card_manager!=null:
 			await main.card_manager.draw_cards(3)
 		print("抽三张牌")
-class Load_animation extends Profile.AnimationUnit:
+class Load_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		if main.card_manager!=null:
 			await main.card_manager.enter_load_time()
 		print("加载栈")
-class Replace_animation extends Profile.AnimationUnit:
+class Replace_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		if main.card_manager!=null:
 			await main.card_manager.enter_replace_time()
 		print("替换栈")
-class Swipe_animation extends Profile.AnimationUnit:
+class Swipe_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		await main.execute_attack()
 		print("打击")
-class Turn_animation extends Profile.AnimationUnit:
+class Turn_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		await main.change_player_mode()
 		print("转换")
-class Lock_animation extends Profile.AnimationUnit:
+class Lock_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		print("锁")
-class Consume_animation extends Profile.AnimationUnit:
+class Consume_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		print("消耗")
-class One_off_animation extends Profile.AnimationUnit:
+class One_off_animation extends AnimationUnit:
 	func play(main:Main_menu):
 		print("一次性")
 class Role:
@@ -130,6 +134,7 @@ class Role:
 	var attack_mode:Attack
 	var origin_place:int
 	var pic_path:String
+	var faction:Faction = Faction.ENEMY
 class Player extends Role:
 	var melee:Melee
 	var shoot:Shoot
@@ -162,6 +167,7 @@ class Player extends Role:
 		shelling.code="SG-00001"
 		origin_place=2
 		attack_mode=melee
+		faction=Faction.PLAYER
 
 	
 ## 敌人行为枚举，用于 fight_menu 分发 AI 逻辑
@@ -694,6 +700,36 @@ var enemy_seed_list:Dictionary[int,Array]={
 	3:[Enemy_information.new(1,7),Enemy_information.new(3,9)],
 	4:[Enemy_information.new(1,7),Enemy_information.new(3,9),Enemy_information.new(2,10)]
 }
+
+## 后续战斗的随机阵容只使用当前已有的三种敌人，并保持各兵种的合理站位。
+func _random_enemy_information() -> Array[Enemy_information]:
+	var enemy_ids: Array[int] = [1, 2, 3]
+	enemy_ids.shuffle()
+	var enemy_count: int = randi_range(2, 3)
+	var result: Array[Enemy_information] = []
+	for index in range(enemy_count):
+		var enemy_id: int = enemy_ids[index]
+		result.append(Enemy_information.new(enemy_id, _get_enemy_spawn_position(enemy_id)))
+	return result
+
+## 近战靠前，炮击居中，射击靠后；三个位置均在玩家的右侧。
+func _get_enemy_spawn_position(enemy_id: int) -> int:
+	match enemy_id:
+		1:
+			return 7
+		2:
+			return 10
+		3:
+			return 9
+	return 10
+
+func _deploy_enemy(enemy_information: Enemy_information) -> void:
+	var spawned_enemy: Enemy = enemy_information.deploy()
+	if spawned_enemy == null:
+		return
+	print("加入敌人")
+	spawned_enemy.upgrade()
+	CharacterArray.append(spawned_enemy)
 ## 根据枚举值创建对应的 function 实例
 func create_function(mode: Function) -> function:
 	if _function_class_map.has(mode):
@@ -970,14 +1006,13 @@ func start_new():
 func lock_enemy_array():
 	CharacterArray.clear()
 	CharacterArray.append(player)
-	var step=item.finished_times
-	if step>enemy_seed_list.size():
-		step=enemy_seed_list.size()
-	for i in enemy_seed_list[step]:
-		print("加入敌人")
-		var en=i.deploy()
-		en.upgrade()
-		CharacterArray.append(en)
+	var step: int = item.finished_times
+	if enemy_seed_list.has(step):
+		for enemy_information: Enemy_information in enemy_seed_list[step]:
+			_deploy_enemy(enemy_information)
+	else:
+		for enemy_information: Enemy_information in _random_enemy_information():
+			_deploy_enemy(enemy_information)
 	print("角色数量为"+str(CharacterArray.size()))
 class TimeRecorder:
 	var start_time: int

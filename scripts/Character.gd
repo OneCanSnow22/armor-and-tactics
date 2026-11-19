@@ -2,6 +2,7 @@ extends CharacterBody2D
 class_name Character
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
+const FLOATING_TEXT_Z_INDEX = 100
 @export var place:Position#位置块
 @export var explosion:CPUParticles2D
 @export var dead_explosion:AnimatedSprite2D#死亡爆炸特效
@@ -95,7 +96,10 @@ func isShot(value:int,probability:int) -> bool:
 	return true
 func pop_damage(value:int):
 	print("弹出文字: " + str(value))
-	var text := preload("res://scenes/Effects/floating_text.tscn").instantiate()
+	var text: Label = preload("res://scenes/Effects/floating_text.tscn").instantiate() as Label
+	if text == null:
+		return
+	text.z_index = FLOATING_TEXT_Z_INDEX
 	text.set_value(value)
 	text.global_position = global_position + Vector2(0,-70)
 	# 加到 Fight_Menu 而非自身，确保与角色在同一 CanvasLayer 下坐标一致
@@ -108,7 +112,10 @@ func pop_damage(value:int):
 		add_child(text)
 	print("已add_child")
 func pop_miss():
-	var text := preload("res://scenes/Effects/floating_text.tscn").instantiate()
+	var text: Label = preload("res://scenes/Effects/floating_text.tscn").instantiate() as Label
+	if text == null:
+		return
+	text.z_index = FLOATING_TEXT_Z_INDEX
 	text.set_miss()
 	text.global_position = global_position + Vector2(0,-70)
 	# 加到 Fight_Menu 而非自身，确保与角色在同一 CanvasLayer 下坐标一致
