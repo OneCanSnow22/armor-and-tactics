@@ -12,7 +12,7 @@ config_version=5
 
 config/name="装甲与战术"
 run/main_scene="uid://udiaqbqs00j5"
-config/features=PackedStringArray("4.6", "GL Compatibility")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -24,6 +24,7 @@ Profile="*uid://bqalig7qx0plk"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
