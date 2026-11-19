@@ -19,16 +19,21 @@ func _set_function(value:function):
 	button.disabled=false
 	if value==null:
 		measure.texture=load("res://assets/cards/blank.png")
+		measure.id=0
 		measure.mode=Profile.Function.Blank
+		measure.point=0
 		button.disabled=true
 		return
 	# 不替换measure引用（它会脱离场景树），而是更新现有子节点的属性
 	if value is Card.Blank:
 		measure.texture=load("res://assets/cards/blank.png")
+		measure.id=value.id
 		measure.mode=Profile.Function.Blank
+		measure.point=value.point
 		button.disabled=false
 		return
 	measure.texture=value.texture
+	measure.id=value.id
 	measure.mode=value.mode
 	measure.point=value.point
 	measure.context=value.context

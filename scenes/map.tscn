@@ -7,12 +7,6 @@
 [ext_resource type="Script" uid="uid://b32sqwk81r0ty" path="res://scripts/map_manager.gd" id="5_2lpho"]
 [ext_resource type="FontFile" uid="uid://cqtidfb3gx7ll" path="res://assets/fonts/ZLabsBitmap_12px_HC.ttf" id="5_c00ee"]
 [ext_resource type="Texture2D" uid="uid://ceukg0ko8t3mg" path="res://assets/character/direction_button.png" id="5_nakos"]
-[ext_resource type="Texture2D" uid="uid://boeaanwq5g8im" path="res://assets/chessboard/dice/dice_roll1.png" id="7_mlgqr"]
-[ext_resource type="Texture2D" uid="uid://du2w5ipdthm15" path="res://assets/chessboard/dice/dice_roll2.png" id="8_wslke"]
-[ext_resource type="Texture2D" uid="uid://cd1k10skkae0b" path="res://assets/chessboard/dice/dice_roll3.png" id="9_gw3fx"]
-[ext_resource type="Texture2D" uid="uid://dcopbnwnenhjt" path="res://assets/chessboard/dice/dice_roll4.png" id="10_n1psn"]
-[ext_resource type="Texture2D" uid="uid://pmgqks1ytoc" path="res://assets/chessboard/dice/dice_roll5.png" id="11_c00ee"]
-[ext_resource type="Texture2D" uid="uid://unt1648avgt8" path="res://assets/chessboard/dice/dice_1.png" id="12_wslke"]
 [ext_resource type="Shader" uid="uid://bek3ab6h84lv0" path="res://shaders/CRT.gdshader" id="13_gw3fx"]
 [ext_resource type="PackedScene" uid="uid://ba2b4k31u2vpw" path="res://scenes/information.tscn" id="13_n1psn"]
 [ext_resource type="FontFile" uid="uid://bauvhddawxkk4" path="res://assets/fonts/ZLabsBitmap_12px_CN.ttf" id="15_c70he"]
@@ -172,67 +166,6 @@ region = Rect2(16, 16, 8, 8)
 [sub_resource type="AtlasTexture" id="AtlasTexture_4b7dj"]
 atlas = ExtResource("5_nakos")
 region = Rect2(8, 16, 8, 8)
-
-[sub_resource type="Animation" id="Animation_p7tei"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("dice:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("7_mlgqr")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("result:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-
-[sub_resource type="Animation" id="Animation_c70he"]
-resource_name = "roll"
-length = 1.6
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("dice:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [ExtResource("7_mlgqr"), ExtResource("8_wslke"), ExtResource("9_gw3fx"), ExtResource("10_n1psn"), ExtResource("11_c00ee")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("result:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.8),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_mo32q"]
-_data = {
-&"RESET": SubResource("Animation_p7tei"),
-&"roll": SubResource("Animation_c70he")
-}
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mo32q"]
 content_margin_left = 10.0
@@ -419,49 +352,6 @@ setting_page = NodePath("../setting")
 crt_button = NodePath("../setting/HBoxContainer/VBoxContainer/close")
 crt_screen = NodePath("../CRT")
 
-[node name="dice" type="CanvasLayer" parent="." unique_id=836773766]
-
-[node name="ColorRect" type="ColorRect" parent="dice" unique_id=1510612077]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.18039216, 0.18039216, 0.18039216, 0.4862745)
-
-[node name="dice" type="TextureRect" parent="dice" unique_id=1400704001]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -715.0
-offset_top = -88.0
-offset_right = -515.0
-offset_bottom = -48.00003
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(4, 4)
-texture = ExtResource("7_mlgqr")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="dice" unique_id=1997949816]
-libraries/ = SubResource("AnimationLibrary_mo32q")
-
-[node name="result" type="TextureRect" parent="dice" unique_id=942486402]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -75.0
-offset_top = -88.0
-offset_right = -35.0
-offset_bottom = -48.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(4, 4)
-texture = ExtResource("12_wslke")
-
 [node name="information" parent="." unique_id=1052764519 instance=ExtResource("13_n1psn")]
 
 [node name="setting" type="CanvasLayer" parent="." unique_id=2014816337]
@@ -547,7 +437,6 @@ grow_vertical = 2
 [connection signal="pressed" from="robot/direction/right" to="GameManager" method="_on_right_pressed"]
 [connection signal="pressed" from="robot/direction/down" to="GameManager" method="_on_down_pressed"]
 [connection signal="pressed" from="robot/direction/left" to="GameManager" method="_on_left_pressed"]
-[connection signal="animation_finished" from="dice/AnimationPlayer" to="GameManager" method="_on_animation_player_animation_finished"]
 [connection signal="pressed" from="setting/HBoxContainer/VBoxContainer/close" to="GameManager" method="_on_close_pressed"]
 [connection signal="pressed" from="setting/HBoxContainer/VBoxContainer/back" to="GameManager" method="_on_back_pressed"]
 [connection signal="pressed" from="setting/HBoxContainer/VBoxContainer/quit" to="GameManager" method="_on_quit_pressed"]

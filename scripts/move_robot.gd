@@ -34,9 +34,9 @@ func need_turn_to()->bool:
 		return true#面朝左边
 func turn_to():
 	animation.scale.x=-animation.scale.x
-func select_direction(direct:int,id:int,step:int):
+func select_direction(direct:int,id:int):
 	direction.visible=true
-	text.text="Remaining_steps:"+str(step)
+	text.text="选择移动方向"
 	down.visible=false
 	left.visible=false
 	right.visible=false
@@ -64,9 +64,10 @@ func select_direction(direct:int,id:int,step:int):
 func hide_direct():
 	if direction.visible:
 		direction.visible=false
-func enlarge_screen():
+func enlarge_screen()->Tween:
 	var tween=create_tween()
 	tween.tween_property(camera,"zoom",Vector2(6,6),0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	return tween
 func normal_screen():	
 	var tween=create_tween()
 	tween.tween_property(camera,"zoom",Vector2(4,4),0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

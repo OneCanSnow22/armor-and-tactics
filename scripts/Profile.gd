@@ -6,8 +6,6 @@ var enemy:Array[Role]
 var item:Item
 var time:TimeRecorder
 const max_energy:int=15
-var remained_step:int#用于记录剩余步数
-var intercepted:bool=false#用于记录是否被拦截
 ## 卡牌配方定义：[function类型, 数量]
 ## 创建卡组时根据配方表批量生成，不用再写重复代码
 enum Function{
@@ -687,6 +685,7 @@ var _function_class_map: Dictionary = {
 	Function.Lock: CardScript.Lock,
 	Function.One_off: CardScript.One_off,
 	Function.Consume: CardScript.Consume,
+	Function.Blank: CardScript.Blank,
 }
 var enemy_seed_list:Dictionary[int,Array]={
 	0:[Enemy_information.new(1,7)],
@@ -1024,5 +1023,6 @@ func function_factory(value:function)->function:#模组工厂函数
 		return Card.Blank.new()
 	elif value is Card.Lock:
 		return Card.Lock.new()
-	else:
-		return null
+	elif value != null:
+		return create_function(value.mode)
+	return null

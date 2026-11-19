@@ -440,10 +440,11 @@ func gear_progress():#启用修改
 	clear_tear_basket()
 	get_tree().change_scene_to_file("res://scenes/map.tscn")
 func apply_modification():#将添加的模组加入选中的卡牌中
-	var funs = $page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer.get_children()
+	var funs: Array[Node] = $page2/VBoxContainer/HBoxContainer/PanelContainer/HFlowContainer.get_children()
 	for i in range(4):
 		var select_func:Selected_function = funs[i]
-		Chosen_card.change_function(select_func.measure,i)
+		var replacement:function = Profile.create_function(select_func.measure.mode)
+		Chosen_card.change_function(replacement,i)
 func is_legal()->bool:#判断卡牌是否合法
 	var sum=0
 	if Chosen_card!=null:
