@@ -313,7 +313,7 @@ class Test_Shoot extends Enemy:
 ## ========== 卡牌随机生成（从 card_reward 迁移） ==========
 
 ## 有用模组 ID 列表（排除 Lock=13、Blank=14）
-const USEFUL_FUNCTIONS: Array[int] = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+const USEFUL_FUNCTIONS: Array[int] = [0,1,2,3,4,5,6,7,8,9,10,11,12,15,16]
 
 ## 各模组对应点数（绝对值用于计算稀有度权重）
 const FUNCTION_POINTS: Dictionary = {
@@ -330,6 +330,8 @@ const FUNCTION_POINTS: Dictionary = {
 	10: 3,   # Turn
 	11: -4,  # One_off
 	12: -5,  # Consume
+	15: 4,   # Loop_twice
+	16: 6,   # Loop_third
 }
 
 ## 创建一张随机卡牌，挂载到场景前需调用 add_child
@@ -729,6 +731,8 @@ var _function_class_map: Dictionary = {
 	Function.One_off: CardScript.One_off,
 	Function.Consume: CardScript.Consume,
 	Function.Blank: CardScript.Blank,
+	Function.Loop_twice: CardScript.Loop_twice,
+	Function.Loop_third: CardScript.Loop_third,
 }
 var enemy_seed_list:Dictionary[int,Array]={
 	0:[Enemy_information.new(1,7)],
@@ -826,6 +830,10 @@ func id_to_function(value:int)->function:
 			return Card.One_off.new()
 		14:
 			return Card.Consume.new()
+		15:
+			return Card.Loop_twice.new()
+		16:
+			return Card.Loop_third.new()
 	return null
 func load_data():#加载数据
 	var path = "user://savadata/save.tres"
@@ -1093,6 +1101,10 @@ func function_factory(value:function)->function:#模组工厂函数
 		return Card.Swipe.new()
 	elif value is Card.Turn:
 		return Card.Turn.new()
+	elif value is Card.Loop_twice:
+		return Card.Loop_twice.new()
+	elif value is Card.Loop_third:
+		return Card.Loop_third.new()
 	elif value is Card.Blank:
 		return Card.Blank.new()
 	elif value is Card.Lock:

@@ -218,12 +218,29 @@ func _ready() -> void:
 	
 	
 func apply_function(main:Main_menu):
-	for i in function_list:
-		if i == null or i is Lock:
-			if i is Lock:
-				break
-			continue
-		await i.apply(main)
+	var index:int=0
+	while index<function_list.size():
+		index=await _apply_function_at(main,index)
+
+func _apply_function_at(main:Main_menu,index:int)->int:
+	if index<0 or index>=function_list.size():
+		return function_list.size()
+	var current:function=function_list[index]
+	if current==null:
+		return index+1
+	if current is Lock:
+		return function_list.size()
+	if current is Loop_twice or current is Loop_third:
+		var repeat_count:int=2 if current is Loop_twice else 3
+		var next_index:int=index+1
+		var next_after:int=next_index
+		for _repeat in range(repeat_count):
+			next_after=await _apply_function_at(main,next_index)
+			if next_after>=function_list.size():
+				return function_list.size()
+		return next_after
+	await current.apply(main)
+	return index+1
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("click"):
