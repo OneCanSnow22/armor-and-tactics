@@ -144,6 +144,17 @@ func decrease_health(value:int):#角色血条UI更新
 		tween.tween_property(decreaseBar,"size",Vector2(length,43),0.2)
 		await tween.finished
 		characterIsDead.emit(current_role)
+func refresh_health(character: Character) -> void:
+	if character == null or character != current_role:
+		return
+	max_health = character.setting.max_health
+	current_health = character.setting.health
+	if max_health == 0:
+		return
+	var length: float = Max_size * (float(current_health) / float(max_health))
+	healthBar.size.x = length
+	decreaseBar.size.x = length
+	health_label.text = str(current_health) + "/" + str(max_health)
 ## 根据角色的buff列表刷新buff_basket显示
 func refresh_buff_basket(character:Character) -> void:
 	if buff_basket==null:

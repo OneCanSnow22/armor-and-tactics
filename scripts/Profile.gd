@@ -174,12 +174,26 @@ class Player extends Role:
 ## Role 只存标识，不存逻辑，判定由 fight_menu 统一处理
 enum EnemyBehavior {
 	BASIC_MELEE,    ## 基础近战：能打就打，打不到就向玩家移动
-	BASIC_SHOOT,    ## 基础射击：永远不移动，直接攻击
-	BASIC_SHELLING, ## 基础炮击：永远不移动，锁定后触发
-	IMMOVABLE,      ## 不可移动型（如重装兵）：不移动，受伤减免
-	MUTANT,         ## 变异体：可在近战/射击间切换
+	BASIC_SHOOT,    ## 基础射击：直接攻击
+	BASIC_SHELLING, ## 基础炮击：锁定后触发
+	HEALER,         ## 后排治疗单位：优先治疗受伤友军
 }
-
+#敌人行为状态
+enum EnemyActionState {
+	READY,   # 本回合可决策
+	AIMING,  # 炮击锁定、等待倒计时
+	ACTING,  # 正在移动或攻击动画中
+	DEAD,
+}
+enum EnemyIntent {
+	ATTACK,
+	APPROACH,
+	PRESS_POSITION,
+	RETREAT,
+	HEAL_ALLIES,
+	MOVE_TO_HEAL,
+	WAIT,
+}
 class Enemy_information:
 	var enemy_id:int
 	var enemy_position:int
@@ -193,12 +207,16 @@ class Enemy_information:
 			return SR_1.new(enemy_position)
 		elif enemy_id==3:
 			return SLR_1.new(enemy_position)
+		elif enemy_id==4:
+			return HLR_1.new(enemy_position)
 		return null
 class Enemy extends Role:
 	var id:int
 	var isAimed:bool
 	var reward:int
 	var behavior: EnemyBehavior = EnemyBehavior.BASIC_MELEE
+	var action_state:int=EnemyActionState.READY
+	var heal_amount:int=0
 	func upgrade():#提升敌人强度
 		var times=Profile.item.finished_times
 		max_health*=(1+0.4*times)
@@ -259,8 +277,23 @@ class SLR_1 extends Enemy:
 		attack_mode.firebomb=Firebomb.new()
 		attack_mode.flashbang=FlashBang.new()
 		attack_mode.flare=Flare.new()
-		behavior=EnemyBehavior.BASIC_SHOOT
+		behavior=EnemyBehavior.BASIC_SHELLING
 		pic_path="res://assets/character/enemy/SLR_1.png"
+class HLR_1 extends Enemy:
+	func _init(value:int) -> void:
+		Rname="HLR_1"
+		id=4
+		reward=25
+		health=20
+		max_health=health
+		origin_place=value
+		attack_mode=Shoot.new()
+		attack_mode.damage=3
+		attack_mode.probability=85
+		attack_mode.max_probability=85
+		heal_amount=5
+		behavior=EnemyBehavior.HEALER
+		pic_path="res://assets/character/enemy/Healer_1.png"
 class Test_Shoot extends Enemy:
 	func _init() -> void:
 		Rname="TS-2"
@@ -701,9 +734,9 @@ var enemy_seed_list:Dictionary[int,Array]={
 	4:[Enemy_information.new(1,7),Enemy_information.new(3,9),Enemy_information.new(2,10)]
 }
 
-## 后续战斗的随机阵容只使用当前已有的三种敌人，并保持各兵种的合理站位。
+## 后续战斗从全部敌人类型中随机生成；奶妈仅在与其他敌人共同出现的阵容中出现。
 func _random_enemy_information() -> Array[Enemy_information]:
-	var enemy_ids: Array[int] = [1, 2, 3]
+	var enemy_ids: Array[int] = [1, 2, 3, 4]
 	enemy_ids.shuffle()
 	var enemy_count: int = randi_range(2, 3)
 	var result: Array[Enemy_information] = []
@@ -712,7 +745,7 @@ func _random_enemy_information() -> Array[Enemy_information]:
 		result.append(Enemy_information.new(enemy_id, _get_enemy_spawn_position(enemy_id)))
 	return result
 
-## 近战靠前，炮击居中，射击靠后；三个位置均在玩家的右侧。
+## 近战靠前，炮击居中，射击靠后，奶妈固定最后排；所有位置均在玩家右侧。
 func _get_enemy_spawn_position(enemy_id: int) -> int:
 	match enemy_id:
 		1:
@@ -721,6 +754,8 @@ func _get_enemy_spawn_position(enemy_id: int) -> int:
 			return 10
 		3:
 			return 9
+		4:
+			return 11
 	return 10
 
 func _deploy_enemy(enemy_information: Enemy_information) -> void:

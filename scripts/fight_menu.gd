@@ -449,16 +449,16 @@ func _cancel_shelling_aim(character: Character) -> void:
 		enemyIsTarget=false
 		clear_player_range()
 	else:
-		var mode: Attack = character.setting.attack_mode
-		if mode is Shelling:
-			(mode as Shelling).is_targeting=false
+		var enemy_data: Profile.Enemy = character.setting as Profile.Enemy
+		if enemy_data != null and enemy_data.action_state != Profile.EnemyActionState.DEAD:
+			enemy_data.action_state = Profile.EnemyActionState.READY
 		clear_enemy_range()
 	if character == state_bar.current_role:
 		state_bar.refresh_buff_basket(character)
 	state_bar.refresh_shelling_mode_label(character)
 func _finish_shelling_turn(character: Character) -> void:
-	var mode: Attack = character.setting.attack_mode
-	var is_aiming: bool = enemyIsTarget if character.setting is Profile.Player else mode is Shelling and (mode as Shelling).is_targeting
+	var enemy_data: Profile.Enemy = character.setting as Profile.Enemy
+	var is_aiming: bool = enemyIsTarget if character.setting is Profile.Player else enemy_data != null and enemy_data.action_state == Profile.EnemyActionState.AIMING
 	if not is_aiming:
 		return
 	if character.tick_lock_buff_on_turn_end() and character == state_bar.current_role:
@@ -495,9 +495,10 @@ func _enemy_causeDamage(attacker:Character):#敌人攻击逻辑，用 index 计�
 			player.ishitted(actual_damage)
 			hit=true
 	elif mode is Shelling:
-		# 首次炮击行动进入瞄准；瞄准期间不重复添加或重置 Buff。
-		if !mode.is_targeting:
-			mode.is_targeting=true
+		# 敌人以 action_state + Lock Buff 表示瞄准，避免武器对象重复保存状态。
+		var enemy_data: Profile.Enemy = attacker.setting as Profile.Enemy
+		if enemy_data != null and enemy_data.action_state != Profile.EnemyActionState.AIMING:
+			enemy_data.action_state = Profile.EnemyActionState.AIMING
 			_add_buff_to_character(attacker, Buff.TYPE_LOCK, mode.time)
 			show_enemy_hit_range(attacker)
 	if hit:
@@ -545,6 +546,9 @@ func _on_character_died(dead: Character):
 		final_report.open_page(false)
 		return
 	# 敌人死亡：结算金钱奖励
+	var dead_enemy: Profile.Enemy = dead.setting as Profile.Enemy
+	if dead_enemy != null:
+		dead_enemy.action_state = Profile.EnemyActionState.DEAD
 	Profile.item.money += dead.setting.reward * (1 + 0.1 * money_reward)
 	playerItem.set_money(Profile.item.money)
 	Profile.item.enemy_kill+=1
@@ -612,6 +616,33 @@ func _get_places() -> Array:
 func _get_place_index(character: Character) -> int:
 	return _get_places().find(character.place)
 
+## 严格移动只尝试指定方向，不沿用玩家通用移动的反向弹回规则。
+func _can_move_strict(character: Character, direction: int) -> bool:
+	if direction == 0:
+		return false
+	var places: Array = _get_places()
+	var current_index: int = places.find(character.place)
+	var target_index: int = current_index + direction
+	if current_index == -1 or target_index < 0 or target_index >= places.size():
+		return false
+	var occupant: Character = _get_character_at(places[target_index] as Position, character)
+	return occupant == null or _are_allies(character, occupant)
+
+func _move_character_strict(character: Character, direction: int) -> bool:
+	if not _can_move_strict(character, direction):
+		return false
+	var places: Array = _get_places()
+	return await _try_move_to_index(_get_place_index(character) + direction, character, places)
+
+func _get_direction_toward(from: Character, to: Character) -> int:
+	var from_index: int = _get_place_index(from)
+	var to_index: int = _get_place_index(to)
+	if to_index > from_index:
+		return 1
+	if to_index < from_index:
+		return -1
+	return 0
+
 ## 判断某敌人能否用当前近战攻击命中玩家
 func _can_melee_hit_player(enemy: Character) -> bool:
 	var player: Character = CharacterArray[0]
@@ -668,26 +699,71 @@ func show_turn_title(text_value: String) -> void:
 
 ## 单个敌人行动分发
 func enemy_turn(enemy: Character) -> void:
-	var e := enemy.setting as Profile.Enemy
+	var e:Profile.Enemy = enemy.setting as Profile.Enemy
 	if e == null:
 		return
+	if e.action_state == Profile.EnemyActionState.DEAD:
+		return
 	print(e.Rname + " 开始行动")
-	await trigger_shelling_attacks(enemy)
-	clear_enemy_range()  # 自动炮击结算后清理旧范围，再展示本次行动的范围
-	match e.behavior:
+	if e.action_state == Profile.EnemyActionState.AIMING:
+		await _run_enemy_aiming_state(enemy, e)
+		clear_enemy_range()
+		return
+	if e.action_state != Profile.EnemyActionState.READY:
+		return
+	var intent: int = _decide_enemy_intent(enemy, e)
+	e.action_state = Profile.EnemyActionState.ACTING
+	await _execute_enemy_intent(enemy, e, intent)
+	if e.action_state == Profile.EnemyActionState.ACTING and e.health > 0:
+		e.action_state = Profile.EnemyActionState.READY
+	clear_enemy_range()
+
+func _run_enemy_aiming_state(enemy: Character, enemy_data: Profile.Enemy) -> void:
+	if enemy.get_buff(Buff.TYPE_LOCK) != null:
+		return
+	var mode: Shelling = enemy.setting.attack_mode as Shelling
+	if mode == null:
+		enemy_data.action_state = Profile.EnemyActionState.READY
+		return
+	enemy_data.action_state = Profile.EnemyActionState.ACTING
+	await _enemy_shelling_fire(enemy, mode)
+	if enemy_data.action_state == Profile.EnemyActionState.ACTING and enemy_data.health > 0:
+		enemy_data.action_state = Profile.EnemyActionState.READY
+
+func _decide_enemy_intent(enemy: Character, enemy_data: Profile.Enemy) -> int:
+	match enemy_data.behavior:
 		Profile.EnemyBehavior.BASIC_MELEE:
-			await _ai_basic_melee(enemy)
+			return _decide_melee_intent(enemy)
 		Profile.EnemyBehavior.BASIC_SHOOT:
-			await _ai_basic_shoot(enemy)
+			return _decide_shoot_intent(enemy)
 		Profile.EnemyBehavior.BASIC_SHELLING:
-			await _ai_basic_shelling(enemy)
-		Profile.EnemyBehavior.IMMOVABLE:
-			await _ai_immovable(enemy)
-		Profile.EnemyBehavior.MUTANT:
-			await _ai_mutant(enemy)
+			return Profile.EnemyIntent.ATTACK
+		Profile.EnemyBehavior.HEALER:
+			return _decide_healer_intent(enemy)
 		_:
-			await _ai_basic_melee(enemy)
-	clear_enemy_range()  # 该敌人行动完毕，清理范围标记
+			return Profile.EnemyIntent.WAIT
+
+func _execute_enemy_intent(enemy: Character, enemy_data: Profile.Enemy, intent: int) -> void:
+	match intent:
+		Profile.EnemyIntent.HEAL_ALLIES:
+			_heal_allies_in_range(enemy, _get_heal_amount(enemy_data))
+		Profile.EnemyIntent.MOVE_TO_HEAL:
+			var heal_target: Character = _get_lowest_health_ally(enemy)
+			if heal_target != null:
+				await _move_character_strict(enemy, _get_direction_toward(enemy, heal_target))
+		Profile.EnemyIntent.PRESS_POSITION, Profile.EnemyIntent.APPROACH:
+			var player: Character = CharacterArray[0] as Character
+			if player != null:
+				await _move_character_strict(enemy, _get_direction_toward(enemy, player))
+		Profile.EnemyIntent.RETREAT:
+			var retreat_player: Character = CharacterArray[0] as Character
+			if retreat_player != null:
+				await _move_character_strict(enemy, -_get_direction_toward(enemy, retreat_player))
+		Profile.EnemyIntent.ATTACK:
+			show_enemy_hit_range(enemy)
+			await execute_attack(enemy)
+		_:
+			pass
 
 ## 计算队友（射击/炮击）的最大潜在伤害。
 ## 炮击仅在瞄准态且 Lock Buff 已耗尽时，会在该角色回合开始自动发射。
@@ -705,39 +781,112 @@ func _calc_teammate_total_damage(enemy: Character) -> int:
 			if Profile.rng.randi_range(0, 99) < mode.probability:
 				total_damage+= mode.damage
 		elif mode is Shelling:
-			if mode.is_targeting and teammate.get_buff(Buff.TYPE_LOCK) == null:
+			var teammate_data: Profile.Enemy = teammate.setting as Profile.Enemy
+			if teammate_data != null and teammate_data.action_state == Profile.EnemyActionState.AIMING and teammate.get_buff(Buff.TYPE_LOCK) == null:
 				total_damage+=mode.damage
 	return total_damage
 
 ## 基础近战 AI：
 ## 能打到玩家时：判断队友伤害是否更高，是则移动压位，否则攻击
 ## 打不到时：向玩家移动一格
-func _ai_basic_melee(enemy: Character) -> void:
-	if _can_hit_player(enemy):
+func _decide_melee_intent(enemy: Character) -> int:
+	var player: Character = CharacterArray[0] as Character
+	if player == null:
+		return Profile.EnemyIntent.WAIT
+	var toward_player: int = _get_direction_toward(enemy, player)
+	if _can_melee_hit_player(enemy):
 		var my_mode: Melee = enemy.setting.attack_mode as Melee
 		var my_damage: int = my_mode.damage if my_mode != null else 0
-		var teammate_max_damage: int = _calc_teammate_total_damage(enemy)
+		if _calc_teammate_total_damage(enemy) > my_damage and player.setting.attack_mode is Melee and _can_move_strict(enemy, toward_player):
+			return Profile.EnemyIntent.PRESS_POSITION
+		return Profile.EnemyIntent.ATTACK
+	if _can_move_strict(enemy, toward_player):
+		return Profile.EnemyIntent.APPROACH
+	return Profile.EnemyIntent.WAIT
 
-		if teammate_max_damage > my_damage and CharacterArray[0].setting.attack_mode==Melee:
-			# 当玩家是近战攻击时，队友潜在伤害更高，移动压位（自己仍在攻击范围内）
-			show_enemy_hit_range(enemy)
-			await move_character(enemy, -1)
-		else:
-			# 自己打更有价值
-			show_enemy_hit_range(enemy)
-			await execute_attack(enemy)
-	else:
-		await move_character(enemy, -1)
+func _get_player_threat_distance() -> int:
+	var player: Character = CharacterArray[0] as Character
+	if player == null:
+		return 0
+	var mode: Attack = player.setting.attack_mode
+	if mode is Melee:
+		return (mode as Melee).range
+	return 999
 
-## 基础射击 AI：永远不移动，直接攻击
-func _ai_basic_shoot(enemy: Character) -> void:
-	show_enemy_hit_range(enemy)
-	await execute_attack(enemy)
+func _decide_shoot_intent(enemy: Character) -> int:
+	var player: Character = CharacterArray[0] as Character
+	if player == null:
+		return Profile.EnemyIntent.WAIT
+	var threat_distance: int = _get_player_threat_distance()
+	if threat_distance >= 999:
+		return Profile.EnemyIntent.ATTACK
+	var distance: int = abs(_get_place_index(enemy) - _get_place_index(player))
+	var retreat_direction: int = -_get_direction_toward(enemy, player)
+	if distance < threat_distance + 1 and _can_move_strict(enemy, retreat_direction):
+		return Profile.EnemyIntent.RETREAT
+	return Profile.EnemyIntent.ATTACK
 
-## 基础炮击 AI：永远不移动，锁定后触发
-func _ai_basic_shelling(enemy: Character) -> void:
-	show_enemy_hit_range(enemy)
-	await execute_attack(enemy)
+func _is_valid_heal_target(healer: Character, target: Character) -> bool:
+	return target != null and target != healer and target.setting != null and healer.setting != null and target.setting.faction == healer.setting.faction and target.setting.faction == Profile.Faction.ENEMY and target.setting.health > 0 and target.setting.health < target.setting.max_health
+
+func _get_healable_allies_in_range(healer: Character) -> Array[Character]:
+	var targets: Array[Character] = []
+	var healer_index: int = _get_place_index(healer)
+	if healer_index == -1:
+		return targets
+	for character in CharacterArray:
+		var ally: Character = character as Character
+		if not _is_valid_heal_target(healer, ally):
+			continue
+		if abs(_get_place_index(ally) - healer_index) <= 2:
+			targets.append(ally)
+	return targets
+
+func _get_lowest_health_ally(healer: Character) -> Character:
+	var selected: Character = null
+	var selected_ratio: float = 2.0
+	var healer_index: int = _get_place_index(healer)
+	for character in CharacterArray:
+		var ally: Character = character as Character
+		if not _is_valid_heal_target(healer, ally):
+			continue
+		var ratio: float = float(ally.setting.health) / float(ally.setting.max_health)
+		if selected == null or ratio < selected_ratio:
+			selected = ally
+			selected_ratio = ratio
+			continue
+		if is_equal_approx(ratio, selected_ratio):
+			var ally_distance: int = abs(_get_place_index(ally) - healer_index)
+			var selected_distance: int = abs(_get_place_index(selected) - healer_index)
+			if ally_distance < selected_distance or (ally_distance == selected_distance and _get_place_index(ally) < _get_place_index(selected)):
+				selected = ally
+	return selected
+
+func _decide_healer_intent(healer: Character) -> int:
+	if not _get_healable_allies_in_range(healer).is_empty():
+		return Profile.EnemyIntent.HEAL_ALLIES
+	var target: Character = _get_lowest_health_ally(healer)
+	if target != null:
+		var direction: int = _get_direction_toward(healer, target)
+		if _can_move_strict(healer, direction):
+			return Profile.EnemyIntent.MOVE_TO_HEAL
+	return Profile.EnemyIntent.ATTACK
+
+func _get_heal_amount(enemy_data: Profile.Enemy) -> int:
+	return ceili(float(enemy_data.heal_amount) * (1.0 + 0.02 * float(Profile.item.finished_times)))
+
+func _heal_allies_in_range(healer: Character, heal_amount: int) -> void:
+	for target in _get_healable_allies_in_range(healer):
+		if not _is_valid_heal_target(healer, target):
+			continue
+		if abs(_get_place_index(target) - _get_place_index(healer)) > 2:
+			continue
+		var previous_health: int = target.setting.health
+		target.setting.health = min(target.setting.max_health, target.setting.health + heal_amount)
+		var actual_heal: int = target.setting.health - previous_health
+		if actual_heal > 0:
+			target.pop_heal(actual_heal)
+			state_bar.refresh_health(target)
 
 ## 不可移动型 AI：不移动，直接攻击
 func _ai_immovable(enemy: Character) -> void:
@@ -751,7 +900,7 @@ func _ai_mutant(enemy: Character) -> void:
 		await execute_attack(enemy)
 		return
 	# 尝试切换到备用攻击模式
-	var e := enemy.setting as Profile.Enemy
+	var e= enemy.setting as Profile.Enemy
 	# TODO: 变异体需要持有备用攻击模式引用，切换逻辑待实现
 	# 切换后刷新攻击范围，再判定一次
 func confirm_aimed_target()->int:#获取玩家所指的位置
@@ -791,7 +940,7 @@ func Turn_for_enemys():#进入敌人的回合
 	else:
 		print("不存在任何可锁定目标")
 	Turn_for_player()
-## 角色回合开始时，瞄准态但 Lock Buff 已消失则自动发射。
+## 玩家回合开始时，瞄准态但 Lock Buff 已消失则自动发射。
 func trigger_shelling_attacks(character:Character) -> void:
 	var mode: Attack = character.setting.attack_mode
 	if mode is not Shelling:
@@ -801,9 +950,6 @@ func trigger_shelling_attacks(character:Character) -> void:
 	if character.setting is Profile.Player:
 		if enemyIsTarget:
 			await _player_shelling_fire(mode as Shelling)
-	else:
-		if (mode as Shelling).is_targeting:
-			await _enemy_shelling_fire(character, mode as Shelling)
 func Turn_for_player():
 	# 玩家buff回合开始递减
 	var player:Character=CharacterArray[0] as Character

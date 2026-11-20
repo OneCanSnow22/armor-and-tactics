@@ -42,6 +42,9 @@ func _ready() -> void:
 func set_value(value: int) -> void:
 	add_theme_color_override("font_outline_color",Color("ff0000"))
 	text = "-%d"%value
+func set_heal(value: int) -> void:
+	add_theme_color_override("font_outline_color",Color("00e6b4"))
+	text = "+%d"%value
 func set_miss():
 	add_theme_color_override("font_outline_color",Color("00e6b4"))
 	text="MISS!"

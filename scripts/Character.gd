@@ -111,6 +111,20 @@ func pop_damage(value:int):
 	else:
 		add_child(text)
 	print("已add_child")
+func pop_heal(value:int) -> void:
+	var text: Label = preload("res://scenes/Effects/floating_text.tscn").instantiate() as Label
+	if text == null:
+		return
+	text.z_index = FLOATING_TEXT_Z_INDEX
+	text.set_heal(value)
+	text.global_position = global_position + Vector2(0,-70)
+	var fight_menu := get_parent()
+	while fight_menu != null and not fight_menu is CanvasLayer:
+		fight_menu = fight_menu.get_parent()
+	if fight_menu != null:
+		fight_menu.add_child(text)
+	else:
+		add_child(text)
 func pop_miss():
 	var text: Label = preload("res://scenes/Effects/floating_text.tscn").instantiate() as Label
 	if text == null:

@@ -6,7 +6,7 @@
 
 当前敌人不是完整的“状态机”，而是**敌人行为类型枚举 + 回合内分发**：
 
-- `Profile.EnemyBehavior` 定义 `BASIC_MELEE`、`BASIC_SHOOT`、`BASIC_SHELLING`、`IMMOVABLE`、`MUTANT` 等兵种/策略类型。
+- `Profile.EnemyBehavior` 当前定义 `BASIC_MELEE`、`BASIC_SHOOT`、`BASIC_SHELLING` 三种兵种/策略类型。
 - `Profile.Enemy.behavior` 保存该敌人的兵种策略。
 - `fight_menu.gd` 的 `enemy_turn(enemy)` 使用 `match e.behavior` 分发到 `_ai_basic_melee()`、`_ai_basic_shoot()` 等函数。
 - 炮击瞄准状态目前分散在 `Shelling.is_targeting`、`Lock` Buff、`Character.viscosity` 等字段中。
@@ -246,7 +246,7 @@ func enemy_turn(enemy: Character) -> void:
 1. 在 `Profile.gd` 添加 `EnemyActionState` 和 `EnemyIntent`，并给 `Enemy` 添加 `action_state`。
 2. 抽出严格移动的“可行性判断”和“严格执行”函数；先不改变原通用移动函数的反弹规则。
 3. 将现有基础近战逻辑改为“决定意图 → 执行意图”，优先覆盖 `PRESS_POSITION` 的后备攻击逻辑。
-4. 新增 `KITE_SHOOT` 行为，接入射击敌人的后撤/攻击决策。
+4. 扩展现有 `BASIC_SHOOT` 行为，使其在后撤风筝与攻击之间选择；不新增重复的射击兵种类型。
 5. 最后收敛炮击的 `AIMING` 状态，移除重复的布尔状态判断。
 6. 为边界、敌对阻挡、友军换位、玩家远程、玩家多张前进卡、炮击锁定、敌人死亡中断等场景逐项验证。
 
