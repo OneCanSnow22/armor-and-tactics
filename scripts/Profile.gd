@@ -23,7 +23,9 @@ enum Function{
 	One_off,
 	Consume,
 	Lock,
-	Blank
+	Blank,
+	Loop_twice,
+	Loop_third
 }
 var Func_picture:Dictionary={
 	Function.Forward:"res://assets/cards/forward.png",
@@ -40,7 +42,9 @@ var Func_picture:Dictionary={
 	Function.One_off:"res://assets/cards/one_off.png",
 	Function.Consume:"res://assets/cards/consume.png",
 	Function.Lock:"res://assets/cards/lock.png",
-	Function.Blank:"res://assets/cards/blank.png"
+	Function.Blank:"res://assets/cards/blank.png",
+	Function.Loop_twice:"res://assets/cards/loop_twice.png",
+	Function.Loop_third:"res://assets/cards/loop_third.png"
 }
 var Deck:Array[Card]=[]
 var CharacterArray:Array[Role]

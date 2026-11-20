@@ -174,6 +174,22 @@ class Consume extends function:
 		context="卡牌在被使用或结束回合时\n存在于手牌中都将被消耗"
 		animation_unit=Profile.Consume_animation.new()
 		mode=Profile.Function.Consume
+class Loop_twice extends function:
+	func _init()->void:
+		id=15
+		point=4
+		title="循环2"
+		context="循环执行下一个模组两次"
+		animation_unit=Profile.AnimationUnit.new()
+		mode=Profile.Function.Loop_twice
+class Loop_third extends function:
+	func _init()->void:
+		id=16
+		point=6
+		title="循环3"
+		context="循环执行下一个模组三次"
+		animation_unit=Profile.AnimationUnit.new()
+		mode=Profile.Function.Loop_third
 class Blank extends function:#不存在于奖励卡牌中属于特殊空位用于存入其他模组
 	func _init()->void:
 		id=0
